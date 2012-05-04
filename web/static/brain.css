@@ -1,0 +1,164 @@
+html, body {
+	font-family: Helvetica, Tahoma, Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+body {
+	background-color:#072d66;
+	background-image: -moz-radial-gradient(50% 50%, circle cover, #a5b9ca, #072d66 100%);
+	background-image: -webkit-radial-gradient(50% 50%, circle cover, #a5b9ca, #072d66 100%);
+	background-image: -o-radial-gradient(50% 50%, circle cover, #a5b9ca, #072d66 100%);
+	background-image: -ms-radial-gradient(50% 50%, circle cover, #a5b9ca, #072d66 100%);
+	background-image: radial-gradient(50% 50%, circle cover, #a5b9ca, #072d66 100%);
+	
+	font-size: 12px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: Oswald, Helvetica, Tahoma, Arial, sans-serif;
+	color: #444;
+	line-height: 1.2;
+	margin: .5em 0;
+	padding: .5em 0;
+}
+
+h1 {
+	font-size: 28px;
+}
+
+h2 {
+	font-size: 24px;
+}
+
+h3 {
+	font-size: 18px;
+}
+
+h4 {
+	font-size: 14px;
+}
+
+h5 {
+	font-size: 12px;
+}
+
+h6 {
+	font-size: 8px;
+}
+
+a:link, a:visited {
+	color: #072d66;
+}
+
+a:hover, a:active {
+	color: #a5b9ca;
+}
+
+.container:before,
+.container:after {
+    content:"";
+    display:table;
+}
+.container:after {
+    clear:both;
+}
+/* For IE 6/7 (trigger hasLayout) */
+.container {
+    zoom:1;
+}
+
+.bordered {
+	border: 1px solid #666;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0px 0px 8px rgba(0, 0, 0, 1);
+    -webkit-box-shadow: 0px 0px 8px rgba(0, 0, 0, 1);
+}
+
+input.bordered,
+textarea.bordered {
+	border-color: #999;
+}
+
+#wrapper {
+	margin: 100px auto 0 auto;
+	width: 800px;
+	padding: 15px;
+	background-color: #FFF;
+}
+
+#header h1 {
+	color: #333;
+	text-align: center;
+	font-size: 48px;
+	margin: 0;
+	padding: 0;
+}
+
+#header h2 {
+	color: #666;
+	text-align: center;
+	font-size: 20px;
+	margin: 0;
+	padding: 0;
+}
+
+#input {
+	margin: 35px 0 5px 0;
+	padding: 0;
+	width: 100%;
+}
+
+#input #q {
+	float: left;
+	width: 90%;
+	height: 60px;
+	padding: 5px;
+	font-family: Oswald, Helvetica, Tahoma, Arial, sans-serif;
+}
+
+#input #go {
+	background-color: #FFF;
+	font-family: Oswald, Helvetica, Tahoma, Arial, sans-serif;
+	float: right;
+	height: 50px;
+	margin-top: 10px;
+	width: 8%;
+	cursor: pointer;
+}
+
+#input #go:hover {
+	cursor: pointer;
+}
+
+#multi-line {
+	clear: both;
+	color: #444;
+	font-size: 11px;
+	margin: 0;
+}
+
+#examples {
+	clear: both;
+	margin-top: 50px;
+}
+
+#examples h2 {
+	text-align: center;
+}
+
+#examples .example {
+	float: left;
+	width: 33%;
+}
+
+#examples .example ul {
+	margin: 10px 0 10px 15px;
+	padding: 0;
+}
+
+#examples .example ul li {
+	margin: 4px 0;
+	padding: 0;
+}
