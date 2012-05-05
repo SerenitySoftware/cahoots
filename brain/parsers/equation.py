@@ -53,7 +53,7 @@ class EquationParser(BaseParser):
         solved = False
         
         if self.isSimpleEquation(cleanData):
-            resultType = "Simple Equation"
+            resultType = "Simple Math"
             solved = True
         
         if solved:
