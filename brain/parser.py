@@ -1,5 +1,5 @@
 #import pyparsing
-from parsers import number, character, boolean, date, phone, uri, email, place, programming, grammar, measurement, address
+from parsers import address, base, boolean, character, date, email, equation, grammar, measurement, number, phone, place, programming, uri
 import datetime
 
 def parse(dataString, *args, **kwargs):
@@ -16,7 +16,8 @@ def parse(dataString, *args, **kwargs):
 		place.PlaceParser,
 		programming.ProgrammingParser,
 		grammar.GrammarParser,
-		address.AddressParser
+		address.AddressParser,
+		equation.EquationParser,
 	]
 	
 	for module in checks:

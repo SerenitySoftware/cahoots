@@ -1,0 +1,3 @@
+werkzeug (pip)
+pymongo (pip)
+MongoDB (apt-get)
