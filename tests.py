@@ -4,7 +4,7 @@ import unittest
 class BrainiacTest(unittest.TestCase):
 	
 	def perform(self, data, expected_type, expected_subtype):
-		results = parser.parse(data)
+		results = parser.parse(data)['results']['matches']
 		self.assertNotEqual(0, len(results), msg = "No Brainiac results returned")
 		
 		top_result = results[0]
