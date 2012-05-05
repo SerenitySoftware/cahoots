@@ -4,19 +4,18 @@ class BooleanParser(BaseParser):
 
 	def __init__(self):
 		self.Type = "Boolean"
-		self.Confidence = 15
 	
 	def parse(self, data, **kwargs):
-		main_booleans = ["true", "false", "yes", "no"]
-		ghetto_booleans = ["0", "1"]
-		
 		data = data.lower()
 		
-		if data in main_booleans:
-			return self.result(True, "Boolean")
+		if data in ["true", "false", "yes", "no"]:
+			return self.result(True, "Boolean", 95)
 			
-		if data in ghetto_booleans:
-			return self.result(True, "Boolean", 5)
+		if data in ["yep", "nope"]:
+			return self.result(True, "Boolean", 80)
+			
+		if data in ["1", "0", "t", "f", "one", "zero"]:
+			return self.result(True, "Boolean", 40)
 			
 		return self.result(False)
 		
