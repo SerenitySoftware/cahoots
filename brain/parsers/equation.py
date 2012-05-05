@@ -9,23 +9,19 @@ class EquationParser(BaseParser):
 
     def __init__(self):
         self.Type = "Equation"
-        self.Confidence = 15
+        self.Confidence = 0
     
     
     def isSimpleEquation(self, data):
         
         # Seeing if our string only has symbols found in simple math equations
-        rgx = re.compile("""^
-           ([\(\)*\-+/0-9\^ ])*
-           $""", re.VERBOSE)
+        rgx = re.compile('([\(\)\*\-+0-9\^\/ ])*')
            
         match = rgx.match(data)
         
         if match:
-            self.Confidence = 50;
-            
+            self.Confidence = 25
             self.parsedEquation = data
-            
             return True
             
         return False
@@ -39,8 +35,6 @@ class EquationParser(BaseParser):
             self.Confidence = 0
             return False
         
-        self.Confidence = 100
-        
         return result
     
     
@@ -50,17 +44,20 @@ class EquationParser(BaseParser):
         cleanData = string.replace(data.upper(), 'X', '*')
         cleanData = string.replace(cleanData, '^', '**')
         
-        solved = False
+        # if we just have a digit, we know this isn't an equation
+        if (cleanData.isdigit()):
+            return self.result(False);
+        
+        likely = False
         
         if self.isSimpleEquation(cleanData):
             resultType = "Simple Math"
-            solved = True
+            likely = True
         
-        if solved:
-            result = self.solveEquation()
-            
-            if result:
-                return self.result(True, resultType, 0, result)
+        if likely:
+            calculated = self.solveEquation()
+            if calculated:
+                return self.result(True, resultType, 85, calculated)
 
         return self.result(False)
         

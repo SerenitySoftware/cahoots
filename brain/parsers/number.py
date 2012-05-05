@@ -95,25 +95,25 @@ class NumberParser(BaseParser):
 			return self.result(False)
 		
 		if self.isFraction(data):
-			return self.result(True, "Fraction")
+			return self.result(True, "Fraction", 50)
 					
 		if self.isBinary(data):
-			return self.result(True, "Binary")
+			return self.result(True, "Binary", 50)
 			
 		if self.isInteger(data):
-			return self.result(True, "Integer")
+			return self.result(True, "Integer", 50)
 			
 		if self.isFloat(data):
-			return self.result(True, "Decimal")
+			return self.result(True, "Decimal", 50)
 			
 		if self.isOctal(data):
-			return self.result(True, "Octal")
+			return self.result(True, "Octal", 50)
 			
 		if len(data) > 1 and self.isHex(data):
-			return self.result(True, "Hexadecimal")
+			return self.result(True, "Hexadecimal", 50)
 			
 		if self.isRomanNumeral(data):
-			return self.result(True, "Roman Numeral")
+			return self.result(True, "Roman Numeral", 50)
 			
 		return self.result(False)
 	
