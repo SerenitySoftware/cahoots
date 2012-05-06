@@ -160,6 +160,13 @@ class EquationTester(BrainiacTest):
 		self.perform("square root of 123.456", "Equation", "Text")
 		self.perform("The square root of 169 * 3", "Equation", "Text")
 		self.perform("(square ROOT of 169) * 35", "Equation", "Text")
+		self.perform("45 squared", "Equation", "Text")
+		self.perform("45 cubed", "Equation", "Text")
+		self.perform("45 minus 34", "Equation", "Text")
+		self.perform("45 plus 34", "Equation", "Text")
+		self.perform("45 times 34", "Equation", "Text")
+		self.perform("45 divided by 34", "Equation", "Text")
+		self.perform("45 dividedby 34", "Equation", "Text")
 	
 if __name__ == '__main__':
 	unittest.main()

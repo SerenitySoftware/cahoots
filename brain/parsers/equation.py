@@ -33,7 +33,17 @@ class EquationParser(BaseParser):
     def isTextEquation(self, data):
         
         # SQUARE ROOTS
-        parsedData = re.compile('SQUARE ROOT OF \d+(\.\d+)?').sub(self.squareRootTextReplace, data)
+        parsedData = re.compile('SQUARE[ ]{1,}ROOT[ ]{1,}OF[ ]{1,}\d+(\.\d+)?').sub(self.squareRootTextReplace, data)
+        
+        # Simple Operators
+        parsedData = parsedData.replace('TIMES', '*')
+        parsedData = parsedData.replace('PLUS', '+')
+        parsedData = parsedData.replace('MINUS', '-')
+        parsedData = parsedData.replace('DIVIDED BY', '/')
+        parsedData = parsedData.replace('DIVIDEDBY', '/')
+        
+        # Simple Powers
+        parsedData = re.compile('[ ]{1,}SQUARED|[ ]{1,}CUBED').sub(self.simplePowerReplace, parsedData)
         
         if parsedData != data:
             parsedData = self.autoFloat(parsedData)
@@ -43,13 +53,29 @@ class EquationParser(BaseParser):
         return False
     
     
+    def simplePowerReplace(self, match):
+        
+        myString = match.group()
+        
+        if (myString.find('SQUARED') != -1):
+            myString = '**2'
+        elif (myString.find('CUBED') != -1):
+            myString = '**3'
+        
+        return myString
+    
+    
     # replacing square root references with math.sqrt
     def squareRootTextReplace(self, match):
         
-        string = match.group().replace('SQUARE ROOT OF','').strip()
-        string = 'math.sqrt('+string+')'
+        myString = match.group().replace('SQUARE','')
+        myString = myString.replace('ROOT','')
+        myString = myString.replace('OF','')
+        myString = myString.strip()
         
-        return string
+        myString = 'math.sqrt('+myString+')'
+        
+        return myString
     
     
     # making all digits/decimals into floats
