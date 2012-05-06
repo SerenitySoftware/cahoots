@@ -1,11 +1,12 @@
 from base import BaseParser
 import re
 import string
+import math
 
 class EquationParser(BaseParser):
     
+    # This is our completely parsed equation ready to be solved
     parsedEquation = None
-
 
     def __init__(self):
         self.Type = "Equation"
@@ -22,14 +23,41 @@ class EquationParser(BaseParser):
         match = rgx.match(data)
         
         if match:
-            # making all digits/decimals into floats
-            data = re.compile(r'\d+(\.\d{1,2})?').sub(self.floatReplace, data)
-            # Any back to back parens/floats can be assumed to be multiplication
-            data = string.replace(data, ')float', ')*float')
-            self.parsedEquation = string.replace(data, ')(', ')*(')
+            data = self.autoFloat(data)
+            self.parsedEquation = self.autoMultiply(data)
             return True
             
         return False
+    
+    
+    def isTextEquation(self, data):
+        
+        # SQUARE ROOTS
+        parsedData = re.compile('SQUARE ROOT OF \d+(\.\d+)?').sub(self.squareRootTextReplace, data)
+        
+        if parsedData != data:
+            parsedData = self.autoFloat(parsedData)
+            self.parsedEquation = self.autoMultiply(parsedData)
+            return True
+        
+        return False
+    
+    
+    # replacing square root references with math.sqrt
+    def squareRootTextReplace(self, match):
+        
+        string = match.group().replace('SQUARE ROOT OF','').strip()
+        string = 'math.sqrt('+string+')'
+        
+        return string
+    
+    
+    # making all digits/decimals into floats
+    def autoFloat(self, data):
+        data = re.compile(r'\d+(\.\d+)?').sub(self.floatReplace, data)
+        
+        return data
+        
     
     # This turns our numbers into floats before we eval the equation.
     # This is because 4/5 comes out at 0, etc. Python autorounds...
@@ -37,12 +65,20 @@ class EquationParser(BaseParser):
         string= 'float('+match.group()+')'
         return string
         
+    
+    # Any back to back parens/floats can be assumed to be multiplication
+    def autoMultiply(self, data):
+        data = string.replace(data, ')float', ')*float')
+        data = string.replace(data, ')(', ')*(')
+        
+        return data
+        
         
     def solveEquation(self):
         
         try:
-            result = eval(self.parsedEquation)
-        except Exception, e:
+            result = eval(self.parsedEquation.strip())
+        except:
             self.Confidence = 0
             return False
         
@@ -51,9 +87,11 @@ class EquationParser(BaseParser):
     
     def parse(self, data, **kwargs):
         
-        # Replacing common math symbols with their python alternatives
+        # Doing some initial data cleanup
         cleanData = string.replace(data.upper(), 'X', '*')
         cleanData = string.replace(cleanData, '^', '**')
+        cleanData = string.replace(cleanData, 'THE', '')
+        cleanData = cleanData.strip()
         
         # if we just have a digit, we know this isn't an equation
         if (cleanData.isdigit()):
@@ -62,7 +100,11 @@ class EquationParser(BaseParser):
         likely = False
         
         if self.isSimpleEquation(cleanData):
-            resultType = "Simple Math"
+            resultType = "Simple"
+            likely = True
+        
+        if self.isTextEquation(cleanData):
+            resultType = "Text"
             likely = True
         
         if likely:

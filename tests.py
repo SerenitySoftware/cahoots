@@ -151,10 +151,15 @@ class DateTester(BrainiacTest):
 class EquationTester(BrainiacTest):
 	
 	def test_equations(self):
-		self.perform("5 x 5", "Equation", "Simple Math")
-		self.perform("(2*3)^4", "Equation", "Simple Math")
-		self.perform("1/7+4-2", "Equation", "Simple Math")
-		self.perform("124*76(45^4)-34.51+2345", "Equation", "Simple Math")
+		self.perform("5 x 5", "Equation", "Simple")
+		self.perform("(2*3)^4", "Equation", "Simple")
+		self.perform("1/7+4-2", "Equation", "Simple")
+		self.perform("124*76(45^4)-34.51+2345", "Equation", "Simple")
+		self.perform("square root of 16", "Equation", "Text")
+		self.perform("The square root of 169", "Equation", "Text")
+		self.perform("square root of 123.456", "Equation", "Text")
+		self.perform("The square root of 169 * 3", "Equation", "Text")
+		self.perform("(square ROOT of 169) * 35", "Equation", "Text")
 	
 if __name__ == '__main__':
 	unittest.main()
