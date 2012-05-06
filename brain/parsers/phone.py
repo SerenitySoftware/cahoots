@@ -20,6 +20,10 @@ class PhoneParser(BaseParser):
 		letters = [c for c in dataString if c in string.letters and c not in letter_set and not letter_set.add(c)]
 		punctuation = [c for c in dataString if c in string.punctuation or c in string.whitespace]
 		
+		if '+' in punctuation or '*' in punctuation:
+			if dataString[0] not in ['+','*']:
+				return self.result(False)
+		
 		if len(letters) > 3:
 			return self.result(False)
 			
@@ -40,7 +44,9 @@ class PhoneParser(BaseParser):
 				self.Confidence = 5
 		
 		#checking for existence of only known phone number related characters
-		phoneChars = re.compile(r'[\(\)\+\*\-0-9 ]*')
+		phoneChars = re.compile("""^
+           ([\(\)\+\*\-0-9/ ])*
+           $""", re.VERBOSE)
 		
 		if phoneChars.match(dataString):
 			
@@ -60,14 +66,93 @@ class PhoneParser(BaseParser):
 			# some intl phone numbers have 12/13 digits
 			if len(digits) in [7,10,11,12,13]:
 				
+				slashPhone = re.compile('[0-9]{3}/[0-9]{7}|\([0-9]{3,4}\)[0-9]{7}');
+				
 				#if our digits are of a possible right length, and we contain dashes or whitespace, probably a phone number
 				if '-' in punctuation or ' ' in punctuation:
 					self.Confidence = 90
+					
+				elif slashPhone.match(dataString):
+					self.Confidence = 80
 				
 				# could be a phone number, probably an integer or something along those lines
 				else:
 					self.Confidence = 15
-				
-					
-				
+								
 		return self.result(True, "Phone Number")
+
+"""
+	def format(self, number):
+		chunks = re.split('[\.,!\?;\- ]', number)
+		format = self.determine_phone_format(chunks)
+		
+		if not format:
+			return '-'.join(chunks)
+			
+		rendered_phone = ''
+		render_format = format[3]
+		render_index = 0
+		phone_digits = list(''.join(chunks))
+		
+		for c in list(render_format):
+			if c == '#':
+				rendered_phone += phone_digits[render_index]
+				render_index += 1
+			else:
+				if c == phone_digits[render_index]:
+					render_index += 1
+				rendered_phone += c
+				
+		return {
+			'format': render_format,
+			'country': format[0],
+			'clean': rendered_phone
+		}
+		
+	def determine_phone_format(self, chunks):
+		formats = (
+			('USA', 1, (
+				'###-###-####',
+				'1-###-###-####'
+			), '+1 (###) ###-####'),
+			('Denmark', 45, (
+				'##-##-##-##',
+				'####-####'
+			)),
+			('France', 33, (
+				'0#-##-##-##-##',
+			)),
+		)
+		
+		for country in formats:
+			for format in country[2]:
+				if self.does_phone_match_format(chunks, format, country[1]):
+					return country
+		
+		return None
+		
+	def does_phone_match_format(self, phone, format, calling_code):
+		format_chunks = format.split("-")
+		if len(phone) != len(format_chunks):
+			return False
+		
+		zipped_chunks = zip(phone, format_chunks)
+		
+		for chunk in zipped_chunks:
+			if len(chunk[0]) != len(chunk[1]):
+				return False
+				
+			zipped_numbers = zip(list(chunk[0]), list(chunk[1]))
+			
+			for num_format in zipped_numbers:
+				phone_character = num_format[0]
+				format_character = num_format[1]
+				
+				if not phone_character in string.digits:
+					return False
+					
+				if format_character != '#' and format_character != phone_character:
+					return False
+		
+		return True
+"""			

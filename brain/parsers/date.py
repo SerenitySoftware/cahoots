@@ -9,7 +9,7 @@ class DateParser(BaseParser):
 
 	def __init__(self):
 		self.Type = "Date"
-		self.Confidence = 50
+		self.Confidence = 80
 		
 	#parse out natural-language strings like "yesterday", "next week", etc
 	def naturalParse(self, dataString):
@@ -54,12 +54,22 @@ class DateParser(BaseParser):
 		parsedDate = self.naturalParse(dataString)
 		
 		if parsedDate:
-			return self.result(True, "Date", Confidence = 50, data = parsedDate)
+			return self.result(True, "Date", Confidence = 95, data = parsedDate)
 		
 		try:
 			parser = dateparser()
 			parsedDate = parser.parse(dataString)
-			return self.result(True, "Date", data = parsedDate)
+			
+			dsLength = len(dataString)
+			
+			if dsLength <= 4:
+				confidence = 10
+			elif dsLength <= 7:
+				confidence = 40
+			else:
+				confidence = 80
+			
+			return self.result(True, "Date", confidence, data = parsedDate)
 		except:
 			pass
 		

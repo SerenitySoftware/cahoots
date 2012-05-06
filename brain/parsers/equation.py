@@ -15,17 +15,28 @@ class EquationParser(BaseParser):
     def isSimpleEquation(self, data):
         
         # Seeing if our string only has symbols found in simple math equations
-        rgx = re.compile('([\(\)\*\-+0-9\^\/ ])*')
+        rgx = re.compile("""^
+           ([()*.\-+0-9^/ ])*
+           $""", re.VERBOSE)
            
         match = rgx.match(data)
         
         if match:
-            self.Confidence = 25
-            self.parsedEquation = data
+            # making all digits/decimals into floats
+            data = re.compile(r'\d+(\.\d{1,2})?').sub(self.floatReplace, data)
+            # Any back to back parens/floats can be assumed to be multiplication
+            data = string.replace(data, ')float', ')*float')
+            self.parsedEquation = string.replace(data, ')(', ')*(')
             return True
             
         return False
     
+    # This turns our numbers into floats before we eval the equation.
+    # This is because 4/5 comes out at 0, etc. Python autorounds...
+    def floatReplace(self, match):
+        string= 'float('+match.group()+')'
+        return string
+        
         
     def solveEquation(self):
         
@@ -57,7 +68,7 @@ class EquationParser(BaseParser):
         if likely:
             calculated = self.solveEquation()
             if calculated:
-                return self.result(True, resultType, 85, calculated)
+                return self.result(True, resultType, 75, calculated)
 
         return self.result(False)
         

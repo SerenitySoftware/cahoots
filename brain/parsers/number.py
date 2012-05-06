@@ -34,6 +34,9 @@ class NumberParser(BaseParser):
 	def isBinary(self, data):
 		if len(data) < 4:
 			return False
+		
+		if len(data) % 4 != 0:
+			return False
 			
 		for c in data:
 			if c != "0" and c != "1":
@@ -56,7 +59,7 @@ class NumberParser(BaseParser):
 		   ([XLC]*)     # tens
 		   ([IVX]*)     # units
 		   $""", re.VERBOSE)
-		   
+		
 		match = rgx_roman.match(data)
 		
 		if match:
@@ -95,25 +98,25 @@ class NumberParser(BaseParser):
 			return self.result(False)
 		
 		if self.isFraction(data):
-			return self.result(True, "Fraction", 50)
+			return self.result(True, "Fraction", 65)
 					
 		if self.isBinary(data):
-			return self.result(True, "Binary", 50)
+			return self.result(True, "Binary", 95)
 			
 		if self.isInteger(data):
-			return self.result(True, "Integer", 50)
+			return self.result(True, "Integer", 80)
 			
 		if self.isFloat(data):
-			return self.result(True, "Decimal", 50)
+			return self.result(True, "Decimal", 80)
 			
 		if self.isOctal(data):
-			return self.result(True, "Octal", 50)
+			return self.result(True, "Octal", 80)
 			
 		if len(data) > 1 and self.isHex(data):
-			return self.result(True, "Hexadecimal", 50)
+			return self.result(True, "Hexadecimal", 80)
 			
 		if self.isRomanNumeral(data):
-			return self.result(True, "Roman Numeral", 50)
+			return self.result(True, "Roman Numeral", 80)
 			
 		return self.result(False)
 	
