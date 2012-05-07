@@ -2,22 +2,23 @@
 from parsers import number, character, boolean, date, phone, uri, email, place, programming, grammar, measurement, address
 import datetime
 
+checks = [
+	number.NumberParser,
+	character.CharacterParser,
+	boolean.BooleanParser,
+	date.DateParser,
+	phone.PhoneParser,
+	uri.URIParser,
+	email.EmailParser,
+	place.PlaceParser,
+	programming.ProgrammingParser,
+	grammar.GrammarParser,
+	address.AddressParser
+]
+
 def parse(dataString, *args, **kwargs):
 	match_types = []
 	results = []
-	checks = [
-		number.NumberParser,
-		character.CharacterParser,
-		boolean.BooleanParser,
-		date.DateParser,
-		phone.PhoneParser,
-		uri.URIParser,
-		email.EmailParser,
-		place.PlaceParser,
-		programming.ProgrammingParser,
-		grammar.GrammarParser,
-		address.AddressParser
-	]
 	
 	for module in checks:
 		p = module()

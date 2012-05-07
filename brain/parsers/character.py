@@ -26,16 +26,33 @@ class CharacterParser(BaseParser):
 		return False
 
 	def parse(self, data, **kwargs):
+		data = data.decode('utf-8')
+		
 		if len(data) != 1:
 			return self.result(False)
+		
+		try:
+			ascii_version = ord(data)
+		except UnicodeEncodeError:
+			ascii_version = None
+			
+		try:
+			utf8_version = ord(unicode(data))
+		except UnicodeEncodeError:
+			utf8_version = None
+			
+		character_data = {
+			"ascii": ascii_version,
+			"utf-8": utf8_version
+		}
 			
 		if self.isLetter(data):
-			return self.result(True, "Letter")
+			return self.result(True, "Letter", data = character_data)
 			
 		if self.isPunctuation(data):
-			return self.result(True, "Punctuation")
+			return self.result(True, "Punctuation", data = character_data)
 			
 		if self.isWhitespace(data):
-			return self.result(True, "Whitespace")
+			return self.result(True, "Whitespace", data = character_data)
 
 		return self.result(False)
