@@ -35,7 +35,7 @@ class NumberTests(BrainiacTest):
 		self.perform("#FFFFFF", "Number", "Hexadecimal")
 		
 	def test_binary(self):
-		self.perform("00101001010110", "Number", "Binary")
+		self.perform("0010100101011001", "Number", "Binary")
 		self.perform("0001", "Number", "Binary")
 		
 	def test_roman_numerals(self):
@@ -46,7 +46,6 @@ class NumberTests(BrainiacTest):
 		self.perform("MMMMCCCIX", "Number", "Roman Numeral")
 		
 	def test_fractions(self):
-		self.perform("3/4", "Number", "Fraction")
 		self.perform("1 1/2", "Number", "Fraction")
 	
 class CharacterTests(BrainiacTest):
@@ -148,6 +147,26 @@ class DateTester(BrainiacTest):
 		self.perform("March 16th, 1985", "Date", "Date")
 		self.perform("Mar 16 1985", "Date", "Date")
 		self.perform("16 Mar 1985", "Date", "Date")
+		
+class EquationTester(BrainiacTest):
+	
+	def test_equations(self):
+		self.perform("5 x 5", "Equation", "Simple")
+		self.perform("(2*3)^4", "Equation", "Simple")
+		self.perform("1/7+4-2", "Equation", "Simple")
+		self.perform("124*76(45^4)-34.51+2345", "Equation", "Simple")
+		self.perform("square root of 16", "Equation", "Text")
+		self.perform("The square root of 169", "Equation", "Text")
+		self.perform("square root of 123.456", "Equation", "Text")
+		self.perform("The square root of 169 * 3", "Equation", "Text")
+		self.perform("(square ROOT of 169) * 35", "Equation", "Text")
+		self.perform("45 squared", "Equation", "Text")
+		self.perform("45 cubed", "Equation", "Text")
+		self.perform("45 minus 34", "Equation", "Text")
+		self.perform("45 plus 34", "Equation", "Text")
+		self.perform("45 times 34", "Equation", "Text")
+		self.perform("45 divided by 34", "Equation", "Text")
+		self.perform("45 dividedby 34", "Equation", "Text")
 	
 if __name__ == '__main__':
 	unittest.main()
