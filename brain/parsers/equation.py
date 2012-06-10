@@ -3,10 +3,17 @@ import re
 import string
 import math
 
+
 class EquationParser(BaseParser):
-    
-    # This is our completely parsed equation ready to be solved
+    """
+    brainiac.brain.parsers.equation
+    parser to identify and solve some mathematical equations
+    """
+
+
     parsedEquation = None
+    """ After we've processed the input string from the user, this var will contain the assembled result """
+
 
     def __init__(self):
         self.Type = "Equation"
@@ -14,8 +21,8 @@ class EquationParser(BaseParser):
     
     
     def isSimpleEquation(self, data):
-        
-        # Seeing if our string only has symbols found in simple math equations
+        """ Seeing if our string only has symbols found in simple math equations """
+
         rgx = re.compile("""^
            ([()*.\-+0-9^/ ])*
            $""", re.VERBOSE)
@@ -31,6 +38,7 @@ class EquationParser(BaseParser):
     
     
     def isTextEquation(self, data):
+        """ Searching for specific textual markers that can be converted into mathematical operators """
         
         # SQUARE ROOTS
         parsedData = re.compile('SQUARE[ ]{1,}ROOT[ ]{1,}OF[ ]{1,}\d+(\.\d+)?').sub(self.squareRootTextReplace, data)
@@ -54,6 +62,7 @@ class EquationParser(BaseParser):
     
     
     def simplePowerReplace(self, match):
+        """ Converts "SQUARED" and "CUBED" to their proper exponent representation """
         
         myString = match.group()
         
@@ -65,8 +74,8 @@ class EquationParser(BaseParser):
         return myString
     
     
-    # replacing square root references with math.sqrt
     def squareRootTextReplace(self, match):
+        """ Replaces square root references with math.sqrt """
         
         myString = match.group().replace('SQUARE','')
         myString = myString.replace('ROOT','')
@@ -77,41 +86,70 @@ class EquationParser(BaseParser):
         
         return myString
     
-    
-    # making all digits/decimals into floats
+
     def autoFloat(self, data):
+        """ Makes all digits/decimals into floats so we can do proper math on them without auto-rounding """
+
         data = re.compile(r'\d+(\.\d+)?').sub(self.floatReplace, data)
         
         return data
         
-    
-    # This turns our numbers into floats before we eval the equation.
-    # This is because 4/5 comes out at 0, etc. Python autorounds...
+
     def floatReplace(self, match):
-        string= 'float('+match.group()+')'
+        """
+        This turns our numbers into floats before we eval the equation.
+        This is because 4/5 comes out at 0, etc. Python autorounds...
+        """
+        string = 'float('+match.group()+')'
         return string
         
     
-    # Any back to back parens/floats can be assumed to be multiplication
     def autoMultiply(self, data):
+        """ Any back to back parens/floats can be assumed to be multiplication. Adding * operator between them """
         data = string.replace(data, ')float', ')*float')
         data = string.replace(data, ')(', ')*(')
         
         return data
+
+
+    def checkForSafeEquationString(self):
+        """
+        Checks to make sure that the equation doesn't contain any unexpected characters
         
+        This is pseudo-sanitization. We just make sure that the string has only "safe" characters
+        We do this by removing all expected strings, and seeing if we have nothing left.
+        """
+        equation = self.parsedEquation
+
+        # These are characters or strings that we can use in an equation
+        safeStrings = ['math.sqrt', 'float', '(', ')', '*', '+', '-', '/', '.']
+
+        for char in safeStrings:
+            equation = string.replace(equation, char, '')
+
+        for num in range(0, 9):
+            equation = string.replace(equation, str(num), '')
+
+        equation = equation.strip()
+
+        return ('' == equation)
+
         
     def solveEquation(self):
+        """ Evaulates the equation to see if it's solve-able """
+
+        if not self.checkForSafeEquationString():
+            return False
         
         try:
-            result = eval(self.parsedEquation.strip())
+            return eval(self.parsedEquation.strip())
         except:
             self.Confidence = 0
             return False
-        
-        return result
     
     
     def parse(self, data, **kwargs):
+        """ Standard parse function for checking if entered string is a mathematical equation """
         
         # Doing some initial data cleanup
         cleanData = string.replace(data.upper(), 'X', '*')
