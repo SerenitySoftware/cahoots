@@ -127,7 +127,7 @@ class EquationParser(BaseParser):
         for char in safeStrings:
             equation = string.replace(equation, char, '')
 
-        for num in range(0, 9):
+        for num in xrange(10):
             equation = string.replace(equation, str(num), '')
 
         equation = equation.strip()
