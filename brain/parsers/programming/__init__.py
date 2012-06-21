@@ -33,7 +33,6 @@ class ProgrammingParser(BaseParser):
 	# finding common words/phrases in programming languages
 	def findCommonTokens(self, data):
 		dataset = re.split('[ ;,{}()\n\t]', data)
-		print dataset
 
 		#an empty list is considered False
 		return [keyword for keyword in dataset if keyword in self.all_keywords]
@@ -48,11 +47,14 @@ class ProgrammingParser(BaseParser):
 		return { 'confidence': 100, 'language': language }
 		
 	def parse(self, data, **kwargs):
+		
+		print self.findCommonTokens(data)
+
 		#Step 1: Is this even code?
 		if not self.findCommonTokens(data):
 			return self.result(False)
 
-
+		'''
 		#Step 2: Which languages match, based on keywords alone?
 		matched_languages = [language for language, language_data in self.language_keywords.items() if self.basicLanguageHeuristic(language, language_data)]
 
@@ -73,10 +75,10 @@ class ProgrammingParser(BaseParser):
 				best_result = language_result
 			elif language_result['confidence'] > best_result['confidence']:
 				best_result = language_result
+		
 
-
-		if not best_result:
-			return self.result(False)
+		if not best_result:'''
+		return self.result(False)
 
 		return self.result(True, best_result['language'], best_result['confidence'])
 

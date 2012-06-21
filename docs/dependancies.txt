@@ -1,3 +1,4 @@
 werkzeug (pip)
 pymongo (pip)
+pyyaml (pip)
 MongoDB (apt-get)
