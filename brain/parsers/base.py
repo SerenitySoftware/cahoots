@@ -1,5 +1,5 @@
 from exceptions import NotImplementedError
-from brainiac.brain.result import ParseResult
+from brain.result import ParseResult
 
 class BaseParser:
 

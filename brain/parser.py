@@ -57,7 +57,7 @@ def parse(dataString, *args, **kwargs):
 		t.join()
 
 	# The threads are done, let's get the results out of them
-	for t in [th for th in threads if th.result.Matched]:
+	for t in [th for th in threads if th.result and th.result.Matched]:
 		match_types.append(t.parser.Type)
 		results.append(t.result)
 			

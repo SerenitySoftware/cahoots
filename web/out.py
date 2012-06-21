@@ -1,6 +1,6 @@
 import simplejson
 from datetime import *
-from brainiac.brain.result import ParseResult
+from brain.result import ParseResult
 
 class BrainiacEncoder(simplejson.JSONEncoder):
 	

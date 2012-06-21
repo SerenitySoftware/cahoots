@@ -1,4 +1,6 @@
-import os
+import os, sys
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+
 import pymongo
 import urlparse
 from werkzeug.wrappers import Request, Response
@@ -10,8 +12,10 @@ from mako import *
 from mako.template import Template
 from mako.lookup import TemplateLookup
 import config
-from brainiac.brain import parser
+from brain import parser
 from web import out
+
+
 
 class BrainiacWSGI(object):
 
@@ -25,7 +29,8 @@ class BrainiacWSGI(object):
 		self.configure_routing()
 		
 	def configure_database(self):
-		self.db = pymongo.Connection(self.config.database['host'], self.config.database['port'])[self.config.database['database']]
+		pass
+		#self.db = pymongo.Connection(self.config.database['host'], self.config.database['port'])[self.config.database['database']]
 		
 	def configure_templating(self):
 		self.template_lookup = TemplateLookup(
