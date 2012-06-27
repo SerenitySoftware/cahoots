@@ -47,6 +47,19 @@ class ProgrammingParser(BaseParser):
 		return { 'confidence': 100, 'language': language }
 		
 	def parse(self, data, **kwargs):
+		'''
+		We want to find:
+			Java
+			C
+			C++
+			PHP
+			VB
+			Python
+			C#
+			Javascript
+			Perl
+			Ruby
+		'''
 		
 		print self.findCommonTokens(data)
 
