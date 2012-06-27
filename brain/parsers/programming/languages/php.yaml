@@ -5,6 +5,7 @@ keywords:
 - 'array('
 - break
 - case
+- callable
 - catch
 - class
 - '__CLASS__'
@@ -24,6 +25,7 @@ keywords:
 - else
 - elseif
 - empty
+- trait
 - enddeclare
 - endfor
 - endforeach
@@ -50,6 +52,7 @@ keywords:
 - include
 - include_once
 - instanceof
+- insteadof
 - interface
 - isset
 - '__LINE__'
