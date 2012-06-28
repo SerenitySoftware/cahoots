@@ -1,0 +1,204 @@
+name: Visual Basic
+keywords:
+- addhandler
+- andalso
+- byte
+- catch
+- cdate
+- cint
+- cobj
+- cshort
+- cuint
+- decimal
+- dim
+- each
+- end <keyword>
+- error
+- finally
+- function
+- global
+- if
+- imports
+- inherits
+- isnot
+- long
+- module
+- mybase
+- new constraint
+- not
+- object
+- option
+- out (generic modifier)
+- paramarray
+- protected
+- redim
+- return
+- shadows
+- static
+- structure constraint
+- then
+- try
+- ulong
+- wend
+- with
+- '#const'
+- '#if'
+- addressof
+- as
+- byval
+- cbool
+- cdbl
+- class constraint
+- const
+- csng
+- culng
+- declare
+- directcast
+- else
+- endif
+- event
+- for (in for…next)
+- get
+- gosub
+- if()
+- imports (xml namespace)
+- integer
+- let
+- loop
+- module statement
+- myclass
+- new operator
+- nothing
+- of
+- optional
+- overloads
+- partial
+- public
+- rem
+- sbyte
+- shared
+- step
+- structure statement
+- throw
+- trycast
+- ushort
+- when
+- withevents
+- '#else'
+- alias
+- boolean
+- call
+- cbyte
+- cdec
+- class statement
+- continue
+- cstr
+- cushort
+- default
+- do
+- elseif
+- enum
+- exit
+- for each…next
+- gettype
+- goto
+- implements
+- in
+- interface
+- lib
+- me
+- mustinherit
+- namespace
+- next
+- notinheritable
+- on
+- or
+- overridable
+- private
+- raiseevent
+- removehandler
+- select
+- short
+- stop
+- sub
+- to
+- typeof…is
+- using
+- while
+- writeonly
+- '#elseif'
+- and
+- byref
+- case
+- cchar
+- char
+- clng
+- csbyte
+- ctype
+- date
+- delegate
+- double
+- end statement
+- erase
+- false
+- friend
+- getxmlnamespace
+- handles
+- implements statement
+- in (generic modifier)
+- is
+- like
+- mod
+- mustoverride
+- narrowing
+- next (in resume)
+- notoverridable
+- operator
+- orelse
+- overrides
+- property
+- readonly
+- resume
+- set
+- single
+- string
+- synclock
+- true
+- uinteger
+- variant
+- widening
+- xor
+- '#end'
+- aggregate
+- binary
+- equals
+- group join
+- join
+- order by
+- strict
+- unicode
+- '#region'
+- ansi
+- compare
+- explicit
+- into
+- key (visual basic)
+- preserve
+- take
+- until
+- assembly
+- custom
+- from
+- isfalse
+- mid
+- skip
+- take while
+- where
+- auto
+- distinct
+- group by
+- istrue
+- off
+- skip while
+- text
+- '#externalsource'

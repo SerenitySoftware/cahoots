@@ -32,7 +32,7 @@ class ProgrammingParser(BaseParser):
 	
 	# finding common words/phrases in programming languages
 	def findCommonTokens(self, data):
-		dataset = re.split('[ ;,{}()\n\t]', data)
+		dataset = re.split('[ ;,{}()\n\t\r]', data)
 
 		#an empty list is considered False
 		return [keyword for keyword in dataset if keyword in self.all_keywords]
@@ -53,26 +53,27 @@ class ProgrammingParser(BaseParser):
 			C (done)
 			C++ (done)
 			PHP (done)
-			VB
-			Python
-			C#
-			Javascript
-			Perl
+			VB (done)
+			Python (done)
+			C# (done)
+			Javascript (done)
+			Perl (done)
 			Ruby
 			Actionscript (done)
 		'''
-		
-		print self.findCommonTokens(data)
+		data = data.lower()
 
-		#Step 1: Is this even code?
-		if not self.findCommonTokens(data):
+		# Step 1: Is this even code?
+		# If there are more than two matches, we would like to proceed. Yes, it's somewhat arbitrary.
+		if len(self.findCommonTokens(data)) < 2:
 			return self.result(False)
 
-		'''
+		
 		#Step 2: Which languages match, based on keywords alone?
-		matched_languages = [language for language, language_data in self.language_keywords.items() if self.basicLanguageHeuristic(language, language_data)]
+		#matched_languages = [language for language, language_data in self.language_keywords.items() if self.basicLanguageHeuristic(language, language_data)]
+		#print vars(matched_languages)
 
-
+		'''
 		#Step 3: Which languages match, based on a smarter lexer?
 		matched_languages = [language for language in matched_languages if self.lexerMatcher(language, data)]
 
