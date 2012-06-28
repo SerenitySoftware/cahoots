@@ -48,18 +48,8 @@ class ProgrammingParser(BaseParser):
 		
 	def parse(self, data, **kwargs):
 		'''
-		We want to find:
-			Java (done)
-			C (done)
-			C++ (done)
-			PHP (done)
-			VB (done)
-			Python (done)
-			C# (done)
-			Javascript (done)
-			Perl (done)
-			Ruby
-			Actionscript (done)
+		Determines if the data is an example of:
+			Java, C, C++, PHP, VB, Python, C#, Javascript, Perl, Ruby, or Actionscript
 		'''
 		data = data.lower()
 
@@ -68,12 +58,10 @@ class ProgrammingParser(BaseParser):
 		if len(self.findCommonTokens(data)) < 2:
 			return self.result(False)
 
-		
+		'''
 		#Step 2: Which languages match, based on keywords alone?
 		#matched_languages = [language for language, language_data in self.language_keywords.items() if self.basicLanguageHeuristic(language, language_data)]
-		#print vars(matched_languages)
 
-		'''
 		#Step 3: Which languages match, based on a smarter lexer?
 		matched_languages = [language for language in matched_languages if self.lexerMatcher(language, data)]
 
