@@ -9,8 +9,8 @@ class ProgrammingParser(BaseParser):
 	__subType = ''
 	__success = False
 
-	all_keywords = []
-	language_keywords = {}
+	allKeywords = []
+	languageKeywords = {}
 	
 	
 	def __init__(self):
@@ -24,21 +24,20 @@ class ProgrammingParser(BaseParser):
 		directory = os.path.dirname(os.path.abspath(__file__))
 		path = os.path.join(directory, "languages/*.yaml")
 
-		for file_path in glob.glob(path):
-			with open(file_path, 'r') as language_file:
-				language = yaml.load(language_file)
-				self.all_keywords.extend(language['keywords'])
-				self.language_keywords[language['name']] = language
+		for filePath in glob.glob(path):
+			with open(filePath, 'r') as languageFile:
+				language = yaml.load(languageFile)
+				self.allKeywords.extend(language['keywords'])
+				self.languageKeywords[language['name']] = language
+
+		self.allKeywords = set(self.allKeywords)
 	
 	# finding common words/phrases in programming languages
-	def findCommonTokens(self, data):
-		dataset = re.split('[ ;,{}()\n\t\r]', data)
+	def findCommonTokens(self, dataset):
+		return [keyword for keyword in dataset if keyword in self.allKeywords]
 
-		#an empty list is considered False
-		return [keyword for keyword in dataset if keyword in self.all_keywords]
-
-	def basicLanguageHeuristic(self, language, data):
-		return True
+	def basicLanguageHeuristic(self, language, languageData, dataset):
+		return [keyword for keyword in dataset if keyword in languageData['keywords']]
 
 	def lexerMatcher(self, language, data):
 		return True
@@ -52,36 +51,38 @@ class ProgrammingParser(BaseParser):
 			Java, C, C++, PHP, VB, Python, C#, Javascript, Perl, Ruby, or Actionscript
 		'''
 		data = data.lower()
+		dataset = set(re.split('[ ;,{}()\n\t\r]', data))
+
 
 		# Step 1: Is this even code?
-		# If there are more than two matches, we would like to proceed. Yes, it's somewhat arbitrary.
-		if len(self.findCommonTokens(data)) < 2:
+		if self.findCommonTokens(dataset):
 			return self.result(False)
+		
+		#Step 2: Which languages match, based on keywords alone?
+		matchedLanguages = [language for language, languageData in self.languageKeywords.items() if self.basicLanguageHeuristic(language, languageData, dataset)]
+
 
 		'''
-		#Step 2: Which languages match, based on keywords alone?
-		#matched_languages = [language for language, language_data in self.language_keywords.items() if self.basicLanguageHeuristic(language, language_data)]
-
 		#Step 3: Which languages match, based on a smarter lexer?
-		matched_languages = [language for language in matched_languages if self.lexerMatcher(language, data)]
+		matchedLanguages = [language for language in matchedLanguages if self.lexerMatcher(language, data)]
 
-		if not matched_languages:
+		if not matchedLanguages:
 			return self.result(False)
 
 
 		#Step 4: Which languages match, based on naive Bayes classification?
-		best_result = None
-		for language in matched_languages:
-			language_result = self.bayesClassification(language, data)
+		bestResult = None
+		for language in matchedLanguages:
+			languageResult = self.bayesClassification(language, data)
 
-			if not best_result:
-				best_result = language_result
-			elif language_result['confidence'] > best_result['confidence']:
-				best_result = language_result
+			if not bestResult:
+				bestResult = languageResult
+			elif languageResult['confidence'] > bestResult['confidence']:
+				bestResult = languageResult
 		
 
-		if not best_result:'''
+		if not bestResult:'''
 		return self.result(False)
 
-		return self.result(True, best_result['language'], best_result['confidence'])
+		return self.result(True, bestResult['language'], bestResult['confidence'])
 
