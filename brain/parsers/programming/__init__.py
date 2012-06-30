@@ -74,8 +74,8 @@ class ProgrammingParser(BaseParser):
             return self.result(False)
 
 
-        # THIS IS ALL TEMPORARY, FOR TESTING
         # Basically giving ourselves a maximum of 50% confidence
+        # This is temporary until we can work on the bayes classifier
         normalizer = 50 / float(max([scr for lexid, scr in matchedLanguages.items()]))
         normalScores = {}
 
@@ -84,8 +84,8 @@ class ProgrammingParser(BaseParser):
 
         return self.resultMulti(normalScores)
 
-
         '''
+        TODO:
         # Step 4: Which languages match, based on naive Bayes classification?
         bestResult = None
         for language in matchedLanguages:
@@ -103,8 +103,6 @@ class ProgrammingParser(BaseParser):
         return self.result(True, bestResult['language'], bestResult['confidence'])
         '''
 
-
     def resultMulti(self, resultData):
 
-        return ParseResultMulti([ParseResult(True, self.Type, langId, confidence) for langId, confidence in resultData.items()])
-
+        return ParseResultMulti([ParseResult(True, self.Type, self.languageKeywords[langId]['name'], confidence) for langId, confidence in resultData.items()])

@@ -20,7 +20,7 @@ checks = [
 ]
 
 
-class parserThread (threading.Thread):
+class ParserThread (threading.Thread):
     """
     Represents a thread that will handle one parser parsing request
     """
@@ -48,7 +48,7 @@ def parse(dataString, *args, **kwargs):
 
     # Creating/starting a thread for each parser module
     for module in checks:
-        thread = parserThread(module, dataString, **kwargs)
+        thread = ParserThread(module, dataString, **kwargs)
         thread.start()
         threads.append(thread)
 

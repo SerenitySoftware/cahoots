@@ -1,6 +1,7 @@
 from brainiac.brain import parser
 import unittest
 
+
 class BrainiacTest(unittest.TestCase):
 	
 	def perform(self, data, expected_type, expected_subtype):
@@ -10,6 +11,7 @@ class BrainiacTest(unittest.TestCase):
 		top_result = results[0]
 		self.assertEqual(top_result.Type, expected_type, msg = "Top result was {0} instead of expected result {1}".format(top_result.Type, expected_type))
 		self.assertEqual(top_result.Subtype, expected_subtype, msg = "Top result subtype was {0} instead of expected subtype {1}".format(top_result.Subtype, expected_subtype))
+
 
 class NumberTests(BrainiacTest):
 
@@ -47,7 +49,8 @@ class NumberTests(BrainiacTest):
 		
 	def test_fractions(self):
 		self.perform("1 1/2", "Number", "Fraction")
-	
+
+
 class CharacterTests(BrainiacTest):
 	
 	def test_letters(self):
@@ -62,7 +65,7 @@ class CharacterTests(BrainiacTest):
 	def test_whitespace(self):
 		self.perform(" ", "Character", "Whitespace")
 		self.perform("	", "Character", "Whitespace")
-		
+
 
 class URITests(BrainiacTest):
 	
@@ -82,7 +85,7 @@ class URITests(BrainiacTest):
 		self.perform("http://example.com/public/index.php?/projects/12", "URI", "URL")
 		self.perform("http://example.com/public/index.php#anything", "URI", "URL")
 
-		
+
 class EmailTests(BrainiacTest):
 	
 	def test_email(self):
@@ -90,7 +93,8 @@ class EmailTests(BrainiacTest):
 		self.perform("jambra+brainiac@photoflit.com", "Email", "Email Address")
 		self.perform("jambra@smithsonian.museum", "Email", "Email Address")
 		self.perform("jambra@photoflit.co.uk", "Email", "Email Address")
-	
+
+
 class PhoneTests(BrainiacTest):
 	
 	def test_phone(self):
@@ -132,7 +136,8 @@ class PhoneTests(BrainiacTest):
 		self.perform("(02) 8765-4321", "Phone", "Phone Number")
 		self.perform("(650) 555-4000", "Phone", "Phone Number")
 		self.perform("+44 (013) 33-44-122 ext 33549", "Phone", "Phone Number")
-	
+
+
 class DateTester(BrainiacTest):
 	
 	def test_dates(self):
@@ -147,14 +152,17 @@ class DateTester(BrainiacTest):
 		self.perform("March 16th, 1985", "Date", "Date")
 		self.perform("Mar 16 1985", "Date", "Date")
 		self.perform("16 Mar 1985", "Date", "Date")
-		
+
+
 class EquationTester(BrainiacTest):
 	
-	def test_equations(self):
+	def test_simple(self):
 		self.perform("5 x 5", "Equation", "Simple")
 		self.perform("(2*3)^4", "Equation", "Simple")
 		self.perform("1/7+4-2", "Equation", "Simple")
 		self.perform("124*76(45^4)-34.51+2345", "Equation", "Simple")
+
+	def test_textual(self):
 		self.perform("square root of 16", "Equation", "Text")
 		self.perform("The square root of 169", "Equation", "Text")
 		self.perform("square root of 123.456", "Equation", "Text")
@@ -167,6 +175,17 @@ class EquationTester(BrainiacTest):
 		self.perform("45 times 34", "Equation", "Text")
 		self.perform("45 divided by 34", "Equation", "Text")
 		self.perform("45 dividedby 34", "Equation", "Text")
+
+
+class ProgrammingTester(BrainiacTest):
+
+	def getFileContents(self, fileName):
+		return open('testdata/'+fileName, 'r').read()
+
+	def test_programming(self):
+		self.perform(self.getFileContents('c.c'), 'Programming', 'C')
+		self.perform(self.getFileContents('python.py'), 'Programming', 'Python')
+
 	
 if __name__ == '__main__':
 	unittest.main()
