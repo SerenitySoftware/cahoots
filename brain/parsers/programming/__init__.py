@@ -1,4 +1,6 @@
 from brain.parsers.base import BaseParser
+from brain.parsers.programming.lexer import ProgrammingLexer
+from brain.result import ParseResult, ParseResultMulti
 import os
 import re
 import glob
@@ -28,7 +30,7 @@ class ProgrammingParser(BaseParser):
 			with open(filePath, 'r') as languageFile:
 				language = yaml.load(languageFile)
 				self.allKeywords.extend(language['keywords'])
-				self.languageKeywords[language['name']] = language
+				self.languageKeywords[language['id']] = language
 
 		self.allKeywords = set(self.allKeywords)
 	
@@ -55,22 +57,36 @@ class ProgrammingParser(BaseParser):
 
 
 		# Step 1: Is this even code?
-		if self.findCommonTokens(dataset):
+		if not self.findCommonTokens(dataset):
 			return self.result(False)
 		
-		#Step 2: Which languages match, based on keywords alone?
+		# Step 2: Which languages match, based on keywords alone?
 		matchedLanguages = [language for language, languageData in self.languageKeywords.items() if self.basicLanguageHeuristic(language, languageData, dataset)]
 
+		if not matchedLanguages:
+			return self.result(False)
 
-		'''
-		#Step 3: Which languages match, based on a smarter lexer?
-		matchedLanguages = [language for language in matchedLanguages if self.lexerMatcher(language, data)]
+		# Step 3: Which languages match, based on a smarter lexer?
+		lexer = ProgrammingLexer(matchedLanguages, data)
+		matchedLanguages = lexer.lex()
 
 		if not matchedLanguages:
 			return self.result(False)
 
 
-		#Step 4: Which languages match, based on naive Bayes classification?
+		# THIS IS ALL TEMPORARY, FOR TESTING
+		# Basically giving ourselves a maximum of 50% confidence
+		normalizer = 50 / float(max([scr for lexid, scr in matchedLanguages.items()]))
+		normalScores = {}
+
+		for langId, score in matchedLanguages.items():
+			normalScores[langId] = int(round(normalizer * score))
+
+		return self.resultMulti(normalScores)
+
+
+		'''
+		# Step 4: Which languages match, based on naive Bayes classification?
 		bestResult = None
 		for language in matchedLanguages:
 			languageResult = self.bayesClassification(language, data)
@@ -81,8 +97,14 @@ class ProgrammingParser(BaseParser):
 				bestResult = languageResult
 		
 
-		if not bestResult:'''
+		if not bestResult:
 		return self.result(False)
 
 		return self.result(True, bestResult['language'], bestResult['confidence'])
+		'''
+
+
+	def resultMulti(self, resultData):
+
+		return ParseResultMulti([ParseResult(True, self.Type, langId, confidence) for langId, confidence in resultData.items()])
 

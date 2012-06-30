@@ -12,3 +12,14 @@ class ParseResult:
 		self.Subtype = subtype
 		self.Confidence = Confidence
 		self.Data = additional_data
+
+
+class ParseResultMulti:
+	'''
+	A container for multiple results
+	'''
+
+	results = []
+
+	def __init__(self, parseResults):
+		self.results = parseResults

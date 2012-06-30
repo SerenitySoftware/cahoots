@@ -1,4 +1,5 @@
-name: C#
+name: 'C#'
+id: cs
 keywords:
 - abstract
 - break

@@ -1,5 +1,6 @@
 #import pyparsing
 from parsers import address, base, boolean, character, date, email, equation, grammar, measurement, number, phone, place, programming, uri
+from brain.result import ParseResultMulti
 import datetime
 import threading
 
@@ -57,9 +58,18 @@ def parse(dataString, *args, **kwargs):
 		t.join()
 
 	# The threads are done, let's get the results out of them
-	for t in [th for th in threads if th.result and th.result.Matched]:
+	for t in [th for th in threads if th.result and (isinstance(th.result, ParseResultMulti) or th.result.Matched)]:
 		match_types.append(t.parser.Type)
-		results.append(t.result)
+		
+		if isinstance(t.result, ParseResultMulti):
+			# Getting the multiple results out of a ParseResultMulti object 
+			for res in [r for r in t.result.results if r.Matched]:
+				results.append(res)
+		else:
+			# Single Result
+			results.append(t.result)
+
+
 			
 	matches = sorted(results, key = lambda result: result.Confidence, reverse = True)
 	match_count = len(matches)

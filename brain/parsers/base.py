@@ -1,5 +1,5 @@
 from exceptions import NotImplementedError
-from brain.result import ParseResult
+from brain.result import ParseResult, ParseResultMulti
 
 class BaseParser:
 
@@ -14,3 +14,11 @@ class BaseParser:
 			Confidence = self.Confidence
 			
 		return ParseResult(matched, self.Type, subtype, Confidence, data)
+
+
+	def resultMulti(self, resultData):
+		'''
+		Classes can return multiple results, but have to assemble the object themselves
+		Should return a ParseResultMulti object
+		'''
+		raise NotImplementedError
