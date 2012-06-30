@@ -1,4 +1,5 @@
 werkzeug (pip)
 pymongo (pip)
 pyyaml (pip)
+pygments (pip)
 MongoDB (apt-get)
