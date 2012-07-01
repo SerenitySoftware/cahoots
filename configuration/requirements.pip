@@ -4,3 +4,4 @@ dateutils
 lepl
 pymongo
 pyyaml
+pygments
