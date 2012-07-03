@@ -1,7 +1,7 @@
 from brain.parsers.base import BaseParser
 from brain.parsers.programming.lexer import ProgrammingLexer
 from brain.result import ParseResult, ParseResultMulti
-from brain.util import BrainStorage
+from brain.util import BrainRegister
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 import os
@@ -37,8 +37,9 @@ class LoadTokenWatcherThread(threading.Thread):
         observer.start()
         try:
             while True:
+
                 time.sleep(15)
-        except KeyboardInterrupt:
+        except:
             observer.stop()
         observer.join()
 
@@ -63,9 +64,9 @@ class ProgrammingParser(BaseParser):
     def initTokens(self):
 
         # if we have already read in and stored the language stuff in memory, we just pull them out of memory
-        if 'PPallKeywords' in BrainStorage.memory and 'PPlanguageKeywords' in BrainStorage.memory:
-            self.allKeywords = BrainStorage.memory['PPallKeywords']
-            self.languageKeywords = BrainStorage.memory['PPlanguageKeywords']
+        if 'PPallKeywords' in BrainRegister.memory and 'PPlanguageKeywords' in BrainRegister.memory:
+            self.allKeywords = BrainRegister.memory['PPallKeywords']
+            self.languageKeywords = BrainRegister.memory['PPlanguageKeywords']
             return
 
         # Not found....Load it!
@@ -88,8 +89,8 @@ class ProgrammingParser(BaseParser):
 
         self.allKeywords = set(self.allKeywords)
 
-        BrainStorage.memory['PPallKeywords'] = self.allKeywords
-        BrainStorage.memory['PPlanguageKeywords'] = self.languageKeywords
+        BrainRegister.memory['PPallKeywords'] = self.allKeywords
+        BrainRegister.memory['PPlanguageKeywords'] = self.languageKeywords
 
         # Launching a thread to watch for changes to the language directory
         if setupWatcher:

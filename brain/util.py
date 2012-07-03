@@ -1,2 +1,2 @@
-class BrainStorage:
+class BrainRegister:
     memory = {}
