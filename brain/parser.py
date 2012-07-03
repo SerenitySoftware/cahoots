@@ -83,4 +83,3 @@ def parse(dataString, *args, **kwargs):
             'matches': matches
         }
     }
-    

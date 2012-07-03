@@ -5,3 +5,4 @@ lepl
 pymongo
 pyyaml
 pygments
+watchdog

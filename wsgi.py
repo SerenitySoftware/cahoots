@@ -1,8 +1,6 @@
 import os, sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
-import pymongo
-import urlparse
 from werkzeug.wrappers import Request, Response
 from werkzeug.exceptions import HTTPException, NotFound
 from werkzeug.wsgi import SharedDataMiddleware
@@ -11,9 +9,11 @@ from werkzeug.utils import redirect
 from mako import *
 from mako.template import Template
 from mako.lookup import TemplateLookup
-import config
 from brain import parser
 from web import out
+import pymongo
+import urlparse
+import config
 
 
 
@@ -91,13 +91,13 @@ class BrainiacAPI(BrainiacWSGI):
 			
 		return Response(out.encode(results), mimetype='text/html')
 		
-def wsgi_start(ip, port, app_type, use_debugger = True, use_reloader = True):
+def wsgi_start(ip, port, app_type, use_reloader = True, use_debugger = True):
 	app = app_type(config)
 	app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
 		'/static':  os.path.join(os.path.dirname(__file__), 'web/static')
 	})
 	
-	run_simple(ip, port, app, use_debugger, use_reloader)
+	run_simple(ip, port, app, use_reloader, use_debugger)
 	
 if __name__ == '__main__':
 	wsgi_start('0.0.0.0', 8000, BrainiacWeb)

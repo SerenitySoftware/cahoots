@@ -1,10 +1,47 @@
 from brain.parsers.base import BaseParser
 from brain.parsers.programming.lexer import ProgrammingLexer
 from brain.result import ParseResult, ParseResultMulti
+from brain.util import BrainStorage
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 import os
 import re
 import glob
 import yaml
+import time
+import threading
+
+
+class LanguageFileChangeEventHandler(FileSystemEventHandler):
+
+    # Static Programming Parser Instance
+    ppi = None
+
+    def on_any_event(self, event):
+        self.ppi.loadTokens(False)
+
+
+class LoadTokenWatcherThread(threading.Thread):
+
+    directory = ''
+
+    def __init__(self, directory):
+        self.directory = directory
+        threading.Thread.__init__(self)
+
+    def run(self):
+        LanguageFileChangeEventHandler.ppi = ProgrammingParser(False)
+        event_handler = LanguageFileChangeEventHandler()
+        observer = Observer()
+        observer.schedule(event_handler, os.path.join(self.directory, "languages/"))
+        observer.start()
+        try:
+            while True:
+                time.sleep(15)
+        except KeyboardInterrupt:
+            observer.stop()
+        observer.join()
+
 
 class ProgrammingParser(BaseParser):
     
@@ -15,14 +52,31 @@ class ProgrammingParser(BaseParser):
     languageKeywords = {}
     
     
-    def __init__(self):
+    def __init__(self, initTokens=True):
         self.Type = "Programming"
         self.Confidence = 0
 
-        self.loadTokens()
+        if initTokens:
+            self.initTokens()
         
 
-    def loadTokens(self):
+    def initTokens(self):
+
+        # if we have already read in and stored the language stuff in memory, we just pull them out of memory
+        if 'PPallKeywords' in BrainStorage.memory and 'PPlanguageKeywords' in BrainStorage.memory:
+            self.allKeywords = BrainStorage.memory['PPallKeywords']
+            self.languageKeywords = BrainStorage.memory['PPlanguageKeywords']
+            return
+
+        # Not found....Load it!
+        self.loadTokens()
+
+
+    def loadTokens(self, setupWatcher=True):
+
+        self.allKeywords = []
+        self.languageKeywords = {}
+
         directory = os.path.dirname(os.path.abspath(__file__))
         path = os.path.join(directory, "languages/*.yaml")
 
@@ -33,6 +87,15 @@ class ProgrammingParser(BaseParser):
                 self.languageKeywords[language['id']] = language
 
         self.allKeywords = set(self.allKeywords)
+
+        BrainStorage.memory['PPallKeywords'] = self.allKeywords
+        BrainStorage.memory['PPlanguageKeywords'] = self.languageKeywords
+
+        # Launching a thread to watch for changes to the language directory
+        if setupWatcher:
+            watcherThread = LoadTokenWatcherThread(directory)
+            watcherThread.start()
+
     
     # finding common words/phrases in programming languages
     def findCommonTokens(self, dataset):
