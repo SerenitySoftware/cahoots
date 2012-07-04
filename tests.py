@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from brainiac.brain import parser
 import unittest
 

@@ -8,9 +8,6 @@ import os
 import re
 import glob
 import yaml
-import time
-import threading
-
 
 class LanguageFileChangeEventHandler(FileSystemEventHandler):
 
@@ -19,29 +16,6 @@ class LanguageFileChangeEventHandler(FileSystemEventHandler):
 
     def on_any_event(self, event):
         self.ppi.loadTokens(False)
-
-
-class LoadTokenWatcherThread(threading.Thread):
-
-    directory = ''
-
-    def __init__(self, directory):
-        self.directory = directory
-        threading.Thread.__init__(self)
-
-    def run(self):
-        LanguageFileChangeEventHandler.ppi = ProgrammingParser(False)
-        event_handler = LanguageFileChangeEventHandler()
-        observer = Observer()
-        observer.schedule(event_handler, os.path.join(self.directory, "languages/"))
-        observer.start()
-        try:
-            while True:
-
-                time.sleep(15)
-        except:
-            observer.stop()
-        observer.join()
 
 
 class ProgrammingParser(BaseParser):
@@ -64,9 +38,9 @@ class ProgrammingParser(BaseParser):
     def initTokens(self):
 
         # if we have already read in and stored the language stuff in memory, we just pull them out of memory
-        if 'PPallKeywords' in BrainRegister.memory and 'PPlanguageKeywords' in BrainRegister.memory:
-            self.allKeywords = BrainRegister.memory['PPallKeywords']
-            self.languageKeywords = BrainRegister.memory['PPlanguageKeywords']
+        if BrainRegister.get('PPallKeywords') and BrainRegister.get('PPlanguageKeywords'):
+            self.allKeywords = BrainRegister.get('PPallKeywords')
+            self.languageKeywords = BrainRegister.get('PPlanguageKeywords')
             return
 
         # Not found....Load it!
@@ -89,28 +63,31 @@ class ProgrammingParser(BaseParser):
 
         self.allKeywords = set(self.allKeywords)
 
-        BrainRegister.memory['PPallKeywords'] = self.allKeywords
-        BrainRegister.memory['PPlanguageKeywords'] = self.languageKeywords
+        BrainRegister.set('PPallKeywords', self.allKeywords)
+        BrainRegister.set('PPlanguageKeywords', self.languageKeywords)
 
-        # Launching a thread to watch for changes to the language directory
+        # Launching an observer to watch for changes to the language directory
         if setupWatcher:
-            watcherThread = LoadTokenWatcherThread(directory)
-            watcherThread.start()
-
+            LanguageFileChangeEventHandler.ppi = ProgrammingParser(False)
+            event_handler = LanguageFileChangeEventHandler()
+            observer = Observer()
+            observer.schedule(event_handler, os.path.join(directory, "languages/"))
+            observer.start()
     
+
     # finding common words/phrases in programming languages
     def findCommonTokens(self, dataset):
         return [keyword for keyword in dataset if keyword in self.allKeywords]
 
+
     def basicLanguageHeuristic(self, language, languageData, dataset):
         return [keyword for keyword in dataset if keyword in languageData['keywords']]
 
-    def lexerMatcher(self, language, data):
-        return True
 
     def bayesClassification(self, language, data):
         return { 'confidence': 100, 'language': language }
-        
+    
+
     def parse(self, data, **kwargs):
         '''
         Determines if the data is an example of:
