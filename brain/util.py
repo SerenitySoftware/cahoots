@@ -1,4 +1,4 @@
-class BrainRegister:
+class BrainRegistry:
     '''
     A memory key/value registry
     '''
@@ -7,11 +7,15 @@ class BrainRegister:
 
     @staticmethod
     def set(key, value):
-        BrainRegister.storage[key] = value
+        BrainRegistry.storage[key] = value
 
     @staticmethod
     def get(key):
-        if key in BrainRegister.storage:
-            return BrainRegister.storage[key]
+        if key in BrainRegistry.storage:
+            return BrainRegistry.storage[key]
         else:
             None
+
+    @staticmethod
+    def test(key):
+        return key in BrainRegistry.storage

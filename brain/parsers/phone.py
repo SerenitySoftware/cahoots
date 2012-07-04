@@ -1,6 +1,5 @@
 from base import BaseParser
-import string
-import re
+import string, re
 
 class PhoneParser(BaseParser):
 

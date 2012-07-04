@@ -1,0 +1,535 @@
+package com.launch.elements {
+    import com.launch.desktop.appWindow;
+    
+    import flash.events.Event;
+    import flash.events.TimerEvent;
+    import flash.utils.Timer;
+    
+    import mx.binding.utils.ChangeWatcher;
+    import mx.containers.Canvas;
+    import mx.containers.VBox;
+    import mx.containers.ViewStack;
+    import mx.controls.Label;
+    import mx.core.UIComponent;
+    import mx.events.FlexEvent;
+
+
+    public class htmlControl extends Canvas {
+        
+        // variables
+        [Bindable] public var elementType:String        = 'iframe';
+        [Bindable] public var source:String             = null;
+        [Bindable] public var showPauseNotice:Boolean   = true;
+        [Bindable] private var htmlText:String          = ' ';
+        [Bindable] public var windowParent:UIComponent  = null; /*REQUIRED*/
+        [Bindable] public var viewStackElement:Object   = null; // This will be set to a viewstack "child" which will be tested for visibility before changing the visibility of the htmlcomp.
+        
+        private var refreshTimer : Timer = new Timer(150);
+        
+        // objects
+        private var htmlComp:lHtmlComp = new lHtmlComp();
+        public var pauseContainer:Canvas    = new Canvas();
+        
+        
+        public function htmlControl()
+        {
+            super();
+            
+            // defaults
+            this.percentHeight  = 100;
+            this.percentWidth   = 100;
+            
+            this.addEventListener(FlexEvent.CREATION_COMPLETE,creationCompleteHandler);
+        }
+        
+        
+        public function set text(strText:String) : void {
+            this.htmlText = strText;
+            
+            // We want to try to set the html from here, but if the component hasn't been created yet, we can't.
+            try { this.htmlComp.htmlText = strText }
+            catch (e:Error) { /* NOTHING HERE */ }
+            
+        }
+        
+        
+        public function get text() : String {
+            return this.htmlComp.getHTML();
+        }
+        
+        
+        public function removeElement() : void {
+            this.htmlComp.removeElement();
+        }
+        
+        
+        public function creationCompleteHandler(event:FlexEvent = null) : void {    
+            
+            // add the htmlComp
+            this.createHtmlComp();
+            
+            // add the pause notice
+            this.createPauseNotice();
+            
+            // add eventListeners
+            this.createEventListeners();
+            
+            // Change watchers
+            ChangeWatcher.watch(this, "elementType", updateElementType);
+            ChangeWatcher.watch(this, "source", updateSource);
+            ChangeWatcher.watch(this, "windowParent", updateWindowParent);
+            
+        }
+        
+        
+        
+        public function createHtmlComp() : void {
+            // Dynamically generating an "id" for our component because it's what the htmlComponent uses to identify itself from other htmlComponents that may be present
+            var randomID:String = "hcFileComponent_" + ( Math.round( (Math.random()*1000) * (Math.random()*1000) * (Math.random()*1000) ) ) ;
+            this.htmlComp.id            = randomID;
+            this.htmlComp.name          = randomID;
+            this.htmlComp.elementType   = this.elementType;
+            this.htmlComp.source        = this.source;
+            this.htmlComp.percentHeight = 100;
+            this.htmlComp.percentWidth  = 100;
+            this.htmlComp.htmlText      = 'Loading...';
+            
+            // add the htmlComp
+            this.addChild(this.htmlComp);
+            
+            this.htmlComp.addEventListener("htmlCreationComplete", htmlCompLoaded);
+        }
+        
+        private function htmlCompLoaded(e:Event) : void {
+            this.htmlComp.htmlText = this.htmlText;
+            this.htmlComp.setVisibility(true);
+        }
+        
+        
+        private function createPauseNotice() : void {
+            // paused bg container
+            pauseContainer.visible                  = false;
+            pauseContainer.styleName                = 'htmlPausedContainer';
+            pauseContainer.percentHeight            = 100;
+            pauseContainer.percentWidth             = 100;
+            pauseContainer.verticalScrollPolicy     = 'off';
+            pauseContainer.horizontalScrollPolicy   = 'off';
+            
+            // little container
+            var pauseNotice:VBox    = new VBox();
+            pauseNotice.styleName   = 'htmlPausedNotice';
+            
+            // Paused Text
+            var pText:Label = new Label();
+            pText.text      = 'Paused';
+            pText.styleName = 'htmlPausedText';
+            
+            // Sub Text
+            var subText:Label   = new Label();
+            subText.text        = 'Click to resume';
+            subText.styleName   = 'htmlPausedSubText';
+            
+            // add the pause notice
+            
+            pauseNotice.addChild(pText);
+            pauseNotice.addChild(subText);
+            pauseContainer.addChild(pauseNotice);
+            this.addChild(this.pauseContainer);
+        }
+        
+        
+        private function createEventListeners() : void {
+            if (windowParent != null && this.windowParent is appWindow) {
+                // window event listeners
+                var wparent:appWindow = windowParent as appWindow;
+                wparent.addEventListener("MOVED", windowDragHandler);
+                wparent.addEventListener("CLOSED", windowCloseHandler);
+                wparent.addEventListener("MINIMIZED", windowHideHandler);
+                wparent.addEventListener("FOCUSED", windowShowHandler);
+                wparent.addEventListener("UNFOCUSED", windowHideHandler);
+                wparent.addEventListener("RESTORED", windowShowHandler);
+                
+                // dockbar event listeners
+                this.parentApplication.dockbar.addEventListener("MENUOPENED", windowHideHandler);
+                this.parentApplication.dockbar.addEventListener("MENUCLOSED", windowShowHandler);
+
+            }
+
+        }
+        
+        
+        private function windowDragHandler(event:Event) : void {
+            // refresh the HtmlComp's position
+            this.htmlComp.refreshElement();
+        }
+        
+        private function windowCloseHandler(event:Event) : void {
+            // remove the htmlComp
+            this.htmlComp.removeElement();
+            this.destroyEventListeners();
+        }
+        
+        public function windowHideHandler(event:Event=null) : void {
+            
+            var wparent:appWindow = this.windowParent as appWindow;
+            
+            trace(wparent.title + ": testing hide event");
+            
+            // Making sure the viewstack element is currently selected if it's set.
+            if ( this.viewStackElement != null && this.viewStackElement.parent is ViewStack && this.viewStackElement.parent.selectedChild != this.viewStackElement ) return;
+            
+            // show the paused notice
+            this.pauseContainer.visible = true;
+            
+            // hide the hComp
+            this.htmlComp.visible = false;
+            this.htmlComp.setVisibility(false); 
+            trace(wparent.title + ": hiding");
+        }
+        
+        
+        
+        public function windowShowHandler(event:Event=null) : void {
+            
+            var wparent:appWindow = this.windowParent as appWindow;
+            //trace("Title: " + wparent.title);
+            trace(wparent.title + ": testing show event");
+            
+            //trace("hasFocus: " + wparent.hasFocus);
+            // Making sure the viewstack element is currently selected if it's set.
+            if ( this.viewStackElement != null && this.viewStackElement.parent is ViewStack && this.viewStackElement.parent.selectedChild != this.viewStackElement ) return;
+            
+            //if the window does not have focus, re-hide the html comp
+            /*if(wparent.hasFocus == false) {
+                this.htmlComp.visible = false;
+                this.pauseContainer.visible = true;
+            }*/ 
+            
+            // if the window is not minimized & has focus
+            if(wparent.minimized != true && wparent.hasFocus == true) {
+                trace(wparent.title + ": showing");
+                // hide the paused notice 
+                this.pauseContainer.visible = false;
+                // show the hComp
+                this.htmlComp.visible = true;
+                this.htmlComp.setVisibility(true);
+                
+                this.refreshTimer.addEventListener(TimerEvent.TIMER, refreshElement);
+                this.refreshTimer.start();
+            }
+        }
+        
+        
+        
+        private function refreshElement(event:TimerEvent) : void {
+            // refresh the HtmlComp's position
+            callLater(this.htmlComp.refreshElement);
+            this.refreshTimer.reset();
+        }
+        
+        
+        
+        private function destroyEventListeners() : void {
+            // remove all event listeners
+            var wparent:appWindow = this.windowParent as appWindow;
+            wparent.removeEventListener("MOVED", windowDragHandler);
+            wparent.removeEventListener("CLOSED", windowCloseHandler);
+            wparent.removeEventListener("MINIMIZED", windowHideHandler);
+            wparent.removeEventListener("FOCUSED", windowShowHandler);
+            wparent.removeEventListener("UNFOCUSED", windowHideHandler);
+            wparent.removeEventListener("RESTORED", windowShowHandler);
+            
+            // dockbar event listeners
+            this.parentApplication.dockbar.removeEventListener("MENUOPENED", windowHideHandler);
+            this.parentApplication.dockbar.removeEventListener("MENUCLOSED", windowShowHandler);
+        }
+        
+        
+        
+        //-------------------------------------
+        // change watcher functions
+        //-------------------------------------
+        
+        public function updateWindowParent(event:Event) : void {
+            // if the windowParent var changes create new eventListeners
+            this.destroyEventListeners();
+            this.createEventListeners();
+        }
+        
+        public function updateSource(event:Event) : void {
+            this.htmlComp.source = this.source;
+        }
+        
+        /*public function updateHtmlText(event:Event) : void {
+            this.htmlComp.htmlText = this.text.toString();
+        }*/
+        
+        public function updateElementType(event:Event) : void {
+            // destroy the existing htmlComp and create a new one
+            if(this.htmlComp)
+            {
+                // remove the iframe
+                this.htmlComp.removeElement();
+                
+                // remove the htmlComp component
+                this.removeAllChildren();
+                
+                // destroy event listeners
+                this.destroyEventListeners();
+                
+                // create the new components.
+                this.creationCompleteHandler();
+            }
+        }
+        
+    }
+    
+}
+
+package com.launch.desktop
+{
+    import com.launch.elements.htmlControl;
+    
+    import flash.events.Event;
+    import flash.events.MouseEvent;
+    import flash.geom.Point;
+    
+    import mx.binding.utils.*;
+    import mx.containers.HBox;
+    import mx.containers.Panel;
+    import mx.controls.Button;
+    import mx.core.Application;
+    import mx.effects.Fade;
+    import mx.effects.Pause;
+    import mx.events.EffectEvent;
+    import mx.events.FlexEvent;
+    import mx.events.ModuleEvent;
+    import mx.managers.CursorManager;
+    import mx.modules.ModuleLoader;
+    
+    // events
+    [Event(name="FOCUSED",      type="flash.events.Event")]
+    [Event(name="UNFOCUSED",    type="flash.events.Event")]
+    [Event(name="MOVED",        type="flash.events.Event")]
+    [Event(name="MINIMIZED",    type="flash.events.Event")]
+    [Event(name="MAXIMIZED",    type="flash.events.Event")]
+    [Event(name="RESTORED",     type="flash.events.Event")]
+    [Event(name="RESIZED",      type="flash.events.Event")]
+    [Event(name="CLOSED",       type="flash.events.Event")]
+
+    public class appWindow extends Panel
+    {
+        
+        /*------------------------------------------------
+            Variables
+        ------------------------------------------------*/
+        [Embed(source="/assets/skins/windows/resizeCursor.png")]
+        private static var resizeCursor:Class;
+        
+        private var oW:Number;
+        private var oH:Number;
+        private var oX:Number;
+        private var oY:Number;
+        [Bindable] public var xPos:*;
+        [Bindable] public var yPos:*;
+        [Bindable] public var showControls:Boolean  = true;
+        [Bindable] public var resizable:Boolean     = false;
+        [Bindable] public var draggable:Boolean     = true; // depreciated - can remove in future
+        [Bindable] public var hasFocus:Boolean      = false;
+        [Bindable] public var minimized:Boolean     = false;
+        [Bindable] public var maximized:Boolean     = false;
+        private var btnBox:HBox                     = new HBox();
+        private var minimizeButton:Button           = new Button();
+        private var normalMaxButton:Button          = new Button();
+        private var closeButton:Button              = new Button();
+        private var resizeHandler:Button            = new Button();
+        private var oPoint:Point                    = new Point();
+        private var resizeCur:Number                = 0;
+        public var passedVars:*                     = null;
+        public var moduleName:String                = ""; // the name of the application we want to load into the moduleLoader
+        public var displayName:String               = "";
+        public var isWebWindow:Boolean              = new Boolean(false);
+        
+        
+        /*------------------------------------------------
+            Constructor
+        ------------------------------------------------*/
+        public function appWindow()
+        {
+            super();
+            
+            this.alpha = 0;
+            this.x = -10000;
+            this.y = -10000;
+            
+            this.addEventListener(FlexEvent.CREATION_COMPLETE, creationCompleteHandler);
+        }
+        
+        
+        override protected function createChildren():void {
+            super.createChildren();
+
+            if (showControls) {
+                this.btnBox.width               = 67;
+                this.btnBox.height              = 22;
+                this.btnBox.styleName           = "btnBoxFocused";
+                this.minimizeButton.width       = 19;
+                this.minimizeButton.height      = 22;
+                this.minimizeButton.styleName   = "minimizeBtn";
+                this.normalMaxButton.width      = 19;
+                this.normalMaxButton.height     = 22;
+                this.normalMaxButton.styleName  = "increaseBtn";
+                this.closeButton.width          = 19;
+                this.closeButton.height         = 22;
+                this.closeButton.styleName      = "closeBtn";
+                this.btnBox.addChild(this.minimizeButton);
+                this.btnBox.addChild(this.normalMaxButton);
+                this.btnBox.addChild(this.closeButton);
+                super.titleBar.addChild(this.btnBox);
+            }
+            
+
+            if(!resizable) {
+                this.resizeHandler.visible   = false;
+            }
+            this.resizeHandler.width     = 14;
+            this.resizeHandler.height    = 15;
+            this.resizeHandler.styleName = "resizeHndlr";
+            this.rawChildren.addChild(resizeHandler);
+            this.initPos();
+            
+        }
+        
+        
+        /*------------------------------------------------
+            IntPos - save old height and width
+        ------------------------------------------------*/
+        public function initPos():void {
+
+            this.oW = this.width;
+            this.oH = this.height;
+            this.oX = this.x;
+            this.oY = this.y;
+        }
+        
+        
+        /*------------------------------------------------
+            UpdateDisplayList
+        ------------------------------------------------*/
+        override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+            super.updateDisplayList(unscaledWidth,unscaledHeight);
+            this.positionChildren();
+        }
+        
+        
+        /*------------------------------------------------
+            PositionChildren - initial layout of controls
+        ------------------------------------------------*/
+        public function positionChildren():void {
+
+            if (showControls) {
+                this.minimizeButton.buttonMode      = true
+                this.minimizeButton.useHandCursor   = true;
+                this.normalMaxButton.buttonMode     = true;
+                this.normalMaxButton.useHandCursor  = true;
+                this.closeButton.buttonMode         = true;
+                this.closeButton.useHandCursor      = true;
+                this.btnBox.x                       = this.unscaledWidth - this.btnBox.width;
+                this.btnBox.y                       = 0;
+            }
+
+            this.resizeHandler.y = this.unscaledHeight - resizeHandler.height - 1;
+            this.resizeHandler.x = this.unscaledWidth - resizeHandler.width - 1;
+            this.resizeHandler.visible = true;
+        }
+        
+        
+        /*------------------------------------------------
+            CreationCompleteHandler
+        ------------------------------------------------*/
+        public function creationCompleteHandler(event:Event):void {
+            
+            BindingUtils.bindProperty(this, "x", this, "xPos");
+            BindingUtils.bindProperty(this, "y", this, "yPos");
+            ChangeWatcher.watch(this,"xPos",updateXPos);
+            ChangeWatcher.watch(this,"yPos",updateYPos);
+            
+            // if this is a module application
+            if (this.moduleName != "" && !this.isWebWindow) {
+                // create moduleLoader
+                createModuleLoader();
+            }
+            // if this is a web window
+            else if (this.isWebWindow) {
+                createWebWindow(event);
+            }
+            
+            //add event handlers
+            this.addEventHandlers();
+            
+            // focus Window
+            this.focusWindow();
+            
+            // update current values
+            this.initPos();
+        }
+        
+        
+        
+        /*------------------------------------------------
+            Create Module Loader
+        ------------------------------------------------*/
+        [Bindable] private var appModule:ModuleLoader = new ModuleLoader();
+        private function createModuleLoader(event:* = null):void
+        {
+            /*
+                Create a new ModuleLoader and pass it the application module to load,
+                load the module, add the module loader to the appContainer. the moduleLoader
+                is the same height and width as the appContainer.
+            */
+            
+            this.appModule.url                          = this.moduleName + ".swf";
+            this.appModule.percentHeight                = 100;
+            this.appModule.percentWidth                 = 100;
+            this.appModule.horizontalScrollPolicy       = "off";
+            this.appModule.verticalScrollPolicy         = "off";
+            this.appModule.inheritingStyles             = null;
+            this.appModule.addEventListener(ModuleEvent.READY, moduleLoaded);
+                        
+            // add the module Loader
+            this.addChild(this.appModule);
+            
+        }
+        
+        
+        
+        /*------------------------------------------------
+            Create Web Window
+        ------------------------------------------------*/
+        private function createWebWindow(event:Event):void
+        {   
+            var htmlCont:htmlControl    = new htmlControl();
+            htmlCont.elementType        = 'iframe';
+            htmlCont.source             = this.passedVars.url;
+            htmlCont.windowParent       = this; 
+            
+            // styles
+            htmlCont.setStyle('top',5);
+            htmlCont.setStyle('right',5);
+            htmlCont.setStyle('bottom',20);
+            htmlCont.setStyle('left',5);
+            htmlCont.addEventListener(FlexEvent.CREATION_COMPLETE, htmlContComplete);
+            
+            // window settings
+            this.layout     = 'absolute';
+            this.height     = this.passedVars.height;
+            this.width      = this.passedVars.width;
+            this.title      = this.passedVars.app_name + " - " + this.passedVars.url;
+            this.resizable  = true;
+            
+            this.addChild(htmlCont);
+            
+        }
+        
+    }
+}

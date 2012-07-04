@@ -6,3 +6,4 @@ pymongo
 pyyaml
 pygments
 watchdog
+redisbayes

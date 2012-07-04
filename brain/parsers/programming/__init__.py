@@ -1,13 +1,11 @@
 from brain.parsers.base import BaseParser
 from brain.parsers.programming.lexer import ProgrammingLexer
+from brain.parsers.programming.bayesian import ProgrammingBayesianClassifier
 from brain.result import ParseResult, ParseResultMulti
-from brain.util import BrainRegister
+from brain.util import BrainRegistry
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-import os
-import re
-import glob
-import yaml
+import os, re, glob, yaml
 
 class LanguageFileChangeEventHandler(FileSystemEventHandler):
 
@@ -41,9 +39,9 @@ class ProgrammingParser(BaseParser):
         '''
 
         # if we have already read in and stored the language stuff in memory, we just pull them out of memory
-        if BrainRegister.get('PPallKeywords') and BrainRegister.get('PPlanguageKeywords'):
-            self.allKeywords = BrainRegister.get('PPallKeywords')
-            self.languageKeywords = BrainRegister.get('PPlanguageKeywords')
+        if BrainRegistry.test('PPallKeywords') and BrainRegistry.test('PPlanguageKeywords'):
+            self.allKeywords = BrainRegistry.get('PPallKeywords')
+            self.languageKeywords = BrainRegistry.get('PPlanguageKeywords')
             return
 
         # Not found....Load it!
@@ -69,8 +67,8 @@ class ProgrammingParser(BaseParser):
 
         self.allKeywords = set(self.allKeywords)
 
-        BrainRegister.set('PPallKeywords', self.allKeywords)
-        BrainRegister.set('PPlanguageKeywords', self.languageKeywords)
+        BrainRegistry.set('PPallKeywords', self.allKeywords)
+        BrainRegistry.set('PPlanguageKeywords', self.languageKeywords)
 
         # Launching an observer to watch for changes to the language directory
         if setupWatcher:
@@ -100,8 +98,7 @@ class ProgrammingParser(BaseParser):
             Java, C, C++, PHP, VB, Python, C#, Javascript, Perl, Ruby, or Actionscript
         '''
 
-        data = data.lower()
-        dataset = set(re.split('[ ;,{}()\n\t\r]', data))
+        dataset = set(re.split('[ ;,{}()\n\t\r]', data.lower()))
 
         # Step 1: Is this even code?
         if not self.findCommonTokens(dataset):
@@ -114,41 +111,54 @@ class ProgrammingParser(BaseParser):
             return self.result(False)
 
         # Step 3: Which languages match, based on a smarter lexer?
-        lexer = ProgrammingLexer(matchedLanguages, data)
-        matchedLanguages = lexer.lex()
+        lexer = ProgrammingLexer(matchedLanguages, data.lower())
+        lexedLanguages = lexer.lex()
 
-        if not matchedLanguages:
+        if not lexedLanguages:
             return self.result(False)
+
 
 
         # Basically giving ourselves a maximum of 50% confidence
         # This is temporary until we can work on the bayes classifier
-        normalizer = 50 / float(max([scr for lexid, scr in matchedLanguages.items()]))
+        normalizer = 10 / float(max([scr for lexid, scr in lexedLanguages.items()]))
         normalScores = {}
 
-        for langId, score in matchedLanguages.items():
-            normalScores[langId] = int(round(normalizer * score))
+        for langId, score in lexedLanguages.items():
+            normalScores[langId] = round((normalizer * score), 2)
+
+
+
+        #Step 4: Using a Naive Bayes Classifier to pinpoint the best language fits
+        classifier = ProgrammingBayesianClassifier()
+        bayesLanguages = classifier.classify(data)
+
+        results = [[lid, scr] for lid, scr in bayesLanguages.items() if lid in lexedLanguages]
+        scores = [scr for lid, scr in results]
+        minScore = min(scores)
+        spread = max(scores) - minScore
+
+        if spread > 90:
+            normalizer = 90 / spread
+        else:
+            normalizer = 1
+
+        # Normalizing and assembling results
+        for langId, score in results:
+            if minScore < -90:
+                score = score + (-1 * minScore)
+            else:
+                score = -1 * score
+
+            normalScores[langId] += round((normalizer * score), 2)
+
+
+        for langId in normalScores:
+            normalScores[langId] = int(round(normalScores[langId]))
+
 
         return self.resultMulti(normalScores)
 
-        '''
-        TODO:
-        # Step 4: Which languages match, based on naive Bayes classification?
-        bestResult = None
-        for language in matchedLanguages:
-            languageResult = self.bayesClassification(language, data)
-
-            if not bestResult:
-                bestResult = languageResult
-            elif languageResult['confidence'] > bestResult['confidence']:
-                bestResult = languageResult
-        
-
-        if not bestResult:
-        return self.result(False)
-
-        return self.result(True, bestResult['language'], bestResult['confidence'])
-        '''
 
     def resultMulti(self, resultData):
 

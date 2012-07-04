@@ -56,7 +56,6 @@ class ProgrammingLexer:
 
 
     def __init__(self, matchedLangs, dataString):
-
         self.matchedLanguages = matchedLangs
         self.data = dataString
 

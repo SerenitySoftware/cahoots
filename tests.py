@@ -185,9 +185,18 @@ class ProgrammingTester(BrainiacTest):
 		return open('testdata/'+fileName, 'r').read()
 
 	def test_programming(self):
+		self.perform(self.getFileContents('actionscript.as'), 'Programming', 'ActionScript')
+		self.perform(self.getFileContents('c++.cpp'), 'Programming', 'C++')
 		self.perform(self.getFileContents('c.c'), 'Programming', 'C')
+		self.perform(self.getFileContents('csharp.cs'), 'Programming', 'C#')
+		self.perform(self.getFileContents('java.java'), 'Programming', 'Java')
+		self.perform(self.getFileContents('javascript.js'), 'Programming', 'JavaScript')
+		self.perform(self.getFileContents('perl.pl'), 'Programming', 'Perl')
+		self.perform(self.getFileContents('php.php'), 'Programming', 'PHP')
 		self.perform(self.getFileContents('python.py'), 'Programming', 'Python')
+		self.perform(self.getFileContents('ruby.rb'), 'Programming', 'Ruby')
+		self.perform(self.getFileContents('visualbasic.vb'), 'Programming', 'Visual Basic')
 
-	
+
 if __name__ == '__main__':
 	unittest.main()
