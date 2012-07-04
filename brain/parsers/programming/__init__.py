@@ -8,6 +8,7 @@ from watchdog.events import FileSystemEventHandler
 import os, re, glob, yaml
 
 class LanguageFileChangeEventHandler(FileSystemEventHandler):
+    """Responsible for reloading language data if the yaml directory changes"""
 
     # Static Programming Parser Instance
     ppi = None
@@ -34,9 +35,7 @@ class ProgrammingParser(BaseParser):
         
 
     def initTokens(self):
-        '''
-        Loads tokens for use in this instance of the programming parser
-        '''
+        """Loads tokens for use in this instance of the programming parser"""
 
         # if we have already read in and stored the language stuff in memory, we just pull them out of memory
         if BrainRegistry.test('PPallKeywords') and BrainRegistry.test('PPlanguageKeywords'):
@@ -49,9 +48,10 @@ class ProgrammingParser(BaseParser):
 
 
     def loadTokens(self, setupWatcher=True):
-        '''
+        """
         Reloads tokens from the yaml files on disk
-        '''
+        Optionally sets of a watcher for changes of the yaml file directory
+        """
 
         self.allKeywords = []
         self.languageKeywords = {}
@@ -89,10 +89,10 @@ class ProgrammingParser(BaseParser):
 
 
     def parse(self, data, **kwargs):
-        '''
+        """
         Determines if the data is an example of:
             Java, C, C++, PHP, VB, Python, C#, Javascript, Perl, Ruby, or Actionscript
-        '''
+        """
 
         dataset = set(re.split('[ ;,{}()\n\t\r]', data.lower()))
 
@@ -188,5 +188,6 @@ class ProgrammingParser(BaseParser):
 
 
     def resultMulti(self, resultData):
+        """Prepares a ParseResultMulti object containing the programming languages detected"""
 
         return ParseResultMulti([ParseResult(True, self.Type, self.languageKeywords[langId]['name'], confidence) for langId, confidence in resultData.items()])

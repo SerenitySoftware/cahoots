@@ -1,4 +1,5 @@
 class ParseResult:
+	"""Represents a single result from the parsing process"""
 	
 	Matched = False
 	Type = "Unknown"
@@ -15,9 +16,7 @@ class ParseResult:
 
 
 class ParseResultMulti:
-	'''
-	A container for multiple results
-	'''
+	"""A container for multiple results"""
 
 	results = []
 

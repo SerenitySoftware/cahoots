@@ -10,7 +10,7 @@ class EquationParser(BaseParser):
 
 
     parsedEquation = None
-    """ After we've processed the input string from the user, this var will contain the assembled result """
+    """After we've processed the input string from the user, this var will contain the assembled result"""
 
 
     def __init__(self):
@@ -19,7 +19,7 @@ class EquationParser(BaseParser):
     
     
     def isSimpleEquation(self, data):
-        """ Seeing if our string only has symbols found in simple math equations """
+        """Seeing if our string only has symbols found in simple math equations"""
 
         rgx = re.compile("""^
            ([()*.\-+0-9^/ ])*
@@ -36,7 +36,7 @@ class EquationParser(BaseParser):
     
     
     def isTextEquation(self, data):
-        """ Searching for specific textual markers that can be converted into mathematical operators """
+        """Searching for specific textual markers that can be converted into mathematical operators"""
         
         # SQUARE ROOTS
         parsedData = re.compile('SQUARE[ ]{1,}ROOT[ ]{1,}OF[ ]{1,}\d+(\.\d+)?').sub(self.squareRootTextReplace, data)
@@ -60,7 +60,7 @@ class EquationParser(BaseParser):
     
     
     def simplePowerReplace(self, match):
-        """ Converts "SQUARED" and "CUBED" to their proper exponent representation """
+        """Converts "SQUARED" and "CUBED" to their proper exponent representation"""
         
         myString = match.group()
         
@@ -73,7 +73,7 @@ class EquationParser(BaseParser):
     
     
     def squareRootTextReplace(self, match):
-        """ Replaces square root references with math.sqrt """
+        """Replaces square root references with math.sqrt"""
         
         myString = match.group().replace('SQUARE','')
         myString = myString.replace('ROOT','')
@@ -86,7 +86,7 @@ class EquationParser(BaseParser):
     
 
     def autoFloat(self, data):
-        """ Makes all digits/decimals into floats so we can do proper math on them without auto-rounding """
+        """Makes all digits/decimals into floats so we can do proper math on them without auto-rounding"""
 
         data = re.compile(r'\d+(\.\d+)?').sub(self.floatReplace, data)
         
@@ -103,7 +103,7 @@ class EquationParser(BaseParser):
         
     
     def autoMultiply(self, data):
-        """ Any back to back parens/floats can be assumed to be multiplication. Adding * operator between them """
+        """Any back to back parens/floats can be assumed to be multiplication. Adding * operator between them"""
         data = string.replace(data, ')float', ')*float')
         data = string.replace(data, ')(', ')*(')
         
@@ -134,7 +134,7 @@ class EquationParser(BaseParser):
 
         
     def solveEquation(self):
-        """ Evaulates the equation to see if it's solve-able """
+        """Evaulates the equation to see if it's solve-able"""
 
         if not self.checkForSafeEquationString():
             return False
@@ -147,7 +147,7 @@ class EquationParser(BaseParser):
     
     
     def parse(self, data, **kwargs):
-        """ Standard parse function for checking if entered string is a mathematical equation """
+        """Standard parse function for checking if entered string is a mathematical equation"""
         
         # Doing some initial data cleanup
         cleanData = string.replace(data.upper(), 'X', '*')

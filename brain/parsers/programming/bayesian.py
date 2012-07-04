@@ -5,14 +5,17 @@ import redis, redisbayes, os, glob
 
 
 class BayesianTrainerChangeEventHandler(FileSystemEventHandler):
+    """Responsible for reloading bayes training data if the training source directory changes"""
 
     def on_any_event(self, event):
         ProgrammingBayesianClassifier.trainClassifier(False)
 
 
 class ProgrammingBayesianClassifier:
+    """Responsible for classifying an example of source code into a specific programming language"""
 
     def __init__(self):
+        """Creates an instance of a bayes classifer for use in identifying programmng languages"""
         if not BrainRegistry.test('PPredisBayes'):
             rb = redisbayes.RedisBayes(redis=redis.Redis())
             BrainRegistry.set('PPredisBayes', rb)
@@ -21,6 +24,7 @@ class ProgrammingBayesianClassifier:
 
     @staticmethod
     def trainClassifier(setupWatcher=True):
+        """Trains the bayes classifier with examples from various programming languages"""
         rb = BrainRegistry.get('PPredisBayes')
 
         directory = os.path.dirname(os.path.abspath(__file__))
@@ -46,6 +50,7 @@ class ProgrammingBayesianClassifier:
 
 
     def classify(self, dataString):
+        """Takes an string and creates a dict of programming language match probabilities"""
         rb = BrainRegistry.get('PPredisBayes')
 
         return rb.score(dataString)

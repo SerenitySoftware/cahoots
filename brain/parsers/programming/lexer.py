@@ -9,10 +9,7 @@ import threading
 
 
 class ProgrammingLexerThread (threading.Thread):
-    """
-    Represents a thread that will handle one parser parsing request
-    """
-
+    """Represents a thread that will handle one parser parsing request"""
     lexer = None
     dataString = None
     result = None
@@ -24,7 +21,10 @@ class ProgrammingLexerThread (threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        # lexing the data to see what lexers can tokenize it
+        """
+        Lexes the data to see what lexers can tokenize it.
+        Any successful lexers are considered possible matches.
+        """
         tokens = [tok for tok, text in lex(self.dataString, self.lexer) if (tok != Token.Text and text != '')]
         tokenCount = len(tokens)
 
@@ -61,10 +61,10 @@ class ProgrammingLexer:
 
 
     def lex(self):
-        '''
+        """
         For every possible matched language, we run a lexer to see if we can eliminate
         it as a possible match. If we detect errors, or have no lexer matches, we remove it from the list.
-        '''
+        """
 
         results = {}
         threads = []

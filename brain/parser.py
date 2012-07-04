@@ -21,9 +21,7 @@ checks = [
 
 
 class ParserThread (threading.Thread):
-    """
-    Represents a thread that will handle one parser parsing request
-    """
+    """Represents a thread that will handle one parser parsing request"""
 
     parser = None
     dataString = None
@@ -42,6 +40,7 @@ class ParserThread (threading.Thread):
 
 
 def parse(dataString, *args, **kwargs):
+    """Parses input data and returns a dict of result data"""
     match_types = []
     results = []
     threads = []
