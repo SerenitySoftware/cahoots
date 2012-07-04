@@ -116,7 +116,7 @@ class ProgrammingParser(BaseParser):
         if not lexedLanguages:
             return self.result(False)
 
-        # Basically giving ourselves a maximum of 10% confidence addition for lexer detection
+        # Giving ourselves a maximum of 10% confidence addition for lexer detection
         normalizer = 10 / float(max([scr for lexid, scr in lexedLanguages.items()]))
         normalScores = {}
 
@@ -133,7 +133,6 @@ class ProgrammingParser(BaseParser):
         scores = [scr for lid, scr in results]
         minScore = min(scores)
         spread = max(scores) - minScore
-
 
         '''
         We want to add up to 90% confidence based on the spread from min to max matches
@@ -174,7 +173,7 @@ class ProgrammingParser(BaseParser):
 
                 spread <= 90 example:
                     score 25
-                    spread = 30 (ie: max of -1700 to min of -1940)
+                    spread = 30
                     normalizer = 1
                     normalized score = 25
             '''
