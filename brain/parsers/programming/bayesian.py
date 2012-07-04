@@ -31,17 +31,12 @@ class ProgrammingBayesianClassifier:
         for filePath in glob.glob(path):
             with open(filePath, 'r') as languageFile:
                 language = filePath.split('.').pop()
-
-                if language not in trainers:
-                    trainers[language] = []
-
-                trainers[language].append(languageFile.read())
+                trainers[language] = languageFile.read()
 
         rb.flush()
 
         for language in trainers:
-            #print language + ' ' + str(len(' '.join(trainers[language])))
-            rb.train(language, ' '.join(trainers[language]))
+            rb.train(language, trainers[language])
 
         if setupWatcher:
             event_handler = BayesianTrainerChangeEventHandler()

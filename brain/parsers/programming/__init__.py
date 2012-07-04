@@ -88,10 +88,6 @@ class ProgrammingParser(BaseParser):
         return [keyword for keyword in dataset if keyword in languageData['keywords']]
 
 
-    def bayesClassification(self, language, data):
-        return { 'confidence': 100, 'language': language }
-    
-
     def parse(self, data, **kwargs):
         '''
         Determines if the data is an example of:
@@ -100,15 +96,18 @@ class ProgrammingParser(BaseParser):
 
         dataset = set(re.split('[ ;,{}()\n\t\r]', data.lower()))
 
-        # Step 1: Is this even code?
+
+        # Step 1: Is this possibly code?
         if not self.findCommonTokens(dataset):
             return self.result(False)
         
+
         # Step 2: Which languages match, based on keywords alone?
         matchedLanguages = [language for language, languageData in self.languageKeywords.items() if self.basicLanguageHeuristic(language, languageData, dataset)]
 
         if not matchedLanguages:
             return self.result(False)
+
 
         # Step 3: Which languages match, based on a smarter lexer?
         lexer = ProgrammingLexer(matchedLanguages, data.lower())
@@ -117,10 +116,7 @@ class ProgrammingParser(BaseParser):
         if not lexedLanguages:
             return self.result(False)
 
-
-
-        # Basically giving ourselves a maximum of 50% confidence
-        # This is temporary until we can work on the bayes classifier
+        # Basically giving ourselves a maximum of 10% confidence addition for lexer detection
         normalizer = 10 / float(max([scr for lexid, scr in lexedLanguages.items()]))
         normalScores = {}
 
@@ -128,28 +124,60 @@ class ProgrammingParser(BaseParser):
             normalScores[langId] = round((normalizer * score), 2)
 
 
-
         #Step 4: Using a Naive Bayes Classifier to pinpoint the best language fits
         classifier = ProgrammingBayesianClassifier()
         bayesLanguages = classifier.classify(data)
 
+        # Pulling some stats out of our bayes results so we can calculate a confidence
         results = [[lid, scr] for lid, scr in bayesLanguages.items() if lid in lexedLanguages]
         scores = [scr for lid, scr in results]
         minScore = min(scores)
         spread = max(scores) - minScore
 
+
+        '''
+        We want to add up to 90% confidence based on the spread from min to max matches
+        Math for the actual normalization is explained in a comment below
+        '''
         if spread > 90:
-            normalizer = 90 / spread
+            normalizer = 90.00 / spread
         else:
-            normalizer = 1
+            normalizer = 1.00
 
         # Normalizing and assembling results
         for langId, score in results:
+            '''
+            Example:
+
+                minScore = -1700
+                score = -1500
+                Therefore: score = -1500 + 1700 (200)
+
+                OR
+
+                minScore = -50
+                score = -25
+                Therefore: score = 25
+            '''
             if minScore < -90:
                 score = score + (-1 * minScore)
             else:
                 score = -1 * score
 
+            '''
+            Example:
+                spread > 90 example:
+                    score = 210
+                    spread = 240 (ie: max of -1700 to min of -1940)
+                    normalizer = 90 / 240 = 0.375
+                    normalized score = 78.75
+
+                spread <= 90 example:
+                    score 25
+                    spread = 30 (ie: max of -1700 to min of -1940)
+                    normalizer = 1
+                    normalized score = 25
+            '''
             normalScores[langId] += round((normalizer * score), 2)
 
 

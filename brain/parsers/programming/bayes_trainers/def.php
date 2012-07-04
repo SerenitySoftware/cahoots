@@ -1,4 +1,896 @@
 <?php
+/**
+ * Project: Digital Edition Curator
+ * File: biz.digitalEditionDayRule.php
+ *
+ * http://wiki.hearstdigitalnews.com/index.php/Day_Definitions_and_Rules
+ *
+ * @copyright
+ * @author
+ */
+class digitalEditionDayRule extends businessWcmObject
+{
+    /**
+     * @var int Constant representing that this day would add its associated sections
+     */
+    const ADDITIVE_OPERATOR = 1;
+
+    /**
+     * @var int Constant representing that this day would subtract its associated sections
+     */
+    const SUBTRACTIVE_OPERATOR = 2;
+
+    /**
+     * @var String title
+     */
+    public $title;
+
+    /**
+     * @var Int
+     */
+    public $siteId;
+
+    /**
+     * @var String rule parameters (ex: MONDAY-1-OF-MONTH, LAST-THURSDAY-OF-MONTH, DAY-1-OF-MONTH, TUESDAY)
+     */
+    public $rule;
+
+    /**
+     * @var int 1 = additive, 2 = subtractive. Default is 1.
+     */
+    public $ruleOperator;
+
+    /**
+     * @var String Database Table Name
+     */
+    protected $tableName = '#__dec_day_rules';
+
+
+    /**
+     * Adds a section definition as a bizrelation to this day rule
+     *
+     * @param int $id ID of the section definition that we want to add
+     *
+     * @return boolean Success
+     */
+    public function addSectionDefinition($id)
+    {
+        $sDef = new digitalEditionSectionDefinition($id);
+
+        if (!$sDef->id) return false;
+
+        // add a wcmBizrelation to the section
+        $relation = new wcmBizrelation();
+        $relation->sourceClass = $this->getClass();
+        $relation->sourceId = $this->id;
+        $relation->destinationClass = $sDef->getClass();
+        $relation->destinationId = $sDef->id;
+        $relation->kind = wcmBizrelation::IS_COMPOSED_OF;
+        $relation->save();
+
+        return true;
+    }
+
+    /**
+     * Removes a section definition bizrelation from this day rule
+     *
+     * @param int $id ID of the section definition that we want to subtract
+     *
+     * @return boolean
+     */
+    public function removeSectionDefinition($id)
+    {
+        $sDef = new digitalEditionSectionDefinition($id);
+
+        if (!$sDef->id) return false;
+
+        $br = new wcmBizrelation();
+
+        $sql = 'DELETE FROM ' . $br->getTableName();
+        $sql .= ' WHERE sourceClass=? AND sourceId=?';
+        $sql .= ' AND destinationClass=? AND destinationId=?';
+
+        $arguments = array(
+            $this->getClass(), $this->id,
+            $sDef->getClass(), $sDef->id,
+        );
+
+        $this->getDatabase()->executeStatement($sql, $arguments);
+
+        return true;
+    }
+
+    /**
+     * Takes a date and returns the sections that should be added to an edition
+     *
+     * @param int $siteId
+     * @param String $date
+     * @param Boolean $liveCreation Whether or not we're creating live-edition specific sections.
+     *
+     * @return Array
+     */
+    public function getSectionDefinitionsByDate($siteId, $date, $liveCreation = false)
+    {
+
+        $dayRules = $this->getDayRulesForDate($siteId, $date, $liveCreation);
+
+        $sectionsDefinitions = $this->getSectionDefinitionsFromDayRules($dayRules);
+
+        usort($sectionsDefinitions, array('digitalEditionDayRule', 'usortSectionDefinitionsByRank'));
+
+        return $sectionsDefinitions;
+
+    }
+
+    /**
+     * Usort comparison function used for sorting section definitions by rank/code
+     * If there are equal ranks, we use code. If those are equal, we just count them as matching.
+     * This should pretty much never return 0 though.
+     *
+     * @param digitalEditionSectionDefinition $sDef1
+     * @param digitalEditionSectionDefinition $sDef2
+     *
+     * @return int
+     */
+    public static function usortSectionDefinitionsByRank($sDef1, $sDef2)
+    {
+        if ($sDef1->rank == $sDef2->rank) {
+
+            if ($sDef1->code == $sDef2->code) return 0;
+
+            return ($sDef1->code > $sDef2->code) ? +1 : -1;
+
+        }
+
+        return ($sDef1->rank > $sDef2->rank) ? +1 : -1;
+    }
+
+    /**
+     * Takes an array of day rules and returns an array of sections that should be processed for those day rules
+     *
+     * @param Array $dayRules
+     *
+     * @return Array
+     */
+    private function getSectionDefinitionsFromDayRules($dayRules)
+    {
+
+        // Holds the section definition objects that we add
+        $sectionDefinitions = array();
+
+        // Stores the ids of the sections that have been added
+        $sectionsAdded = array();
+
+        // Stores the ids of the sections that have been subtracted
+        $sectionsSubtracted = array();
+
+        // Looping through each dayrule and getting its sections
+        foreach ($dayRules as $dr) {
+
+            // Getting the section definitions related to this dayrule
+            $sections = self::getDayRuleSectionDefinitions($dr);
+
+            // Looking through all the sections associated with the
+            foreach ($sections as $section) {
+
+                // We have to treat additions and subtractions differently (duh)
+                switch ($dr->ruleOperator) {
+
+                    case digitalEditionDayRule::ADDITIVE_OPERATOR:
+                        // If we haven't already added this section, we add it here
+                        if (!in_array($section->id, $sectionsAdded)) {
+                            $sectionDefinitions[] = $section;
+                            $sectionsAdded[] = $section->id;
+                        }
+                        break;
+
+                    case digitalEditionDayRule::SUBTRACTIVE_OPERATOR:
+                        // If we haven't already added this section to the subtract list, we add it here
+                        if (!in_array($section->id, $sectionsSubtracted)) {
+                            $sectionsSubtracted[] = $section->id;
+                        }
+                        break;
+
+                }
+            }
+        }
+
+        // Removing any subtracted section definitions from our list.
+        $processedSectionDefinitions = array();
+        foreach($sectionDefinitions as $definition) {
+            // If the definition id isn't in the subtracted list, we add it to the final list of sections
+            if (!in_array($definition->id, $sectionsSubtracted)) {
+                $processedSectionDefinitions[] = $definition;
+            }
+        }
+
+        return $processedSectionDefinitions;
+
+    }
+
+    /**
+     * Accepts a dayRule and returns an array of associated section definitions
+     *
+     * @param digitalEditionDayRule $dayRule
+     *
+     * @return Array (digitalEditionSectionDefinition)
+     */
+    public static function getDayRuleSectionDefinitions($dayRule, $idsOnly = false)
+    {
+        $br = new wcmBizrelation();
+        $sDef = new digitalEditionSectionDefinition();
+
+        $sql = 'SELECT destinationId FROM ' . $br->getTableName();
+        $sql .= ' WHERE sourceClass=? AND sourceId=?';
+        $sql .= ' AND destinationClass=?';
+
+        $arguments = array(
+            $dayRule->getClass(), $dayRule->id,
+            $sDef->getClass(),
+        );
+
+        $resultSet = $dayRule->getDatabase()->executeQuery($sql, $arguments);
+
+        $sections = array();
+
+        // executeQuery returns null on no rows
+        if ($resultSet->getRecordCount() == 0) return $sections;
+
+        while ($resultSet->next()) {
+            $row = $resultSet->getRow();
+            $sections[] = $idsOnly ? $row['destinationId'] : new digitalEditionSectionDefinition($row['destinationId']);
+        }
+
+        return $sections;
+    }
+
+    /**
+     * Takes our date and gets all the rules that would apply to producing a section for that date
+     *
+     * @param int $siteId
+     * @param String $date
+     * @param Boolean $liveCreation Whether or not we're creating live-edition specific sections.
+     *
+     * @return Array
+     */
+    private function getDayRulesForDate($siteId, $date, $liveCreation = false)
+    {
+
+        $liveAppend = $liveCreation ? '-LIVE' : '';
+
+        $timestamp = strtotime($date);
+
+        // This will hold the list of rules that we need to look up
+        $ruleList = array();
+
+        // Getting basic rule check data
+        $weekday = strtoupper(date('l', $timestamp));
+        $month = strtoupper(date('F', $timestamp));
+        $day = date('j', $timestamp);
+
+        // Getting data about the current weekday instance in the month (ex: 2nd Thursday)
+        $wiData = $this->getWeekdayInstance($timestamp);
+
+
+        /**
+         * Assembly of rule checking strings
+         */
+
+        if ($liveCreation) {
+            $ruleList[] = 'LIVE';
+        }
+
+        // Every day!
+        $ruleList[] = 'EVERYDAY'.$liveAppend;
+
+        // Checking the simple weekday
+        $ruleList[] = $weekday.$liveAppend;
+
+        // Checking the day of the month
+        $ruleList[] = 'DAY-'.$day.'-OF-MONTH'.$liveAppend;
+
+        // Checking the specific day of THIS month
+        $ruleList[] = 'DAY-'.$day.'-OF-'.$month.$liveAppend;
+
+        // Adding a rule for this weekday instance (THURSDAY-4-OF-MONTH)
+        $ruleList[] = $weekday.'-'.$wiData['instance'].'-OF-MONTH'.$liveAppend;
+
+        // Seeing if this is the first weekday instance of this type per month
+        if ($wiData['instance'] === 1) {
+            $ruleList[] = 'FIRST-'.$weekday.'-OF-MONTH'.$liveAppend;
+        }
+
+        // Seeing if this is the first weekday instance of this type per month
+        if ($wiData['instance'] === $wiData['total']) {
+            $ruleList[] = 'LAST-'.$weekday.'-OF-MONTH'.$liveAppend;
+        }
+
+        // Seeing if this is the first day of the month
+        if ($day == 1) {
+            $ruleList[] = 'FIRST-DAY-OF-MONTH'.$liveAppend;
+        }
+
+        // Seeing if this is the last day of the month. (seeing if tomorrow is a member of a different month)
+        if (strtoupper(date('F', $timestamp+86400)) !== $month) {
+            $ruleList[] = 'LAST-DAY-OF-MONTH'.$liveAppend;
+        }
+
+
+        /**
+         * Getting all the day rules that apply to the rule checks we generated
+         */
+
+        $where = "rule IN ('".  implode("','", $ruleList)."') AND siteId='".$siteId."'";
+
+        $rulesToProcess = array();
+
+        $enum = new digitalEditionDayRule();
+        $enum->beginEnum($where, 'ruleOperator ASC');
+
+        while ($enum->nextEnum()) {
+            $rulesToProcess[] = clone $enum;
+        }
+
+        return $rulesToProcess;
+
+    }
+
+    /**
+     * Takes a date and returns an array of: The current instance of a weekday in
+     * the month, and the total number of instances of that weekday in the month.
+     *
+     * @param int $date
+     *
+     * @return Array instance, total
+     */
+    private function getWeekdayInstance($timestamp)
+    {
+        // weekday instance, total possible weekday instances
+        $instanceArray = array(
+            'instance' => 0,
+            'total' => 0,
+        );
+
+        $secondsPerWeek = 604800;
+
+        $month = date('n', $timestamp);
+
+
+        // Getting what weekday instance of the month it is
+        $workstamp = $timestamp;
+
+        while (date('n', $workstamp) === $month) {
+            // We increment the total as well as just the instance we're looking at
+            $instanceArray['instance']++;
+            $instanceArray['total']++;
+
+            // Looking at last week.
+            $workstamp -= $secondsPerWeek;
+        }
+
+
+        // Seeing how many weekdays of this type there are in this month
+        $workstamp = $timestamp + $secondsPerWeek;
+
+        while (date('n', $workstamp) === $month) {
+            // Adding this iteration to the total
+            $instanceArray['total']++;
+
+            // Looking at last week.
+            $workstamp += $secondsPerWeek;
+        }
+
+        return $instanceArray;
+    }
+
+}
+
+<?php
+/**
+ * BackPress script procedural API.
+ *
+ * @package BackPress
+ * @since r16
+ */
+
+/**
+ * Prints script tags in document head.
+ *
+ * Called by admin-header.php and by wp_head hook. Since it is called by wp_head
+ * on every page load, the function does not instantiate the WP_Scripts object
+ * unless script names are explicitly passed. Does make use of already
+ * instantiated $wp_scripts if present. Use provided wp_print_scripts hook to
+ * register/enqueue new scripts.
+ *
+ * @since r16
+ * @see WP_Dependencies::print_scripts()
+ */
+function wp_print_scripts( $handles = false ) {
+    do_action( 'wp_print_scripts' );
+    if ( '' === $handles ) // for wp_head
+        $handles = false;
+
+    global $wp_scripts;
+    if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
+        if ( ! did_action( 'init' ) )
+            _doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>init</code>' ), '3.3' );
+
+        if ( !$handles )
+            return array(); // No need to instantiate if nothing is there.
+        else
+            $wp_scripts = new WP_Scripts();
+    }
+
+    return $wp_scripts->do_items( $handles );
+}
+
+/**
+ * Register new Javascript file.
+ *
+ * @since r16
+ * @param string $handle Script name
+ * @param string $src Script url
+ * @param array $deps (optional) Array of script names on which this script depends
+ * @param string|bool $ver (optional) Script version (used for cache busting), set to null to disable
+ * @param bool $in_footer (optional) Whether to enqueue the script before </head> or before </body>
+ * @return null
+ */
+function wp_register_script( $handle, $src, $deps = array(), $ver = false, $in_footer = false ) {
+    global $wp_scripts;
+    if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
+        if ( ! did_action( 'init' ) )
+            _doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>init</code>' ), '3.3' );
+        $wp_scripts = new WP_Scripts();
+    }
+
+    $wp_scripts->add( $handle, $src, $deps, $ver );
+    if ( $in_footer )
+        $wp_scripts->add_data( $handle, 'group', 1 );
+}
+
+/**
+ * Wrapper for $wp_scripts->localize().
+ *
+ * Used to localizes a script.
+ * Works only if the script has already been added.
+ * Accepts an associative array $l10n and creates JS object:
+ * "$object_name" = {
+ *   key: value,
+ *   key: value,
+ *   ...
+ * }
+ * See http://core.trac.wordpress.org/ticket/11520 for more information.
+ *
+ * @since r16
+ *
+ * @param string $handle The script handle that was registered or used in script-loader
+ * @param string $object_name Name for the created JS object. This is passed directly so it should be qualified JS variable /[a-zA-Z0-9_]+/
+ * @param array $l10n Associative PHP array containing the translated strings. HTML entities will be converted and the array will be JSON encoded.
+ * @return bool Whether the localization was added successfully.
+ */
+function wp_localize_script( $handle, $object_name, $l10n ) {
+    global $wp_scripts;
+    if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
+        if ( ! did_action( 'init' ) )
+            _doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>init</code>' ), '3.3' );
+
+        return false;
+    }
+
+    return $wp_scripts->localize( $handle, $object_name, $l10n );
+}
+
+/**
+ * Remove a registered script.
+ *
+ * @since r16
+ * @see WP_Scripts::remove() For parameter information.
+ */
+function wp_deregister_script( $handle ) {
+    global $wp_scripts;
+    if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
+        if ( ! did_action( 'init' ) )
+            _doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>init</code>' ), '3.3' );
+        $wp_scripts = new WP_Scripts();
+    }
+
+    $wp_scripts->remove( $handle );
+}
+
+/**
+ * Enqueues script.
+ *
+ * Registers the script if src provided (does NOT overwrite) and enqueues.
+ *
+ * @since r16
+ * @see wp_register_script() For parameter information.
+ */
+function wp_enqueue_script( $handle, $src = false, $deps = array(), $ver = false, $in_footer = false ) {
+    global $wp_scripts;
+    if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
+        if ( ! did_action( 'init' ) )
+            _doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>init</code>' ), '3.3' );
+        $wp_scripts = new WP_Scripts();
+    }
+
+    if ( $src ) {
+        $_handle = explode('?', $handle);
+        $wp_scripts->add( $_handle[0], $src, $deps, $ver );
+        if ( $in_footer )
+            $wp_scripts->add_data( $_handle[0], 'group', 1 );
+    }
+    $wp_scripts->enqueue( $handle );
+}
+
+/**
+ * Remove an enqueued script.
+ *
+ * @since WP 3.1
+ * @see WP_Scripts::dequeue() For parameter information.
+ */
+function wp_dequeue_script( $handle ) {
+    global $wp_scripts;
+    if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
+        if ( ! did_action( 'init' ) )
+            _doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>init</code>' ), '3.3' );
+        $wp_scripts = new WP_Scripts();
+    }
+
+    $wp_scripts->dequeue( $handle );
+}
+
+/**
+ * Check whether script has been added to WordPress Scripts.
+ *
+ * The values for list defaults to 'queue', which is the same as enqueue for
+ * scripts.
+ *
+ * @since WP unknown; BP unknown
+ *
+ * @param string $handle Handle used to add script.
+ * @param string $list Optional, defaults to 'queue'. Others values are 'registered', 'queue', 'done', 'to_do'
+ * @return bool
+ */
+function wp_script_is( $handle, $list = 'queue' ) {
+    global $wp_scripts;
+    if ( ! is_a( $wp_scripts, 'WP_Scripts' ) ) {
+        if ( ! did_action( 'init' ) )
+            _doing_it_wrong( __FUNCTION__, sprintf( __( 'Scripts and styles should not be registered or enqueued until the %1$s, %2$s, or %3$s hooks.' ),
+                '<code>wp_enqueue_scripts</code>', '<code>admin_enqueue_scripts</code>', '<code>init</code>' ), '3.3' );
+        $wp_scripts = new WP_Scripts();
+    }
+
+    $query = $wp_scripts->query( $handle, $list );
+
+    if ( is_object( $query ) )
+        return true;
+
+    return $query;
+}
+
+<?php
+/**
+*
+* @package build
+* @copyright (c) 2010 phpBB Group
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
+*
+*/
+
+class build_package
+{
+    var $package_infos;
+    var $old_packages;
+    var $versions;
+    var $locations;
+
+    // -c - context diff
+    // -r - compare recursive
+    // -N - Treat missing files as empty
+    // -E - Ignore tab expansions
+    //      not used: -b - Ignore space changes.
+    // -w - Ignore all whitespace
+    // -B - Ignore blank lines
+    // -d - Try to find smaller set of changes
+    var $diff_options = '-crNEBwd';
+    var $diff_options_long = '-x images -crNEB'; // -x fonts -x imageset //imageset not used here, because it includes the imageset.cfg file. ;)
+
+    var $verbose = false;
+    var $status_begun = false;
+    var $num_dots = 0;
+
+    function build_package($versions, $verbose = false)
+    {
+        $this->versions = $versions;
+        $this->verbose = $verbose;
+
+        // Get last two entries
+        $_latest = $this->versions[sizeof($this->versions) - 1];
+        $_before = $this->versions[sizeof($this->versions) - 2];
+
+        $this->locations = array(
+            'new_version'   => dirname(dirname(__FILE__)) . '/phpBB/',
+            'old_versions'  => dirname(__FILE__) . '/old_versions/',
+            'root'          => dirname(__FILE__) . '/',
+            'package_dir'   => dirname(__FILE__) . '/new_version/'
+        );
+
+        $this->package_infos = array(
+            'package_name'          => 'phpBB3',
+            'name_prefix'           => 'phpbb',
+            'simple_name'           => 'release-' . $_latest,
+            'new_version_number'    => $_latest,
+            'short_version_number'  => str_replace('.', '', $_latest),
+            'release_filename'      => 'phpBB-' . $_latest,
+            'last_version'          => 'release-' . $_before,
+            'last_version_number'   => $_before,
+        );
+
+        $this->package_infos['dest_dir'] = $this->locations['package_dir'] . $this->package_infos['package_name'];
+        $this->package_infos['diff_dir'] = $this->locations['old_versions'] . $this->package_infos['simple_name'];
+        $this->package_infos['patch_directory'] = $this->locations['package_dir'] . 'patches';
+        $this->package_infos['files_directory'] = $this->locations['package_dir'] . 'files';
+        $this->package_infos['update_directory'] = $this->locations['package_dir'] . 'update';
+        $this->package_infos['release_directory'] = $this->locations['package_dir'] . 'release_files';
+
+        // Old packages always exclude the latest version. ;)
+        $this->old_packages = array();
+
+        foreach ($this->versions as $package_version)
+        {
+            if ($package_version == $_latest)
+            {
+                continue;
+            }
+
+            $this->old_packages['release-' . $package_version] = $package_version . '_to_';
+        }
+    }
+
+    function get($var)
+    {
+        return $this->package_infos[$var];
+    }
+
+    function begin_status($headline)
+    {
+        if ($this->status_begun)
+        {
+            echo "\nDone.\n\n";
+        }
+
+        $this->num_dots = 0;
+
+        echo $headline . "\n    ";
+
+        $this->status_begun = true;
+    }
+
+    function run_command($command)
+    {
+        $result = trim(`$command`);
+
+        if ($this->verbose)
+        {
+            echo "    command : " . getcwd() . '$ ' . $command . "\n";
+            echo "    result  : " . $result . "\n";
+        }
+        else
+        {
+            if ($this->num_dots > 70)
+            {
+                echo "\n";
+                $this->num_dots = 0;
+            }
+            echo '.';
+            $this->num_dots++;
+        }
+
+        flush();
+    }
+
+    function create_directory($directory, $dir_struct)
+    {
+        if (!file_exists($directory))
+        {
+            $this->run_command("mkdir $directory");
+        }
+
+        if (is_array($dir_struct))
+        {
+            foreach ($dir_struct as $_dir => $_dir_struct)
+            {
+                $this->create_directory($directory . '/' . $_dir, $_dir_struct);
+            }
+        }
+    }
+
+    function collect_diff_files($diff_filename, $package_name)
+    {
+        $diff_result = $binary = array();
+        $diff_contents = file($diff_filename);
+
+        $special_diff_contents = array();
+
+        foreach ($diff_contents as $num => $line)
+        {
+            $line = trim($line);
+
+            if (!$line)
+            {
+                continue;
+            }
+
+            // Special diff content?
+            if (strpos($line, 'diff ' . $this->diff_options . ' ') === 0 || strpos($line, '*** ') === 0 || strpos($line, '--- ') === 0 || (strpos($line, ' Exp $') !== false && strpos($line, '$Id:') !== false))
+            {
+                $special_diff_contents[] = $line;
+            }
+            else if (strpos($line, 'diff ' . $this->diff_options . ' ') === 0 || strpos($line, '*** ') === 0 || strpos($line, '--- ') === 0 || (strpos($line, ' Exp $') !== false && strpos($line, '$Id:') !== false) || (strpos($line, ' $') !== false && strpos($line, '$Id:') !== false))
+            {
+                $special_diff_contents[] = $line;
+            }
+
+            // Is diffing line?
+            if (strstr($line, 'diff ' . $this->diff_options . ' '))
+            {
+                $next_line = $diff_contents[$num+1];
+                if (strpos($next_line, '***') === 0)
+                {
+    //          *** phpbb208/admin/admin_board.php  Sat Jul 10 20:16:26 2004
+                    $next_line = explode("\t", $next_line);
+                    $next_line = trim($next_line[0]);
+                    $next_line = str_replace('*** ' . $package_name . '/', '', $next_line);
+                    $diff_result[] = $next_line;
+                }
+            }
+
+            // Is binary?
+            if (preg_match('/^Binary files ' . $package_name . '\/(.*) and [a-z0-9._-]+\/\1 differ/i', $line, $match))
+            {
+                $binary[] = trim($match[1]);
+            }
+        }
+
+        // Now go through the list again and find out which files have how many changes...
+        $num_changes = array();
+
+    /*  [1070] => diff -crN phpbb200/includes/usercp_avatar.php phpbb2023/includes/usercp_avatar.php
+        [1071] => *** phpbb200/includes/usercp_avatar.php   Sat Jul 10 20:16:13 2004
+        [1072] => --- phpbb2023/includes/usercp_avatar.php  Wed Feb  6 22:28:04 2008
+        [1073] => *** 6,12 ****
+        [1074] => !  *   $Id$
+        [1075] => --- 6,12 ----
+        [1076] => *** 51,59 ****
+        [1077] => --- 51,60 ----
+        [1078] => *** 62,80 ****
+        [1079] => --- 63,108 ----
+        [1080] => *** 87,97 ****
+    */
+        while (($line = array_shift($special_diff_contents)) !== NULL)
+        {
+            $line = trim($line);
+
+            if (!$line)
+            {
+                continue;
+            }
+
+            // Is diffing line?
+            if (strstr($line, 'diff ' . $this->diff_options . ' '))
+            {
+                $next_line = array_shift($special_diff_contents);
+                if (strpos($next_line, '*** ') === 0)
+                {
+    //          *** phpbb208/admin/admin_board.php  Sat Jul 10 20:16:26 2004
+                    $next_line = explode("\t", $next_line);
+                    $next_line = trim($next_line[0]);
+                    $next_line = str_replace('*** ' . $package_name . '/', '', $next_line);
+
+                    $is_reached = false;
+                    $prev_line = '';
+
+                    while (!$is_reached)
+                    {
+                        $line = array_shift($special_diff_contents);
+
+                        if (strpos($line, 'diff ' . $this->diff_options) === 0 || empty($special_diff_contents))
+                        {
+                            $is_reached = true;
+                            array_unshift($special_diff_contents, $line);
+                            continue;
+                        }
+
+                        if (strpos($line, '*** ') === 0 && strpos($line, ' ****') !== false)
+                        {
+                            $is_comment = false;
+                            while (!(strpos($line, '--- ') === 0 && strpos($line, ' ----') !== false))
+                            {
+                                $line = array_shift($special_diff_contents);
+                                if (strpos($line, ' Exp $') !== false || strpos($line, '$Id:') !== false)
+                                {
+                                    $is_comment = true;
+                                }
+                            }
+
+                            if (!$is_comment)
+                            {
+                                if (!isset($num_changes[$next_line]))
+                                {
+                                    $num_changes[$next_line] = 1;
+                                }
+                                else
+                                {
+                                    $num_changes[$next_line]++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Now remove those results not having changes
+        $return = array();
+
+        foreach ($diff_result as $key => $value)
+        {
+            if (isset($num_changes[$value]))
+            {
+                $return[] = $value;
+            }
+        }
+
+        foreach ($binary as $value)
+        {
+            $return[] = $value;
+        }
+
+        $diff_result = $return;
+        unset($return);
+        unset($special_diff_contents);
+
+        $result = array(
+            'files'     => array(),
+            'binary'    => array(),
+            'all'       => $diff_result,
+        );
+
+        $binary_extensions = array('gif', 'jpg', 'jpeg', 'png', 'ttf');
+
+        // Split into file and binary
+        foreach ($diff_result as $filename)
+        {
+            if (strpos($filename, '.') === false)
+            {
+                $result['files'][] = $filename;
+                continue;
+            }
+
+            $extension = explode('.', $filename);
+            $extension = array_pop($extension);
+
+            if (in_array($extension, $binary_extensions))
+            {
+                $result['binary'][] = $filename;
+            }
+            else
+            {
+                $result['files'][] = $filename;
+            }
+        }
+
+        return $result;
+    }
+}
+
+<?php
     /*
         File Path:      /system/ci/system/amfphp/services/LaunchRPC.php
         Comments:

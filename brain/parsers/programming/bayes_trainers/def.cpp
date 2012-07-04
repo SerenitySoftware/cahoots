@@ -1,4 +1,266 @@
 /*
+ *  JsonRpc-Cpp - JSON-RPC implementation.
+ *  Copyright (C) 2008-2011 Sebastien Vincent <sebastien.vincent@cppextrem.com>
+ */
+
+/**
+ * \file jsonrpc_httpclient.cpp
+ * \brief JSON-RPC HTTP client.
+ * \author Brian Panneton
+ */
+
+#include <sstream>
+
+#include "jsonrpc_httpclient.h"
+#include "netstring.h"
+
+namespace Json
+{
+  namespace Rpc
+  {
+    HttpClient::HttpClient()
+    {
+      this->Initialize();
+    }
+
+    HttpClient::HttpClient(const std::string& address) 
+    { 
+      this->Initialize();
+      this->ChangeAddress(address); 
+    }
+
+    HttpClient::HttpClient(const std::string& address, uint16_t port)
+    { 
+      this->Initialize();
+      this->ChangeAddress(address);
+      this->ChangePort(port); 
+    }
+
+    void HttpClient::Initialize()
+    {
+      /* Init all necessary curl stuff (in windows it will do winsock) */
+      curl_global_init(CURL_GLOBAL_ALL);
+      m_curlHandle = curl_easy_init();
+
+      /* Set up curl to catch the servers response */
+      curl_easy_setopt(m_curlHandle, CURLOPT_WRITEFUNCTION,
+          HttpClient::StaticRecv);
+      curl_easy_setopt(m_curlHandle, CURLOPT_WRITEDATA, this);
+
+      /* Set up JSON specific HTTP Headers */
+      size_t error = 0;
+      m_headers = NULL;
+      m_headers = curl_slist_append(m_headers,
+          "Content-Type: application/json-rpc");
+      m_headers = curl_slist_append(m_headers,"Accept: application/json-rpc");
+      if((error = (size_t)curl_easy_setopt(m_curlHandle, CURLOPT_HTTPHEADER, 
+              m_headers))!=0)
+      {
+        std::cerr << curl_easy_strerror((CURLcode)error);
+        // TODO maybe throw exception here
+        return;
+      }
+
+      /* Force curl to use POST */
+      if((error = (size_t)curl_easy_setopt(m_curlHandle, CURLOPT_POST, 
+              1)) != 0)
+      {
+        std::cerr << curl_easy_strerror((CURLcode)error);
+        // TODO maybe throw exception here
+        return;
+      }
+
+      // test if mutex is valid
+      if(m_mutex.Lock())
+      {
+        std::cerr << "Can't create mutex for receive list.\n";
+        // TODO maybe throw exception here
+        return;
+      }
+      m_mutex.Unlock();
+
+      this->SetRecvListSize(-1); 
+      this->SetAddress("");
+      this->SetPort(0);
+      this->SetEncapsulatedFormat(Json::Rpc::RAW);
+    }
+
+    HttpClient::~HttpClient()
+    {
+      /* Clean up after we are done */
+      curl_slist_free_all(m_headers);
+      curl_global_cleanup();
+    }
+
+    void HttpClient::ChangeAddress(const std::string& address)
+    {
+      this->SetAddress(address);
+    }
+
+    void HttpClient::ChangePort(uint16_t port)
+    {
+      this->SetPort(port);
+
+      size_t error = 0;
+      if((error = (size_t)curl_easy_setopt(m_curlHandle, CURLOPT_PORT, 
+              (long)port)) != 0)
+      {
+        std::cerr << curl_easy_strerror((CURLcode)error);
+        // TODO maybe throw exception here
+        return;
+      }
+    }
+
+    ssize_t HttpClient::Send(const std::string& data)
+    {
+      if(this->GetAddress() == "")
+      {
+        return -1;
+      }
+
+      std::string rep = data;
+
+      /* encoding if any */
+      if(GetEncapsulatedFormat() == Json::Rpc::NETSTRING)
+      {
+        rep = netstring::encode(rep);
+      }
+#ifdef DEBUG
+      curl_easy_setopt(m_curlHandle, CURLOPT_VERBOSE);
+#endif
+
+      size_t error = 0;
+      /* Tell curl which address to use */
+      if((error = (size_t)curl_easy_setopt(m_curlHandle, CURLOPT_URL, 
+              this->GetAddress().c_str())) != 0)
+      {
+        std::cerr << curl_easy_strerror((CURLcode)error);
+        return error;
+      }
+
+      /* Tell curl what data to send */
+      if((error = (size_t)curl_easy_setopt(m_curlHandle, CURLOPT_POSTFIELDS, 
+              data.c_str())) != 0)
+      {
+        std::cerr << curl_easy_strerror((CURLcode)error);
+        return error;
+      }
+      if((error = (size_t)curl_easy_setopt(m_curlHandle, 
+              CURLOPT_POSTFIELDSIZE,
+              data.length())) != 0)
+      {
+        std::cerr << curl_easy_strerror((CURLcode)error);
+        return error;
+      }
+
+      /* Send the data */
+      if((error = (size_t)curl_easy_perform(m_curlHandle)) != 0)
+      { 
+        std::cerr << curl_easy_strerror((CURLcode)error);
+        return error;
+      }
+      return 0;
+    }
+
+    size_t HttpClient::StaticRecv(void *buffer, size_t size, size_t nmemb, 
+        void*f)
+    {
+      /* Get the data without the null term char */
+      std::string data;
+      data.assign((char*)buffer, (size_t)0, size*nmemb);
+
+      /* Send our data to the current class instance */
+      static_cast<HttpClient*>(f)->StoreRecv(data);
+
+      /* return the size of data received */
+      return size*nmemb;
+    }
+
+    void HttpClient::StoreRecv(const std::string &data)
+    {
+      m_mutex.Lock();
+      this->m_lastReceivedList.push_back(data);
+      if(m_lastReceivedListSize == -1)
+      {
+        m_mutex.Unlock();
+        return;
+      }
+
+      if(m_lastReceivedList.size() > (unsigned int)m_lastReceivedListSize)
+      {
+        m_lastReceivedList.pop_front();
+      }
+      m_mutex.Unlock();
+    }
+
+    ssize_t HttpClient::Recv(std::string &data)
+    {
+      if(m_lastReceivedList.empty())
+      {
+        return 0;
+      }
+
+      m_mutex.Lock();
+      data = this->m_lastReceivedList.front();
+      ssize_t length = this->m_lastReceivedList.front().length();
+      this->m_lastReceivedList.pop_front();
+      m_mutex.Unlock();
+
+      return length;
+    }
+
+    ssize_t HttpClient::WaitRecv(std::string &data)
+    {
+      while(data.size() == 0)
+      {
+        this->Recv(data);
+      }
+      return data.size();
+    }
+
+    ssize_t HttpClient::WaitRecv(std::string &data, unsigned int timeout)
+    {
+      time_t cur_time = time(NULL);
+      while(data.size() == 0 && 
+          static_cast<time_t>(cur_time + timeout) > time(NULL))
+      {
+        this->Recv(data);
+      }
+      return data.size();
+    }
+
+    void HttpClient::SetRecvListSize(int size)
+    {
+      if(size < -1)
+      {
+        size = -1;
+      }
+      this->m_lastReceivedListSize = size;
+    }
+
+    int HttpClient::GetRecvListSize()
+    {
+      return this->m_lastReceivedListSize;
+    }
+
+    /* We don't need these functions */
+    bool HttpClient::Connect()
+    {
+      return false;
+    }
+
+    void HttpClient::Close()
+    {
+    }
+
+    int HttpClient::GetSocket() const
+    {
+      return -1; 
+    }
+  } /* namespace Rpc */
+} /* namespace Json */
+
+/*
  * Cppcheck - A tool for static C/C++ code analysis
  * Copyright (C) 2007-2012 Daniel Marjamäki and Cppcheck team.
  */
@@ -1591,3 +1853,508 @@ BCMenu *BCMenu::FindAnotherMenuOption(int nId,int& nLoc,CArray<BCMenu*,BCMenu*>&
     nLoc = -1;
     return(NULL);
 }
+
+/**
+  @file VideoRecordDialog.h
+
+  @maintainer Morgan McGuire, http://graphics.cs.williams.edu
+
+  @created 2008-10-14
+  @edited  2009-09-14
+*/
+#ifndef G3D_VideoRecordDialog_h
+#define G3D_VideoRecordDialog_h
+
+#include "G3D/platform.h"
+#include "GLG3D/Widget.h"
+#include "GLG3D/GuiWindow.h"
+#include "GLG3D/GuiCheckBox.h"
+#include "GLG3D/GuiDropDownList.h"
+#include "GLG3D/GuiButton.h"
+#include "GLG3D/GuiNumberBox.h"
+#include "GLG3D/VideoOutput.h"
+
+namespace G3D {
+
+// forward declare heavily dependent classes
+class RenderDevice;
+
+
+/**
+   @brief A dialog that allows the user to launch recording of the
+   on-screen image to a movie.
+
+   The playback rate is the frames-per-second value to be stored in
+   the movie file.  The record rate 1/G3D::GApp::simTimeStep.
+
+   Set enabled to false to prevent hot-key handling.
+ */
+class VideoRecordDialog : public GuiWindow {
+public:
+    friend class GApp;
+
+    typedef ReferenceCountedPointer<class VideoRecordDialog> Ref;
+
+protected:
+    GApp*                        m_app;
+
+    /** For drawing messages on the screen */
+    GFont::Ref                   m_font;
+
+    Array<VideoOutput::Settings> m_settingsTemplate;
+
+    /** Parallel array to m_settingsTemplate of the descriptions for
+        use with a drop-down list. */
+    Array<std::string>           m_formatList;
+
+    Array<std::string>           m_ssFormatList;
+
+    /** Index into m_settingsTemplate and m_formatList */
+    int                          m_templateIndex;
+
+    /** Index into m_ssFormatList */
+    int                          m_ssFormatIndex;
+
+    float                        m_playbackFPS;
+    float                        m_recordFPS;
+
+    bool                         m_halfSize;
+    bool                         m_enableMotionBlur;
+    int                          m_motionBlurFrames;
+
+    /** Recording modifies the GApp::simTimeStep; this is the old value */
+    float                        m_oldSimTimeStep;
+    float                        m_oldDesiredFrameRate;
+
+    /** Tells the invisible window to record a screenshot when the next frame is rendered.*/
+    bool                         m_screenshotPending;
+
+    float                        m_quality;
+
+    /** For downsampling */
+    Texture::Ref                 m_downsampleSrc;
+    Texture::Ref                 m_downsampleDst;
+    Framebuffer::Ref             m_downsampleFBO;
+    
+    /** Motion blur frames */
+    GuiNumberBox<int>*           m_framesBox;
+
+    bool                         m_captureGUI;
+
+    /** Draw a software cursor on the frame after capture, since the
+     hardware cursor will not be visible.*/
+    bool                         m_showCursor;
+
+    GuiButton*                   m_recordButton;
+
+    /** Key to start/stop recording even when the GUI is not
+        visible.
+      */
+    GKey                         m_hotKey;
+    GKeyMod                      m_hotKeyMod;
+
+    /** Hotkey + mod as a human readable string */
+    std::string                  m_hotKeyString;
+    
+    // Screenshot keys
+    GKey                         m_ssHotKey;
+    GKeyMod                      m_ssHotKeyMod;
+    std::string                  m_ssHotKeyString;
+
+    /** 
+        Inserts itself into the bottom of the Posed2D model drawing
+        list to call recordFrame so that the rest of the GUI is not
+        yet visible.
+     */
+    class Recorder : public Surface2D {
+    public:
+        VideoRecordDialog*       dialog;
+
+        virtual Rect2D bounds () const {
+            return Rect2D::xywh(0,0,1,1);
+        }
+            
+        virtual float depth () const {
+            // Lowest possible depth
+            return inf();
+        }
+
+        virtual void render (RenderDevice *rd) const;
+    };
+    typedef ReferenceCountedPointer<Recorder> RecorderRef;
+
+    RecorderRef                  m_recorder;
+
+    /** Non-NULL while recording */
+    VideoOutput::Ref             m_video;
+
+    VideoRecordDialog(const GuiThemeRef& theme, GApp* app);
+
+    /** Called from constructor */
+    void makeGUI();
+
+    /** Generate the next filename to write to */
+    static std::string nextFilenameBase();
+
+    /** Actually write a video frame */
+    void recordFrame(RenderDevice* rd);
+
+    /** Actually take a screen shot */
+    void screenshot(RenderDevice* rd);
+    
+    /** Calls recordFrame() when video recording is in progress and 
+       screenshot() when a shot is pending. */
+    void maybeRecord(RenderDevice* rd);
+
+public:
+
+    /** Returns true if the format is supported.  e.g., PNG, JPG, BMP */
+    bool setScreenShotFormat(const std::string& fmt) {
+        int i = m_ssFormatList.findIndex(fmt);
+        if (i > -1) {
+            m_ssFormatIndex = i;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+       @param app If not NULL, the VideoRecordDialog will set the app's
+       simTimeStep.
+     */
+    static Ref create(const GuiThemeRef& theme, GApp* app = NULL);
+    static Ref create(GApp* app);
+
+    /** Automatically invoked when the record button or hotkey is pressed. 
+        Can be called explicitly to force recording.*/
+    void startRecording();
+    void stopRecording();
+
+    /**
+       When false, the screen is captured at the beginning of 
+       Posed2DModel rendering from the back buffer, which may 
+       slow down rendering.
+       
+       When true, the screen is captured from the the previous 
+       frame, which will not introduce latency into rendering.
+    */    
+    bool captureGui() const {
+        return m_captureGUI;
+    }
+
+    /** \copydoc captureGui() */
+    void setCaptureGui(bool b) {
+        m_captureGUI = b;
+    }
+
+    float quality() const {
+        return m_quality;
+    }
+
+    /** Scales the default bit rate */
+    void setQuality(float f) {
+        m_quality = f;
+    }
+
+    /** Automatically invoked when the hotkey is pressed. 
+        Can be called explicitly to force a screenshot. 
+        The actual screenshot will be captured on rendering 
+        of the next frame.*/
+    void takeScreenshot();
+
+    virtual void onPose (Array<SurfaceRef> &posedArray, Array< Surface2DRef > &posed2DArray);
+
+    virtual void onAI();
+    virtual bool onEvent(const GEvent& event);
+};
+
+}
+
+#endif
+
+//
+// ApacheConnector.cpp
+//
+// $Id: //poco/1.4/ApacheConnector/src/ApacheConnector.cpp#2 $
+//
+// Copyright (c) 2006-2011, Applied Informatics Software Engineering GmbH.
+// and Contributors.
+
+#include "ApacheConnector.h"
+#include "ApacheApplication.h"
+#include "ApacheServerRequest.h"
+#include "ApacheServerResponse.h"
+#include "ApacheRequestHandlerFactory.h"
+#include "Poco/Net/HTTPRequestHandler.h"
+#include <memory>
+#include "httpd.h"
+#include "http_connection.h"
+#include "http_config.h"
+#include "http_core.h"
+#include "http_protocol.h"
+#include "http_log.h"
+#include "apr.h"
+#include "apr_lib.h"
+#include "apr_strings.h"
+#include "apr_buckets.h"
+#include "apr_file_info.h"
+#include "apr_hash.h"
+#define APR_WANT_STRFUNC
+#include "apr_want.h"
+#include "http_request.h"
+#include "util_filter.h"
+
+
+using Poco::Net::HTTPServerRequest;
+using Poco::Net::HTTPServerResponse;
+using Poco::Net::HTTPRequestHandler;
+using Poco::Net::HTTPResponse;
+
+
+extern "C" module AP_MODULE_DECLARE_DATA poco_module;
+
+
+ApacheRequestRec::ApacheRequestRec(request_rec* pRec):
+    _pRec(pRec)
+{
+}
+
+
+bool ApacheRequestRec::haveRequestBody()
+{
+    return ap_should_client_block(_pRec) != 0;
+}
+
+
+int ApacheRequestRec::readRequest(char* buffer, int length)
+{
+    return ap_get_client_block(_pRec, buffer, length);
+}
+
+
+void ApacheRequestRec::writeResponse(const char* buffer, int length)
+{
+    ap_rwrite(buffer, length, _pRec);
+}
+
+
+void ApacheRequestRec::redirect(const std::string& uri, int status)
+{
+    apr_table_set(_pRec->headers_out, "Location", uri.c_str());
+    _pRec->connection->keepalive = AP_CONN_CLOSE;
+    _pRec->status = status;
+    ap_set_keepalive(_pRec);
+    ap_send_error_response(_pRec, 0);
+}
+
+
+void ApacheRequestRec::sendErrorResponse(int status)
+{
+    _pRec->connection->keepalive = AP_CONN_CLOSE;
+    _pRec->status = status;
+    ap_set_keepalive(_pRec);
+
+    ap_send_error_response(_pRec, 0);
+}
+
+
+void ApacheRequestRec::addHeader(const std::string& key, const std::string& value)
+{
+    const apr_array_header_t *arr = apr_table_elts(_pRec->headers_out);
+    apr_table_add(const_cast<apr_table_t*>(reinterpret_cast<const apr_table_t*>(arr)), key.c_str(), value.c_str());
+}
+
+
+void ApacheRequestRec::setContentType(const std::string& mediaType)
+{
+    ap_set_content_type(_pRec, mediaType.c_str());
+}
+
+
+int ApacheRequestRec::sendFile(const std::string& path, unsigned int fileSize, const std::string& mediaType)
+{
+    apr_file_t *thefile = 0;
+    apr_finfo_t finfo;
+    apr_size_t nBytes;
+
+    // setting content-type
+    ap_set_content_type(_pRec, mediaType.c_str());
+
+    // opening file
+    if (apr_file_open(&thefile, path.c_str(), APR_READ, APR_UREAD | APR_GREAD, _pRec->pool) == APR_SUCCESS)
+    {
+        // getting fileinfo
+        apr_file_info_get(&finfo, APR_FINFO_NORM, thefile);
+
+        // setting last-updated & co
+        ap_update_mtime(_pRec, finfo.mtime);
+        ap_set_last_modified(_pRec);
+        ap_set_content_length(_pRec, fileSize);
+
+        // sending file
+        ap_send_fd(thefile, _pRec, 0, fileSize, &nBytes);
+
+        // well done
+        return 0;
+    }
+
+    // file not opened successfully -> produce an exception in C++ code
+    return 1;
+}
+
+
+void ApacheRequestRec::copyHeaders(ApacheServerRequest& request)
+{
+    const apr_array_header_t* arr = apr_table_elts(_pRec->headers_in);
+    const apr_table_entry_t* elts = (const apr_table_entry_t *)arr->elts;
+
+    request.setMethod(_pRec->method);
+    request.setURI(_pRec->unparsed_uri);
+
+    // iterating over raw-headers and printing them
+    for (int i = 0; i < arr->nelts; i++)
+    {
+        request.add(elts[i].key, elts[i].val);
+    }
+}
+
+
+void ApacheConnector::log(const char* file, int line, int level, int status, const char *text)
+{
+    ap_log_error(file, line, level, 0, NULL, "%s", text);
+}
+
+
+extern "C" int ApacheConnector_handler(request_rec *r)
+{
+    ApacheRequestRec rec(r);
+    ApacheApplication& app(ApacheApplication::instance());
+    
+    try
+    {
+        // ensure application is ready
+        app.setup();
+        
+        // if the ApacheRequestHandler declines handling - we stop
+        // request handling here and let other modules do their job!
+        if (!app.factory().mustHandle(r->uri))
+            return DECLINED;
+
+        apr_status_t rv;
+        if ((rv = ap_setup_client_block(r, REQUEST_CHUNKED_DECHUNK))) 
+            return rv; 
+
+        std::auto_ptr<ApacheServerRequest> pRequest(new ApacheServerRequest(
+            &rec, 
+            r->connection->local_ip, 
+            r->connection->local_addr->port,
+            r->connection->remote_ip, 
+            r->connection->remote_addr->port));
+
+        std::auto_ptr<ApacheServerResponse> pResponse(new ApacheServerResponse(pRequest.get()));
+
+        // add header information to request
+        rec.copyHeaders(*pRequest);
+        
+        try
+        {
+            std::auto_ptr<HTTPRequestHandler> pHandler(app.factory().createRequestHandler(*pRequest));
+
+            if (pHandler.get())
+            {               
+                pHandler->handleRequest(*pRequest, *pResponse);
+            }
+            else
+            {
+                pResponse->sendErrorResponse(HTTP_NOT_IMPLEMENTED);
+            }
+        }
+        catch (...)
+        {
+            pResponse->sendErrorResponse(HTTP_INTERNAL_SERVER_ERROR);
+            throw;
+        }
+    }
+    catch (Poco::Exception& exc)
+    {
+        ApacheConnector::log(__FILE__, __LINE__, ApacheConnector::PRIO_ERROR, 0, exc.displayText().c_str());
+    }
+    catch (...)
+    {
+        ApacheConnector::log(__FILE__, __LINE__, ApacheConnector::PRIO_ERROR, 0, "Unknown exception");
+    }
+    return OK;
+}
+
+
+extern "C" void ApacheConnector_register_hooks(apr_pool_t *p)
+{
+    ap_hook_handler(ApacheConnector_handler, NULL, NULL, APR_HOOK_MIDDLE);
+}
+
+
+extern "C" const char* ApacheConnector_uris(cmd_parms *cmd, void *in_dconf, const char *in_str)
+{
+    try
+    {
+        ApacheApplication::instance().factory().handleURIs(in_str);
+    }
+    catch (Poco::Exception& exc)
+    {
+        ApacheConnector::log(__FILE__, __LINE__, ApacheConnector::PRIO_ERROR, 0, exc.displayText().c_str());
+    }
+    catch (...)
+    {
+        ApacheConnector::log(__FILE__, __LINE__, ApacheConnector::PRIO_ERROR, 0, "Unknown exception");
+    }
+    return 0;
+}
+
+
+extern "C" const char* ApacheConnector_config(cmd_parms *cmd, void *in_dconf, const char *in_str)
+{
+    try
+    {
+        ApacheApplication::instance().loadConfiguration(in_str);
+    }
+    catch (Poco::Exception& exc)
+    {
+        ApacheConnector::log(__FILE__, __LINE__, ApacheConnector::PRIO_ERROR, 0, exc.displayText().c_str());
+    }
+    catch (...)
+    {
+        ApacheConnector::log(__FILE__, __LINE__, ApacheConnector::PRIO_ERROR, 0, "Unknown exception");
+    }
+    return 0;
+}
+
+
+extern "C" const command_rec ApacheConnector_cmds[] = 
+{
+    AP_INIT_RAW_ARGS(
+        "AddPocoRequestHandler", 
+        reinterpret_cast<cmd_func>(ApacheConnector_uris), 
+        NULL,
+        RSRC_CONF, 
+        "POCO RequestHandlerFactory class name followed by shared library path followed by a list of ' ' separated URIs that must be handled by this module."),
+    AP_INIT_RAW_ARGS(
+        "AddPocoConfig", 
+        reinterpret_cast<cmd_func>(ApacheConnector_config), 
+        NULL,
+        RSRC_CONF, 
+        "Path of the POCO configuration file."),
+    { NULL }
+};
+
+
+module AP_MODULE_DECLARE_DATA poco_module = 
+{
+    STANDARD20_MODULE_STUFF,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
+    ApacheConnector_cmds,
+    ApacheConnector_register_hooks
+};
