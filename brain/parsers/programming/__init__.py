@@ -36,6 +36,9 @@ class ProgrammingParser(BaseParser):
         
 
     def initTokens(self):
+        '''
+        Loads tokens for use in this instance of the programming parser
+        '''
 
         # if we have already read in and stored the language stuff in memory, we just pull them out of memory
         if BrainRegister.get('PPallKeywords') and BrainRegister.get('PPlanguageKeywords'):
@@ -48,6 +51,9 @@ class ProgrammingParser(BaseParser):
 
 
     def loadTokens(self, setupWatcher=True):
+        '''
+        Reloads tokens from the yaml files on disk
+        '''
 
         self.allKeywords = []
         self.languageKeywords = {}
@@ -93,9 +99,9 @@ class ProgrammingParser(BaseParser):
         Determines if the data is an example of:
             Java, C, C++, PHP, VB, Python, C#, Javascript, Perl, Ruby, or Actionscript
         '''
+
         data = data.lower()
         dataset = set(re.split('[ ;,{}()\n\t\r]', data))
-
 
         # Step 1: Is this even code?
         if not self.findCommonTokens(dataset):
