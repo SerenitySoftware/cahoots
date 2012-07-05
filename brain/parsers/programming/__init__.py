@@ -121,7 +121,7 @@ class ProgrammingParser(BaseParser):
         normalScores = {}
 
         for langId, score in lexedLanguages.items():
-            normalScores[langId] = round((normalizer * score), 2)
+            normalScores[langId] = (normalizer * score)
 
 
         #Step 4: Using a Naive Bayes Classifier to pinpoint the best language fits
@@ -177,12 +177,19 @@ class ProgrammingParser(BaseParser):
                     normalizer = 1
                     normalized score = 25
             '''
-            normalScores[langId] += round((normalizer * score), 2)
+            normalScores[langId] += (normalizer * score)
 
 
+        # We reduce our confidence significantly if the string provided is very short
+        normalizer = (min(100, float(len(data))) / 100)
+        if (normalizer < 1):
+            for langId in normalScores:
+                normalScores[langId] = normalScores[langId] * normalizer
+
+
+        # turning the score into an integer
         for langId in normalScores:
             normalScores[langId] = int(round(normalScores[langId]))
-
 
         return self.resultMulti(normalScores)
 
