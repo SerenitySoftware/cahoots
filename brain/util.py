@@ -20,3 +20,14 @@ class BrainRegistry:
     def test(key):
         """Checks to see if there's a key in the registry"""
         return key in BrainRegistry.storage
+
+    @staticmethod
+    def flush():
+        """Removes all values from the registry"""
+        BrainRegistry.storage = {}
+
+
+def truncateText(text, limit=80):
+    if len(text) > limit:
+        text = text[:limit-3] + "..."
+    return text

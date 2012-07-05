@@ -1,7 +1,7 @@
 from parsers import address, base, boolean, character, date, email, equation, grammar, measurement, number, phone, place, programming, uri
 from brain.result import ParseResultMulti
-import datetime
-import threading
+from brain.util import truncateText
+import datetime, threading
 
 # These are all the parser modules we want to test against
 checks = [
@@ -73,7 +73,7 @@ def parse(dataString, *args, **kwargs):
     query = dataString
     
     return {
-        'query': query,
+        'query': truncateText(query),
         'date': datetime.datetime.now(),
         'top': matches[0] if len(matches) > 0 else None,
         'results': {

@@ -13,10 +13,7 @@ from mako.template import Template
 from mako.lookup import TemplateLookup
 from brain import parser
 from web import out
-import pymongo
-import urlparse
-import config
-
+import pymongo, urlparse, config
 
 
 class BrainiacWSGI(object):
@@ -65,6 +62,7 @@ class BrainiacWSGI(object):
 	def __call__(self, environ, start_response):
 		return self.wsgi_app(environ, start_response)
 
+
 class BrainiacWeb(BrainiacWSGI):
 	
 	def __init__(self, config):
@@ -78,7 +76,8 @@ class BrainiacWeb(BrainiacWSGI):
 			results = parser.parse(query)
 		
 		return self.render('home.html', q = query, results = results, json_results = out.encode(results))
-		
+
+
 class BrainiacAPI(BrainiacWSGI):
 
 	def __init__(self, config):
@@ -92,7 +91,8 @@ class BrainiacAPI(BrainiacWSGI):
 			results = parser.parse(query)
 			
 		return Response(out.encode(results), mimetype='text/html')
-		
+
+
 def wsgi_start(ip, port, app_type, use_reloader = True, use_debugger = True):
 	app = app_type(config)
 	app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
@@ -100,7 +100,8 @@ def wsgi_start(ip, port, app_type, use_reloader = True, use_debugger = True):
 	})
 	
 	run_simple(ip, port, app, use_reloader, use_debugger)
-	
+
+
 if __name__ == '__main__':
 	wsgi_start('0.0.0.0', 8000, BrainiacWeb)
 	#wsgi_start('0.0.0.0', 8080, BrainiacAPI)

@@ -1,5 +1,5 @@
 from brain import parser
-import util
+from tests import getFixtureFileContents
 import unittest
 
 
@@ -181,14 +181,14 @@ class EquationTester(BrainiacTest):
 class ProgrammingTester(BrainiacTest):
 
     def test_programming(self):
-        self.perform(util.getFixtureFileContents('actionscript.as'), 'Programming', 'ActionScript')
-        self.perform(util.getFixtureFileContents('c++.cpp'), 'Programming', 'C++')
-        self.perform(util.getFixtureFileContents('c.c'), 'Programming', 'C')
-        self.perform(util.getFixtureFileContents('csharp.cs'), 'Programming', 'C#')
-        self.perform(util.getFixtureFileContents('java.java'), 'Programming', 'Java')
-        self.perform(util.getFixtureFileContents('javascript.js'), 'Programming', 'JavaScript')
-        self.perform(util.getFixtureFileContents('perl.pl'), 'Programming', 'Perl')
-        self.perform(util.getFixtureFileContents('php.php'), 'Programming', 'PHP')
-        self.perform(util.getFixtureFileContents('python.py'), 'Programming', 'Python')
-        self.perform(util.getFixtureFileContents('ruby.rb'), 'Programming', 'Ruby')
-        self.perform(util.getFixtureFileContents('visualbasic.vb'), 'Programming', 'Visual Basic')
+        self.perform(getFixtureFileContents('actionscript.as'), 'Programming', 'ActionScript')
+        self.perform(getFixtureFileContents('c++.cpp'), 'Programming', 'C++')
+        self.perform(getFixtureFileContents('c.c'), 'Programming', 'C')
+        self.perform(getFixtureFileContents('csharp.cs'), 'Programming', 'C#')
+        self.perform(getFixtureFileContents('java.java'), 'Programming', 'Java')
+        self.perform(getFixtureFileContents('javascript.js'), 'Programming', 'JavaScript')
+        self.perform(getFixtureFileContents('perl.pl'), 'Programming', 'Perl')
+        self.perform(getFixtureFileContents('php.php'), 'Programming', 'PHP')
+        self.perform(getFixtureFileContents('python.py'), 'Programming', 'Python')
+        self.perform(getFixtureFileContents('ruby.rb'), 'Programming', 'Ruby')
+        self.perform(getFixtureFileContents('visualbasic.vb'), 'Programming', 'Visual Basic')
