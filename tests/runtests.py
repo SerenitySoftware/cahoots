@@ -8,10 +8,11 @@ import unittest
 
 
 class BrainiacTestSuites:
+    """Supplies the unit test suites"""
 
     @staticmethod
     def parser():
-        """Unit Tests for the Parser module"""
+        """Unit tests for the parser module"""
         suite = unittest.TestSuite()
         suite.addTest(unittest.makeSuite(NumberTests))
         suite.addTest(unittest.makeSuite(CharacterTests))
