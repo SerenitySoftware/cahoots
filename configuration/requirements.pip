@@ -6,4 +6,5 @@ pymongo
 pyyaml
 pygments
 watchdog
+hiredis
 redisbayes
