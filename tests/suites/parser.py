@@ -192,3 +192,15 @@ class ProgrammingTester(BrainiacTest):
         self.perform(getFixtureFileContents('python.py'), 'Programming', 'Python')
         self.perform(getFixtureFileContents('ruby.rb'), 'Programming', 'Ruby')
         self.perform(getFixtureFileContents('visualbasic.vb'), 'Programming', 'Visual Basic')
+
+
+class NameTester(BrainiacTest):
+
+    def test_programming(self):
+        self.perform('Mr Ryan W Vennell Sr', 'Name', 'Name')
+        self.perform('Mr R Vennell Sr', 'Name', 'Name')
+        self.perform('Ryan W Vennell Sr', 'Name', 'Name')
+        self.perform('Mr Ryan Vennell Esq', 'Name', 'Name')
+        self.perform('Mr Ryan W Vennell', 'Name', 'Name')
+        self.perform('Ryan Vennell', 'Name', 'Name')
+        self.perform('R Vennell', 'Name', 'Name')
