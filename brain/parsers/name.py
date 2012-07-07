@@ -72,13 +72,8 @@ class NameParser(BaseParser):
                 self.Confidence += 20
 
 
-        # If all we found was a prefix and a suffix, basically zero confidence.
-        if len(data) == 0:
-            return self.result(False)
-
-
         # If we have a two or three word "name" here we boost its confidence since this is something of a giveaway
-        if len(data) < 4 and len(data) > 1:
+        if len(data) in xrange(2,4):
             self.Confidence += (5 * len(data))
 
 
