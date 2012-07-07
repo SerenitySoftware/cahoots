@@ -86,9 +86,9 @@ class NameParser(BaseParser):
         if len(data) > 1:
             for word in data:
                 if self.isInitial(word):
-                    self.Confidence += 20
-                else:
                     self.Confidence += 15
+                else:
+                    self.Confidence += 10
 
 
         if self.Confidence == 0:
