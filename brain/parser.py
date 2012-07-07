@@ -1,10 +1,11 @@
-from parsers import address, base, boolean, character, date, email, equation, grammar, measurement, number, phone, place, programming, uri
+from parsers import address, base, boolean, character, date, email, equation, grammar, measurement, name, number, phone, place, programming, uri
 from brain.result import ParseResultMulti
 from brain.util import truncateText
 import datetime, threading
 
 # These are all the parser modules we want to test against
 checks = [
+    name.NameParser,
     number.NumberParser,
     character.CharacterParser,
     boolean.BooleanParser,
