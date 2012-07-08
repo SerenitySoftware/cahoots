@@ -9,13 +9,12 @@ class DateParser(BaseParser):
 
 	def __init__(self):
 		self.Type = "Date"
-		self.Confidence = 80
+		self.Confidence = 0
 		
 	#parse out natural-language strings like "yesterday", "next week", etc
 	def naturalParse(self, dataString):
 		dataString = dataString.lower()
 		today = date.today()
-		
 		
 		if dataString == "yesterday":
 			return today - timedelta(1)
@@ -28,49 +27,51 @@ class DateParser(BaseParser):
 			
 		if dataString == "last week":
 			return today - timedelta(days = 8 + today.weekday())
-			
-		#if dataString == "next month":
-		#	days_in_month = calendar.monthrange(today.year, today.month)[1]
-		#	return today - timedelta(days = today.day) + timedelta(days = days_in_month + 1)
-			
+		
 		return False
 		
+
 	def parse(self, dataString, **kwargs):
 		punctuation = [c for c in dataString if c in string.punctuation or c in string.whitespace]
 		letters = [c for c in dataString if c in string.letters]
 		
-		if len(dataString) < 4:
+		dsLength = len(dataString)
+
+		if dsLength < 4:
 			return self.result(False)
-			
-		if len(dataString) == 4:
-			self.Confidence = 5
-			
-		if len(punctuation) <= 1:
-			self.Confidence = 5
-			
-		if '/' in punctuation and punctuation.count('/') == 1:
-			self.Confidence = 5
-			
+
+
+		# Checking for a natural language date
 		parsedDate = self.naturalParse(dataString)
 		
 		if parsedDate:
-			return self.result(True, "Date", Confidence = 95, data = parsedDate)
+			return self.result(True, "Date", 100, parsedDate)
+
+			
+		if dsLength > 4:
+			self.Confidence += 5
+			
+		if len(punctuation) <= 1:
+			self.Confidence += 5
+			
+		if '/' in punctuation and punctuation.count('/') < 3:
+			self.Confidence += (5 * punctuation.count('/'))
 		
+
 		try:
 			parser = dateparser()
 			parsedDate = parser.parse(dataString)
 			
-			dsLength = len(dataString)
-			
 			if dsLength <= 4:
-				confidence = 10
+				self.Confidence += 10
 			elif dsLength <= 7:
-				confidence = 40
+				self.Confidence += 40
 			else:
-				confidence = 80
+				self.Confidence += 80
 			
-			return self.result(True, "Date", confidence, data = parsedDate)
+			return self.result(True, "Date", self.Confidence, parsedDate)
 		except:
 			pass
 		
+
 		return self.result(False)
