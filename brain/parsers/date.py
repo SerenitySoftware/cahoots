@@ -11,8 +11,8 @@ class DateParser(BaseParser):
 		self.Type = "Date"
 		self.Confidence = 0
 		
-	#parse out natural-language strings like "yesterday", "next week", etc
 	def naturalParse(self, dataString):
+		"""parse out natural-language strings like "yesterday", "next week", etc"""
 		dataString = dataString.lower()
 		today = date.today()
 		
