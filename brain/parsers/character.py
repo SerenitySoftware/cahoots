@@ -1,11 +1,12 @@
 from base import BaseParser
+from boolean import BooleanParser
 import string
 
 class CharacterParser(BaseParser):
 
 	def __init__(self):
 		self.Type = "Character"
-		self.Confidence = 15
+		self.Confidence = 25
 	
 	def isLetter(self, data):
 		if data in string.ascii_letters:
@@ -41,18 +42,24 @@ class CharacterParser(BaseParser):
 		except UnicodeEncodeError:
 			utf8_version = None
 			
-		character_data = {
+		characterData = {
 			"ascii": ascii_version,
 			"utf-8": utf8_version
 		}
+
+		# If this character doesn't evaluate as a boolean, we're positive
+		# it's a character if it passes one of the specific evaulations.
+		bp = BooleanParser()
+		if not bp.isTrue(data) and not bp.isFalse(data):
+			self.Confidence = 100
 			
 		if self.isLetter(data):
-			return self.result(True, "Letter", data = character_data)
+			return self.result(True, "Letter", data = characterData)
 			
 		if self.isPunctuation(data):
-			return self.result(True, "Punctuation", data = character_data)
+			return self.result(True, "Punctuation", data = characterData)
 			
 		if self.isWhitespace(data):
-			return self.result(True, "Whitespace", data = character_data)
+			return self.result(True, "Whitespace", data = characterData)
 
 		return self.result(False)
