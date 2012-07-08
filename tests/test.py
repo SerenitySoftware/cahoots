@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__))[:-6])
 
 from suites.parser import *
 from suites.util import *
+from suites.parsers.boolean import *
 from suites.parsers.name import *
 import unittest
 

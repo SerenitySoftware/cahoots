@@ -2,6 +2,7 @@ from brain import parser
 from tests import getFixtureFileContents
 import unittest
 
+"""Unit Testing of the Parser"""
 
 class BrainiacTest(unittest.TestCase):
     
@@ -13,6 +14,26 @@ class BrainiacTest(unittest.TestCase):
         self.assertEqual(top_result.Type, expected_type, msg = "Top result was {0} instead of expected result {1}".format(top_result.Type, expected_type))
         self.assertEqual(top_result.Subtype, expected_subtype, msg = "Top result subtype was {0} instead of expected subtype {1}".format(top_result.Subtype, expected_subtype))
 
+class BooleanTests(BrainiacTest):
+
+    # Not testing 1 or 0 here, because they have a higher confidence of being an integer
+
+    def test_true(self):
+        self.perform("true", "Boolean", "True")
+        self.perform("yes", "Boolean", "True")
+        self.perform("yep", "Boolean", "True")
+        self.perform("yup", "Boolean", "True")
+        self.perform("t", "Boolean", "True")
+        self.perform("one", "Boolean", "True")
+        pass
+
+    def test_false(self):
+        self.perform("false", "Boolean", "False")
+        self.perform("no", "Boolean", "False")
+        self.perform("nope", "Boolean", "False")
+        self.perform("f", "Boolean", "False")
+        self.perform("zero", "Boolean", "False")
+        pass
 
 class NumberTests(BrainiacTest):
 
