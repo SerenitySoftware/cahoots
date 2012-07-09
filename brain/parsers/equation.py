@@ -1,4 +1,6 @@
 from base import BaseParser
+from phone import PhoneParser
+from programming import ProgrammingParser
 import re, string, math
 
 
@@ -8,16 +10,26 @@ class EquationParser(BaseParser):
     parser to identify and solve some mathematical equations
     """
 
-
-    parsedEquation = None
+    __parsedEquation = None
     """After we've processed the input string from the user, this var will contain the assembled result"""
 
 
     def __init__(self):
         self.Type = "Equation"
-        self.Confidence = 0
-    
-    
+        self.Confidence = 100
+
+
+    def isNumber(self, data):
+        """Checking if the data is a number"""
+        
+        try:
+            float(data.strip())
+        except:
+            return False
+
+        return True
+
+
     def isSimpleEquation(self, data):
         """Seeing if our string only has symbols found in simple math equations"""
 
@@ -29,7 +41,7 @@ class EquationParser(BaseParser):
         
         if match:
             data = self.autoFloat(data)
-            self.parsedEquation = self.autoMultiply(data)
+            self.__parsedEquation = self.autoMultiply(data)
             return True
             
         return False
@@ -39,7 +51,7 @@ class EquationParser(BaseParser):
         """Searching for specific textual markers that can be converted into mathematical operators"""
         
         # SQUARE ROOTS
-        parsedData = re.compile('SQUARE[ ]{1,}ROOT[ ]{1,}OF[ ]{1,}\d+(\.\d+)?').sub(self.squareRootTextReplace, data)
+        parsedData = re.compile('SQUARE[ ]{1,}ROOT[ ]{1,}OF[ ]{1,}\d+(\.\d+)?').sub(self.__squareRootTextReplace, data)
         
         # Simple Operators
         parsedData = parsedData.replace('TIMES', '*')
@@ -49,17 +61,17 @@ class EquationParser(BaseParser):
         parsedData = parsedData.replace('DIVIDEDBY', '/')
         
         # Simple Powers
-        parsedData = re.compile('[ ]{1,}SQUARED|[ ]{1,}CUBED').sub(self.simplePowerReplace, parsedData)
+        parsedData = re.compile('[ ]{1,}SQUARED|[ ]{1,}CUBED').sub(self.__simplePowerReplace, parsedData)
         
         if parsedData != data:
             parsedData = self.autoFloat(parsedData)
-            self.parsedEquation = self.autoMultiply(parsedData)
+            self.__parsedEquation = self.autoMultiply(parsedData)
             return True
         
         return False
     
     
-    def simplePowerReplace(self, match):
+    def __simplePowerReplace(self, match):
         """Converts "SQUARED" and "CUBED" to their proper exponent representation"""
         
         myString = match.group()
@@ -72,7 +84,7 @@ class EquationParser(BaseParser):
         return myString
     
     
-    def squareRootTextReplace(self, match):
+    def __squareRootTextReplace(self, match):
         """Replaces square root references with math.sqrt"""
         
         myString = match.group().replace('SQUARE','')
@@ -88,15 +100,15 @@ class EquationParser(BaseParser):
     def autoFloat(self, data):
         """Makes all digits/decimals into floats so we can do proper math on them without auto-rounding"""
 
-        data = re.compile(r'\d+(\.\d+)?').sub(self.floatReplace, data)
+        data = re.compile(r'\d+(\.\d+)?').sub(self.__floatReplace, data)
         
         return data
         
 
-    def floatReplace(self, match):
+    def __floatReplace(self, match):
         """
         This turns our numbers into floats before we eval the equation.
-        This is because 4/5 comes out at 0, etc. Python autorounds...
+        This is because 4/5 comes out at 0, etc. Python is strongly typed...
         """
         string = 'float('+match.group()+')'
         return string
@@ -110,20 +122,19 @@ class EquationParser(BaseParser):
         return data
 
 
-    def checkForSafeEquationString(self):
+    def checkForSafeEquationString(self, equation):
         """
         Checks to make sure that the equation doesn't contain any unexpected characters
         
         This is pseudo-sanitization. We just make sure that the string has only "safe" characters
         We do this by removing all expected strings, and seeing if we have nothing left.
         """
-        equation = self.parsedEquation
 
         # These are characters or strings that we can use in an equation
         safeStrings = ['math.sqrt', 'float', '(', ')', '*', '+', '-', '/', '.']
 
-        for char in safeStrings:
-            equation = string.replace(equation, char, '')
+        for ss in safeStrings:
+            equation = string.replace(equation, ss, '')
 
         for num in xrange(10):
             equation = string.replace(equation, str(num), '')
@@ -133,21 +144,44 @@ class EquationParser(BaseParser):
         return ('' == equation)
 
         
-    def solveEquation(self):
-        """Evaulates the equation to see if it's solve-able"""
+    def solveEquation(self, equation):
+        """Sanitizes and Evaulates the equation to see if it's solve-able"""
 
-        if not self.checkForSafeEquationString():
+        if not self.checkForSafeEquationString(equation):
             return False
         
         try:
-            return eval(self.parsedEquation.strip())
+            return eval(equation.strip())
         except:
             self.Confidence = 0
             return False
     
-    
+        
+    def calculateConfidence(self, data):
+        """Calculates a confidence rating for this (possible) equation"""
+        confidence = 100
+
+        phoneParser = PhoneParser()
+        phoneResult = phoneParser.parse(data)
+
+        if phoneResult.Matched:
+            for char in [c for c in data if c in string.punctuation]:
+                confidence -= 10
+
+        progParser = ProgrammingParser()
+        dataset = progParser.createDataset(data)
+        for token in set(progParser.findCommonTokens(dataset)):
+            confidence -= 5
+
+        return confidence
+
+
     def parse(self, data, **kwargs):
         """Standard parse function for checking if entered string is a mathematical equation"""
+        
+        # if we just have a number, we know this isn't an equation
+        if self.isNumber(data):
+            return self.result(False)
         
         # Doing some initial data cleanup
         cleanData = string.replace(data.upper(), 'X', '*')
@@ -155,24 +189,22 @@ class EquationParser(BaseParser):
         cleanData = string.replace(cleanData, 'THE', '')
         cleanData = cleanData.strip()
         
-        # if we just have a digit, we know this isn't an equation
-        if (cleanData.isdigit()):
-            return self.result(False);
+        if len(cleanData) == 0:
+            return self.result(False)
         
-        likely = False
-        
+        # We start with 100% confidence, and then lower our confidence if needed.
         if self.isSimpleEquation(cleanData):
             resultType = "Simple"
-            likely = True
-        
-        if self.isTextEquation(cleanData):
+        elif self.isTextEquation(cleanData):
             resultType = "Text"
-            likely = True
-        
-        if likely:
-            calculated = self.solveEquation()
-            if calculated:
-                return self.result(True, resultType, 75, calculated)
+        else:
+            return self.result(False)
+
+        # If the equation proves to be solveable, we calculate a confidence and report success
+        calculated = self.solveEquation(self.__parsedEquation)
+        if calculated:
+            return self.result(True, resultType, self.calculateConfidence(data), calculated)
 
         return self.result(False)
         
+

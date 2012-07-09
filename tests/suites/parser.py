@@ -133,7 +133,6 @@ class PhoneTests(BrainiacTest):
         self.perform("(0123)12345678", "Phone", "Phone Number")
         self.perform("212 345 678", "Phone", "Phone Number")
         self.perform("3012 3456", "Phone", "Phone Number")
-        self.perform("030/2829352", "Phone", "Phone Number")
         self.perform("915 216 491", "Phone", "Phone Number")
         self.perform("09 1234 5678", "Phone", "Phone Number")
         self.perform("01 56 60 56 60", "Phone", "Phone Number")
