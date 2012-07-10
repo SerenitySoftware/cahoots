@@ -151,14 +151,19 @@ textarea.bordered {
 #examples .example {
 	float: left;
 	width: 33%;
+	overflow: hidden;
 }
 
 #examples .example ul {
-	margin: 10px 0 10px 15px;
+	margin: 10px 0px 10px 15px;
 	padding: 0;
 }
 
 #examples .example ul li {
 	margin: 4px 0;
 	padding: 0;
+}
+
+#examples .example ul li a {
+	white-space: nowrap;
 }

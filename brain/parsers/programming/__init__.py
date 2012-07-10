@@ -88,13 +88,18 @@ class ProgrammingParser(BaseParser):
         return [keyword for keyword in dataset if keyword in languageData['keywords']]
 
 
+    def createDataset(self, data):
+        """Takes a data string and converts it into a dataset for analysis"""
+        return set(re.split('[ ;,{}()\n\t\r]', data.lower()))
+
+
     def parse(self, data, **kwargs):
         """
         Determines if the data is an example of:
             Java, C, C++, PHP, VB, Python, C#, Javascript, Perl, Ruby, or Actionscript
         """
 
-        dataset = set(re.split('[ ;,{}()\n\t\r]', data.lower()))
+        dataset = self.createDataset(data)
 
 
         # Step 1: Is this possibly code?

@@ -68,6 +68,9 @@ class NumberParser(BaseParser):
 		return False
 	
 	def isFraction(self, data):
+		# TODO: Currently detects X/X/X as a fraction.
+		# This logic should be simplified greatly to just look for int/int
+		# Need to figure out how to handle this colliding with an equation
 		if not '/' in data:
 			return False
 		

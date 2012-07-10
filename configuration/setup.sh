@@ -5,4 +5,4 @@ echo "Installing OS Packages"
 cat requirements.system | xargs sudo apt-get install -y
 
 echo "Installing pip Packages"
-pip install -r requirements.pip
+sudo pip install -r requirements.pip

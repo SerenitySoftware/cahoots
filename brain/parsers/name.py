@@ -82,8 +82,16 @@ class NameParser(BaseParser):
             for word in data:
                 if self.isInitial(word):
                     self.Confidence += 15
+                    # if there's a period in this initial, we boost it.
+                    if "." in word:
+                        self.Confidence += 5
                 else:
                     self.Confidence += 10
+
+
+        # If our "name" is longer than 4 words, we reduce the liklihood that it's a name
+        if len(data) > 5:
+            self.Confidence -= (7*len(data))
 
 
         if self.Confidence == 0:
