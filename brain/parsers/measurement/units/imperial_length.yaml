@@ -2,6 +2,31 @@ system: Imperial
 type: Length
 id: imperial_length
 keywords:
-- pass
 - '"'
 - "'"
+- yard
+- yards
+- foot
+- feet
+- inch
+- inches
+- thou
+- thous
+- chain
+- chains
+- furlong
+- furlongs
+- mile
+- miles
+- league
+- leagues
+- fathom
+- fathoms
+- cable
+- cables
+- nautical mile
+- nautical miles
+- link
+- links
+- rod
+- rods

@@ -1,0 +1,18 @@
+system: Metric
+type: Mass
+id: metric_mass
+keywords:
+- gram
+- grams
+- milligram
+- milligrams
+- centigram
+- centigrams
+- decigram
+- decigrams
+- kilogram
+- kilograms
+- mg
+- cg
+- dg
+- kg

@@ -2,4 +2,17 @@ system: Metric
 type: Temperature
 id: metric_temperature
 keywords:
-- pass
+- celcius
+- deg celcius
+- degrees celcius
+- degree celcius
+- °c
+- °celcius
+- deg c
+- kelvin
+- deg kelvin
+- degrees kelvin
+- degree kelvin
+- °k
+- °kelvin
+- deg k
