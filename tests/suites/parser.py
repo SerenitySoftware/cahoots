@@ -227,3 +227,28 @@ class NameTester(BrainiacTest):
         self.perform('R Vennell', 'Name', 'Name')
         self.perform('Ryan V', 'Name', 'Name')
         self.perform('Ryan V.', 'Name', 'Name')
+
+
+class MeasurementTester(BrainiacTest):
+
+    def test_measurement(self):
+        self.perform('73 Inches', 'Measurement', 'Imperial Length')
+        self.perform('73"', 'Measurement', 'Imperial Length')
+        self.perform('73\'', 'Measurement', 'Imperial Length')
+        self.perform('5 acres', 'Measurement', 'Imperial Area')
+        self.perform('5 sq/ft', 'Measurement', 'Imperial Area')
+        self.perform('7 ounces', 'Measurement', 'Imperial Mass')
+        self.perform('5lb', 'Measurement', 'Imperial Mass')
+        self.perform('7 deg F', 'Measurement', 'Imperial Temperature')
+        self.perform('10000 Gallons', 'Measurement', 'Imperial Volume')
+        self.perform('1 pint of icecream', 'Measurement', 'Imperial Volume')
+        self.perform('15 hectares', 'Measurement', 'Metric Area')
+        self.perform('15 square kilometers', 'Measurement', 'Metric Area')
+        self.perform('10nm', 'Measurement', 'Metric Length')
+        self.perform('43 kilometers', 'Measurement', 'Metric Length')
+        self.perform('70 metric tonnes', 'Measurement', 'Metric Mass')
+        self.perform('3kg', 'Measurement', 'Metric Mass')
+        self.perform('7 celcius', 'Measurement', 'Metric Temperature')
+        self.perform('3 liter', 'Measurement', 'Metric Volume')
+        self.perform('3 ml', 'Measurement', 'Metric Volume')
+        self.perform('400 parsecs', 'Measurement', 'Miscellaneous Length')
