@@ -99,12 +99,14 @@ class MeasurementParser(BaseParser):
 
 
     def identifyUnitsInData(self, data):
+        """Finds all units of measurement in a set of data"""
         matches = []
 
         for unit in self.allUnits:
             unitStart = data.find(unit)
             if unitStart != -1:
-                data = data[:unitStart] + data[(unitStart+len(unit)):]
+                #replacing the located unit with a space
+                data = data[:unitStart] + ' ' + data[(unitStart+len(unit)):]
 
                 # if we find the term again, we can't classify this as measurement.
                 if data.find(unit) != -1:
