@@ -1,4 +1,4 @@
-from brain.util import BrainRegistry, truncateText
+from brain.util import BrainRegistry, truncateText, isNumber
 import unittest
 
 class BrainRegistryTests(unittest.TestCase):
@@ -57,3 +57,13 @@ class truncateTextTests(unittest.TestCase):
         truncatedTestString = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse non risu...'
 
         self.assertEquals(truncateText(testString), truncatedTestString)
+
+
+class isNumberTests(unittest.TestCase):
+
+    def test_isNumber(self):
+
+        self.assertTrue(isNumber("123.123"))
+        self.assertTrue(isNumber("123"))
+
+        self.assertFalse(isNumber("7 divided by 2"))

@@ -13,13 +13,6 @@ class EquationParserTests(unittest.TestCase):
         self.ep = None
 
 
-    def test_isNumber(self):
-
-        self.assertTrue(self.ep.isNumber("123.123"))
-
-        self.assertFalse(self.ep.isNumber("7 divided by 2"))
-
-
     def test_isSimpleEquation(self):
 
         self.assertTrue(self.ep.isSimpleEquation("5 * 5"))

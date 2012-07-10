@@ -1,0 +1,5 @@
+system: Metric
+type: Temperature
+id: metric_temperature
+keywords:
+- pass

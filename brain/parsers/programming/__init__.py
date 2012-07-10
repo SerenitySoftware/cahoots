@@ -18,9 +18,6 @@ class LanguageFileChangeEventHandler(FileSystemEventHandler):
 
 
 class ProgrammingParser(BaseParser):
-    
-    __subType = ''
-    __success = False
 
     allKeywords = []
     languageKeywords = {}
@@ -31,10 +28,10 @@ class ProgrammingParser(BaseParser):
         self.Confidence = 0
 
         if initTokens:
-            self.initTokens()
+            self.__initTokens()
         
 
-    def initTokens(self):
+    def __initTokens(self):
         """Loads tokens for use in this instance of the programming parser"""
 
         # if we have already read in and stored the language stuff in memory, we just pull them out of memory
@@ -53,8 +50,8 @@ class ProgrammingParser(BaseParser):
         Optionally sets of a watcher for changes of the yaml file directory
         """
 
-        self.allKeywords = []
-        self.languageKeywords = {}
+        allKeywords = []
+        languageKeywords = {}
 
         directory = os.path.dirname(os.path.abspath(__file__))
         path = os.path.join(directory, "languages/*.yaml")
@@ -62,10 +59,11 @@ class ProgrammingParser(BaseParser):
         for filePath in glob.glob(path):
             with open(filePath, 'r') as languageFile:
                 language = yaml.load(languageFile)
-                self.allKeywords.extend(language['keywords'])
-                self.languageKeywords[language['id']] = language
+                allKeywords.extend(language['keywords'])
+                languageKeywords[language['id']] = language
 
-        self.allKeywords = set(self.allKeywords)
+        self.allKeywords = set(allKeywords)
+        self.languageKeywords = languageKeywords
 
         BrainRegistry.set('PPallKeywords', self.allKeywords)
         BrainRegistry.set('PPlanguageKeywords', self.languageKeywords)

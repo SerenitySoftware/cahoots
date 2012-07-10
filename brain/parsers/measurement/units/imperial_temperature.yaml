@@ -1,0 +1,5 @@
+system: Imperial
+type: Temperature
+id: imperial_temperature
+keywords:
+- pass

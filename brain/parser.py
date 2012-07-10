@@ -18,6 +18,7 @@ checks = [
     grammar.GrammarParser,
     address.AddressParser,
     equation.EquationParser,
+    measurement.MeasurementParser
 ]
 
 

@@ -1,3 +1,4 @@
+from brain.util import isNumber
 from base import BaseParser
 from phone import PhoneParser
 from programming import ProgrammingParser
@@ -17,17 +18,6 @@ class EquationParser(BaseParser):
     def __init__(self):
         self.Type = "Equation"
         self.Confidence = 100
-
-
-    def isNumber(self, data):
-        """Checking if the data is a number"""
-        
-        try:
-            float(data.strip())
-        except:
-            return False
-
-        return True
 
 
     def isSimpleEquation(self, data):
@@ -180,7 +170,7 @@ class EquationParser(BaseParser):
         """Standard parse function for checking if entered string is a mathematical equation"""
         
         # if we just have a number, we know this isn't an equation
-        if self.isNumber(data):
+        if isNumber(data):
             return self.result(False)
         
         # Doing some initial data cleanup
