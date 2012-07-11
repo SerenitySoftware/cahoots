@@ -49,6 +49,7 @@ class DateParser(BaseParser):
             return self.result(True, "Date", 100, parsedDate)
 
 
+        # we will use this to adjust the final confidence score
         confidenceNormalizer = 1.0
 
             
@@ -60,7 +61,6 @@ class DateParser(BaseParser):
             
         if '/' in punctuation and punctuation.count('/') < 3:
             confidenceNormalizer *= (1.0 + (.05 * punctuation.count('/')))
-
 
         if len(letters) == 0 and len(digits) < 4:
             confidenceNormalizer *= 0.5

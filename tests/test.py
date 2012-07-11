@@ -14,6 +14,7 @@ from suites.parsers.email import *
 from suites.parsers.equation import *
 from suites.parsers.measurement import *
 from suites.parsers.name import *
+from suites.parsers.number import *
 
 import unittest
 

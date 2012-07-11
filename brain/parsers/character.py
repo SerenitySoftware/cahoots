@@ -9,18 +9,21 @@ class CharacterParser(BaseParser):
 		self.Confidence = 25
 	
 	def isLetter(self, data):
+		"""Checks if input is a letter"""
 		if data in string.ascii_letters:
 			return True
 			
 		return False
 	
 	def isPunctuation(self, data):
+		"""Checks if input is punctuation"""
 		if data in string.punctuation:
 			return True
 			
 		return False
 		
 	def isWhitespace(self, data):
+		"""Checks if input is whitespace"""
 		if data in string.whitespace:
 			return True
 			
