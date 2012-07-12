@@ -30,9 +30,12 @@ class CharacterParser(BaseParser):
 		return False
 
 	def parse(self, data, **kwargs):
-		data = data.decode('utf-8')
-		
 		if len(data) != 1:
+			return self.result(False)
+
+		try:
+			data = data.decode('utf-8')
+		except:
 			return self.result(False)
 		
 		try:

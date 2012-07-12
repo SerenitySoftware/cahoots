@@ -2,7 +2,7 @@ from brain.parsers.base import BaseParser
 from brain.util import BrainRegistry, isNumber
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-import os, re, glob, yaml
+import os, re, glob, yaml, string
 
 
 class MeasurementUnitFileChangeEventHandler(FileSystemEventHandler):
@@ -130,10 +130,14 @@ class MeasurementParser(BaseParser):
         if len(data) > 50 or len(data) == 0:
             return self.result(False)
 
+        #checking if the dataset IS a unit reference.
         if self.basicUnitCheck(data):
             systemId = self.determineSystemUnit(data)
             return self.result(True, self.getSubType(systemId))
 
+        # If there aren't any digits or whitespace in the data, we pretty much can just eliminate it at this point
+        elif not set(data).intersection(set(string.digits)) and not set(data).intersection(set(string.whitespace)):
+            return self.result(False)
 
         # processing the data by identifying and removing found units from it
         try:
@@ -145,35 +149,53 @@ class MeasurementParser(BaseParser):
             if not units:
                 return self.result(False)
 
+        # Turning this into a float so we can operate on it more bettererly
+        self.Confidence = float(self.Confidence)
+
 
         # Finding system ids the found units belong to
         systemIds = []
         for unit in units:
+
+            # Adding a small amount of confidence for every unit we located
+            self.Confidence = self.Confidence * 1.1
+
             systemIds.append(self.determineSystemUnit(unit))
         systemIds = set(systemIds)
 
-
-        # for every found systemId over 1, we cut our self confidence in half
+        # for every found systemId over 1, we cut our self confidence
         if len(systemIds) > 1:
             for i in systemIds:
-                self.Confidence = int(round(float(self.Confidence)/2.00)) # 25, 13, 7, 4, 2, 1, 1, 1...
+                self.Confidence = self.Confidence * 0.75
 
 
         # if all we have left is a number, it helps our case a lot.
         if isNumber(data):
             self.Confidence += 50
         else:
+            # our penalty for extra words is 25% of whatever our confidence is right now
+            extraWordPenalty = self.Confidence * 0.25
+
             # cutting our confidence down for every unidentified word we have in the data string
             data = data.split()
             for i in data:
                 # if we found a number, we dont penalize for that
-                if not isNumber(i):
-                    self.Confidence = int(self.Confidence/2) # 25, 12, 6, 3, 1, 0
+                if not isNumber(i) and i not in string.punctuation:
+                    self.Confidence -= extraWordPenalty
 
-                # if we hit 0, we fail
-                if self.Confidence == 0:
+                # if we hit less than 2% confdence, we just fail.
+                if int(self.Confidence) < 2:
                     return self.result(False)
 
+
+        # If there aren't any numbers in the data, we lower the confidence.
+        if not set(''.join(data)).intersection(set(string.digits)):
+            print "foobar"
+            self.Confidence = self.Confidence * 0.75
+
+
+        # Cleaning up our final confidence number
+        self.Confidence = min(100, int(round(self.Confidence)))
 
         # assembling a string representing the subtypes we found
         subTypes = []
