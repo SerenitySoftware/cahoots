@@ -2,6 +2,7 @@ from brain.result import ParseResult, ParseResultMulti
 from base import BaseParser
 from equation import EquationParser
 from binascii import unhexlify
+from phonenumbers import phonenumberutil
 import re
 
 class NumberParser(BaseParser):
@@ -152,7 +153,7 @@ class NumberParser(BaseParser):
             # if the fraction isn't solve-able, we lower the confidence significantly
             # it might "technically" be a fraction made up of roman numerals, etc.
             ep = EquationParser()
-            if not ep.parse(data).Matched:
+            if not ep.solveEquation(ep.autoFloat(data)):
                 self.Confidence -= 40
 
             return self.result(True, "Fraction")
@@ -170,11 +171,20 @@ class NumberParser(BaseParser):
 
         if self.isInteger(data):
 
+
+            try:
+                phonenumberutil.parse(data, _check_region=False)
+                # 10 point confidence penalty
+                cp = 10
+            except:
+                cp = 0
+                pass
+
             if self.isOctal(data):
-                return self.resultMulti({'Integer': 75,'Octal': 25})
+                return self.resultMulti({'Integer': 75-(cp/2),'Octal': 25-(cp/2)})
 
             # Just an int
-            return self.result(True, "Integer")
+            return self.result(True, "Integer", self.Confidence - cp)
             
 
         if '.' in data and self.isFloat(data):

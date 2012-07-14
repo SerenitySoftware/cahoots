@@ -7,9 +7,11 @@ class BaseParser:
     Confidence = 10
 
     def parse(self, data, *args, **kwargs):
+        """Base parse method"""
         raise NotImplementedError, "Class must override the parse() method"
         
     def result(self, matched, subtype = "Unknown", Confidence = 0, data = {}):
+        """Returns a ParseResult object detailing the results of parsing"""
         if Confidence == 0:
             Confidence = self.Confidence
             
@@ -17,8 +19,8 @@ class BaseParser:
 
 
     def resultMulti(self, resultData):
-        '''
+        """
         Classes can return multiple results, but have to assemble the object themselves
         Should return a ParseResultMulti object
-        '''
+        """
         raise NotImplementedError

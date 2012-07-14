@@ -1,6 +1,6 @@
 from brain.util import isNumber
 from base import BaseParser
-from phone import PhoneParser
+from phonenumbers import phonenumberutil
 from programming import ProgrammingParser
 import re, string, math
 
@@ -151,12 +151,15 @@ class EquationParser(BaseParser):
         """Calculates a confidence rating for this (possible) equation"""
         confidence = 100
 
-        phoneParser = PhoneParser()
-        phoneResult = phoneParser.parse(data)
+        # lowering confidence if we have a phone number
+        try:
+            if len(data) <= 30 and len(data) >= 7:
+                phonenumberutil.parse(data, _check_region=False)
+                for char in [c for c in data if c in string.punctuation]:
+                    confidence -= 10
+        except:
+            pass
 
-        if phoneResult.Matched:
-            for char in [c for c in data if c in string.punctuation]:
-                confidence -= 10
 
         progParser = ProgrammingParser()
         dataset = progParser.createDataset(data)
