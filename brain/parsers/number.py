@@ -1,4 +1,3 @@
-from brain.result import ParseResult
 from base import BaseParser
 from equation import EquationParser
 from binascii import unhexlify
@@ -122,8 +121,11 @@ class NumberParser(BaseParser):
 
         result = self.parse(data)
 
-        if result:
+        try:
+            result.next()
             return True
+        except StopIteration:
+            return False
 
         return False
 
