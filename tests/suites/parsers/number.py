@@ -2,7 +2,7 @@ from brain.parsers.number import NumberParser
 import unittest
 
 class NumberParserTests(unittest.TestCase):
-    """Unit Testing of the DateParser"""
+    """Unit Testing of the NumberParser"""
 
     np = None
 

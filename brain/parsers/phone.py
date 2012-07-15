@@ -22,7 +22,7 @@ class PhoneParser(BaseParser):
             checkRegion = (dataString[0] == "+")
             
             # First pass to see if it's a valid number
-            numObj = phonenumberutil.parse(dataString, _check_region=(dataString[0] == "+"))
+            numObj = phonenumberutil.parse(dataString, _check_region=checkRegion)
 
             numDesc = geocoder.description_for_valid_number(numObj, "en").strip()
 

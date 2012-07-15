@@ -15,6 +15,7 @@ from suites.parsers.equation import *
 from suites.parsers.measurement import *
 from suites.parsers.name import *
 from suites.parsers.number import *
+from suites.parsers.phone import *
 
 import unittest
 
