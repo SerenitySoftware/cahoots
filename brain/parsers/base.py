@@ -1,5 +1,5 @@
 from exceptions import NotImplementedError
-from brain.result import ParseResult, ParseResultMulti
+from brain.result import ParseResult
 
 class BaseParser:
 
@@ -10,17 +10,9 @@ class BaseParser:
         """Base parse method"""
         raise NotImplementedError, "Class must override the parse() method"
         
-    def result(self, matched, subtype = "Unknown", Confidence = 0, data = {}):
+    def result(self, subtype = "Unknown", Confidence = 0, data = {}):
         """Returns a ParseResult object detailing the results of parsing"""
         if Confidence == 0:
             Confidence = self.Confidence
             
-        return ParseResult(matched, self.Type, subtype, Confidence, data)
-
-
-    def resultMulti(self, resultData):
-        """
-        Classes can return multiple results, but have to assemble the object themselves
-        Should return a ParseResultMulti object
-        """
-        raise NotImplementedError
+        return ParseResult(self.Type, subtype, Confidence, data)

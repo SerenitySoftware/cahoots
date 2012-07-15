@@ -1,5 +1,4 @@
 from parsers import address, base, boolean, character, date, email, equation, grammar, measurement, name, number, phone, place, programming, uri
-from brain.result import ParseResultMulti
 from brain.util import truncateText
 import datetime, threading
 
@@ -21,14 +20,13 @@ checks = [
     measurement.MeasurementParser
 ]
 
-
 class ParserThread (threading.Thread):
     """Represents a thread that will handle one parser parsing request"""
 
     parser = None
     dataString = None
     kwargs = None
-    result = None
+    results = []
 
     def __init__(self, module, dataString, **kwargs):
         self.threadId = module
@@ -38,7 +36,7 @@ class ParserThread (threading.Thread):
 
     def run(self):
         self.parser = self.threadId()
-        self.result = self.parser.parse(self.dataString, **self.kwargs)
+        self.results = self.parser.parse(self.dataString, **self.kwargs) or []
 
 
 def parse(dataString, *args, **kwargs):
@@ -58,18 +56,10 @@ def parse(dataString, *args, **kwargs):
         t.join()
 
     # The threads are done, let's get the results out of them
-    for t in [th for th in threads if th.result and (isinstance(th.result, ParseResultMulti) or th.result.Matched)]:
-        match_types.append(t.parser.Type)
-        
-        if isinstance(t.result, ParseResultMulti):
-            # Getting the multiple results out of a ParseResultMulti object 
-            for res in [r for r in t.result.results if r.Matched]:
-                results.append(res)
-        else:
-            # Single Result
-            results.append(t.result)
+    for th in threads:
+        results.extend(th.results)
 
-
+    match_types = list(set([result.Type for result in results]))
     matches = sorted(results, key = lambda result: result.Confidence, reverse = True)
     match_count = len(matches)
     query = dataString

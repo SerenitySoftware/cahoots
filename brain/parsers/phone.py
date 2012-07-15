@@ -77,7 +77,7 @@ class PhoneParser(BaseParser):
         dataString = dataString.strip()
         
         if len(dataString) > 30 or len(dataString) < 7:
-            return self.result(False)
+            return
             
         self.digits = [c for c in dataString if c in string.digits]
         letter_set = set()
@@ -85,13 +85,13 @@ class PhoneParser(BaseParser):
         self.punctuation = [c for c in dataString if c in string.punctuation or c in string.whitespace]
 
         if len(self.letters) > len(self.digits):
-            return self.result(False)
+            return
         
         # Parsing our input, looking for phone numbers
         phoneNumberData = self.getPhoneNumberObject(dataString)
 
         if not phoneNumberData:
-            return self.result(False)
+            return
 
         # if this is an ip address, we take a big hit.
         uriParser = URIParser()
@@ -121,4 +121,4 @@ class PhoneParser(BaseParser):
         if len(self.punctuation) > 0:
             self.Confidence += (5 * len(set(self.punctuation)))
                                 
-        return self.result(True, "Phone Number", max(0, min(100, self.Confidence)), phoneNumberData)
+        yield self.result("Phone Number", max(0, min(100, self.Confidence)), phoneNumberData)

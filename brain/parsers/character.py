@@ -31,12 +31,12 @@ class CharacterParser(BaseParser):
 
 	def parse(self, data, **kwargs):
 		if len(data) != 1:
-			return self.result(False)
+			return
 
 		try:
 			data = data.decode('utf-8')
 		except:
-			return self.result(False)
+			return
 		
 		try:
 			ascii_version = ord(data)
@@ -60,12 +60,11 @@ class CharacterParser(BaseParser):
 			self.Confidence = 100
 			
 		if self.isLetter(data):
-			return self.result(True, "Letter", data = characterData)
+			yield self.result("Letter", data = characterData)
 			
 		if self.isPunctuation(data):
-			return self.result(True, "Punctuation", data = characterData)
+			yield self.result("Punctuation", data = characterData)
 			
 		if self.isWhitespace(data):
-			return self.result(True, "Whitespace", data = characterData)
-
-		return self.result(False)
+			yield self.result("Whitespace", data = characterData)
+			

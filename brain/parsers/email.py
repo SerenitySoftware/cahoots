@@ -15,9 +15,7 @@ class EmailParser(BaseParser):
 
 	def parse(self, dataString, **kwargs):
 		if '@' not in dataString:
-			return self.result(False)
+			return
 		
 		if self.matchesEmailPattern(dataString):
-			return self.result(True, "Email Address", self.Confidence)
-		
-		return self.result(False)
+			yield self.result("Email Address", self.Confidence)

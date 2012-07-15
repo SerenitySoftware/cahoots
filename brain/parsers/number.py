@@ -1,4 +1,4 @@
-from brain.result import ParseResult, ParseResultMulti
+from brain.result import ParseResult
 from base import BaseParser
 from equation import EquationParser
 from binascii import unhexlify
@@ -122,7 +122,7 @@ class NumberParser(BaseParser):
 
         result = self.parse(data)
 
-        if isinstance(result, ParseResultMulti) or result.Matched:
+        if result:
             return True
 
         return False
@@ -132,7 +132,7 @@ class NumberParser(BaseParser):
         data = data.strip()
 
         if data == "":
-            return self.result(False)
+            return
             
         if data[0] == "-":
             data = data[1:]
@@ -140,7 +140,7 @@ class NumberParser(BaseParser):
         data = data.replace(",", "")
         
         if data == '':
-            return self.result(False)
+            return
         
 
         if self.isFraction(data):
@@ -156,7 +156,8 @@ class NumberParser(BaseParser):
             if not ep.solveEquation(ep.autoFloat(data)):
                 self.Confidence -= 40
 
-            return self.result(True, "Fraction")
+            yield self.result("Fraction")
+            return
                     
 
         if self.isBinary(data):
@@ -164,14 +165,14 @@ class NumberParser(BaseParser):
             decodedBinary = self.decodeBinary(data)
             if not decodedBinary:
                 self.Confidence -= 75
-                return self.result(True, "Binary")
+                yield self.result("Binary")
+                return
             else:
-                return self.result(True, "Binary", data=decodedBinary)
+                yield self.result("Binary", data=decodedBinary)
+                return
          
 
         if self.isInteger(data):
-
-
             try:
                 phonenumberutil.parse(data, _check_region=False)
                 # 10 point confidence penalty
@@ -181,29 +182,25 @@ class NumberParser(BaseParser):
                 pass
 
             if self.isOctal(data):
-                return self.resultMulti({'Integer': 75-(cp/2),'Octal': 25-(cp/2)})
+                yield self.result("Integer", 75 - (cp / 2))
+                yield self.result("Octal", 25 - (cp / 2))
+                return
 
             # Just an int
-            return self.result(True, "Integer", self.Confidence - cp)
+            yield self.result("Integer", self.Confidence - cp)
+            return
             
 
         if '.' in data and self.isFloat(data):
-            return self.result(True, "Decimal")    
+            yield self.result("Decimal")
+            return
             
 
         if len(data) > 1 and self.isHex(data):
-            return self.result(True, "Hexadecimal")
+            yield self.result("Hexadecimal")
+            return
             
 
         if self.isRomanNumeral(data):
-            return self.result(True, "Roman Numeral")
-            
-
-        return self.result(False)
-    
-
-
-    def resultMulti(self, resultData):
-        """Prepares a ParseResultMulti object containing the numbers detected"""
-
-        return ParseResultMulti([ParseResult(True, self.Type, subType, confidence) for subType, confidence in resultData.items()])
+            yield self.result("Roman Numeral")
+            return

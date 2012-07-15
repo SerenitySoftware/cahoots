@@ -7,4 +7,4 @@ class GrammarParser(BaseParser):
 		self.Confidence = 25
 		
 	def parse(self, dataString, **kwargs):
-		return self.result(False)
+		pass

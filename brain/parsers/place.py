@@ -7,4 +7,4 @@ class PlaceParser(BaseParser):
 		self.Confidence = 100
 
 	def parse(self, dataString, **kwargs):
-		return self.result(False)
+		pass
