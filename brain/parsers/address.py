@@ -7,6 +7,4 @@ class AddressParser(BaseParser):
 		self.Confidence = 100
 	
 	def parse(self, data, **kwargs):
-			
-		return self.result(False)
-		
+		pass

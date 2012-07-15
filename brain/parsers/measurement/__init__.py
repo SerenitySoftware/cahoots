@@ -128,26 +128,27 @@ class MeasurementParser(BaseParser):
 
         # If the length of the data is longer than 50...almost certainly not a measurement
         if len(data) > 50 or len(data) == 0:
-            return self.result(False)
+            return
 
         #checking if the dataset IS a unit reference.
         if self.basicUnitCheck(data):
             systemId = self.determineSystemUnit(data)
-            return self.result(True, self.getSubType(systemId))
+            yield self.result(self.getSubType(systemId))
+            return
 
         # If there aren't any digits or whitespace in the data, we pretty much can just eliminate it at this point
         elif not set(data).intersection(set(string.digits)) and not set(data).intersection(set(string.whitespace)):
-            return self.result(False)
+            return
 
         # processing the data by identifying and removing found units from it
         try:
             data, units = self.identifyUnitsInData(data)
         except:
-            return self.result(False)
+            return
         else:
             # if we found no units in the data, fail
             if not units:
-                return self.result(False)
+                return
 
         # Turning this into a float so we can operate on it more bettererly
         self.Confidence = float(self.Confidence)
@@ -185,7 +186,7 @@ class MeasurementParser(BaseParser):
 
                 # if we hit less than 2% confdence, we just fail.
                 if int(self.Confidence) < 2:
-                    return self.result(False)
+                    return
 
 
         # If there aren't any numbers in the data, we lower the confidence.
@@ -202,4 +203,4 @@ class MeasurementParser(BaseParser):
         for sid in systemIds:
             subTypes.append(self.getSubType(sid))
 
-        return self.result(True, ', '.join(subTypes))
+        yield self.result(', '.join(subTypes))

@@ -50,7 +50,7 @@ class NameParser(BaseParser):
 
         # Making sure there are at least SOME uppercase letters in the phrase
         if not re.search('[A-Z]', data):
-            return self.result(False)
+            return
 
         data = data.split()
 
@@ -58,7 +58,7 @@ class NameParser(BaseParser):
         # If someone has a name longer than 10 words...they need help
         # Making sure each word in the phrase starts with an uppercase letter or a number
         if len(data) > 10 or not self.basicValidation(data):
-            return self.result(False)
+            return
 
 
         # Checking for things like Mr. or Jr. Big boost for these values.
@@ -95,6 +95,6 @@ class NameParser(BaseParser):
 
 
         if self.Confidence == 0:
-            return self.result(False)
+            return
 
-        return self.result(True, "Name", min(100, self.Confidence))
+        yield self.result("Name", min(100, self.Confidence))

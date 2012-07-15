@@ -1,7 +1,7 @@
 from brain.parsers.base import BaseParser
 from brain.parsers.programming.lexer import ProgrammingLexer
 from brain.parsers.programming.bayesian import ProgrammingBayesianClassifier
-from brain.result import ParseResult, ParseResultMulti
+from brain.result import ParseResult
 from brain.util import BrainRegistry
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
@@ -102,14 +102,14 @@ class ProgrammingParser(BaseParser):
 
         # Step 1: Is this possibly code?
         if not self.findCommonTokens(dataset):
-            return self.result(False)
+            return
         
 
         # Step 2: Which languages match, based on keywords alone?
         matchedLanguages = [language for language, languageData in self.languageKeywords.items() if self.basicLanguageHeuristic(language, languageData, dataset)]
 
         if not matchedLanguages:
-            return self.result(False)
+            return
 
 
         # Step 3: Which languages match, based on a smarter lexer?
@@ -117,7 +117,7 @@ class ProgrammingParser(BaseParser):
         lexedLanguages = lexer.lex()
 
         if not lexedLanguages:
-            return self.result(False)
+            return
 
         # Giving ourselves a maximum of 10% confidence addition for lexer detection
         normalizer = 10 / float(max([scr for lexid, scr in lexedLanguages.items()]))
@@ -194,10 +194,5 @@ class ProgrammingParser(BaseParser):
         for langId in normalScores:
             normalScores[langId] = int(round(normalScores[langId]))
 
-        return self.resultMulti(normalScores)
-
-
-    def resultMulti(self, resultData):
-        """Prepares a ParseResultMulti object containing the programming languages detected"""
-
-        return ParseResultMulti([ParseResult(True, self.Type, self.languageKeywords[langId]['name'], confidence) for langId, confidence in resultData.items()])
+        for langId, confidence in normalScores.items():
+            yield ParseResult(self.Type, self.languageKeywords[langId]['name'], confidence)

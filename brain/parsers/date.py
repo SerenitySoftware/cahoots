@@ -39,14 +39,15 @@ class DateParser(BaseParser):
         dsLength = len(dataString)
 
         if dsLength < 4:
-            return self.result(False)
+            return
 
 
         # Checking for a natural language date
         parsedDate = self.naturalParse(dataString)
         
         if parsedDate:
-            return self.result(True, "Date", 100, parsedDate)
+            yield self.result("Date", 100, parsedDate)
+            return
 
 
         # we will use this to adjust the final confidence score
@@ -79,9 +80,6 @@ class DateParser(BaseParser):
 
             self.Confidence = int(round(float(self.Confidence)*confidenceNormalizer))
             
-            return self.result(True, "Date", self.Confidence, parsedDate)
+            yield self.result("Date", self.Confidence, parsedDate)
         except:
             pass
-        
-
-        return self.result(False)

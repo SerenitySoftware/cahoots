@@ -42,16 +42,15 @@ class BooleanParser(BaseParser):
 
 		# The largest boolean "value" we have is 5 characters long.
 		if len(data) > 5:
-			return self.result(False)
+			return
 		
 		# Testing for true
 		confidence = self.isTrue(data)
 		if confidence:
-			return self.result(True, "True", confidence, True)
+			yield self.result("True", confidence, True)
 
 		# Testing for false
 		confidence = self.isFalse(data)
 		if confidence:
-			return self.result(True, "False", confidence, False)
+			yield self.result("False", confidence, False)
 			
-		return self.result(False)

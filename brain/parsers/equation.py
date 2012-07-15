@@ -174,7 +174,7 @@ class EquationParser(BaseParser):
         
         # if we just have a number, we know this isn't an equation
         if isNumber(data):
-            return self.result(False)
+            return
         
         # Doing some initial data cleanup
         cleanData = string.replace(data.upper(), 'X', '*')
@@ -183,7 +183,7 @@ class EquationParser(BaseParser):
         cleanData = cleanData.strip()
         
         if len(cleanData) == 0:
-            return self.result(False)
+            return
         
         # We start with 100% confidence, and then lower our confidence if needed.
         if self.isSimpleEquation(cleanData):
@@ -191,13 +191,10 @@ class EquationParser(BaseParser):
         elif self.isTextEquation(cleanData):
             resultType = "Text"
         else:
-            return self.result(False)
+            return
 
         # If the equation proves to be solveable, we calculate a confidence and report success
         calculated = self.solveEquation(self.__parsedEquation)
         if calculated:
-            return self.result(True, resultType, self.calculateConfidence(data), calculated)
-
-        return self.result(False)
-        
+            yield self.result(resultType, self.calculateConfidence(data), calculated)
 
