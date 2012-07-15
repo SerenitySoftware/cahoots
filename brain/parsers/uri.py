@@ -1,15 +1,15 @@
 from base import BaseParser
-import socket, urlparse
-import string
-from lepl.apps.rfc3696 import HttpUrl
+import socket, urlparse, string
 
 class URIParser(BaseParser):
 
 	def __init__(self):
 		self.Type = "URI"
-		self.Confidence = 50
+		self.Confidence = 100
+
 
 	def isIPv6Address(self, address):
+		"""Checks if the data is an ipv6 address"""
 		try:
 			socket.inet_pton(socket.AF_INET6, address)
 			return True
@@ -18,7 +18,9 @@ class URIParser(BaseParser):
 
 		return False
 
+
 	def isIPv4Address(self, address):
+		"""checks if the data is an ipv4 address"""
 		try:
 			socket.inet_aton(address)
 			return True
@@ -26,12 +28,10 @@ class URIParser(BaseParser):
 			pass
 			
 		return False
-		
-	def tryURL(self, url):
-		#using the lepl parsing library, which is slow
-		#if HttpUrl()(url):
-		#	return True
-		
+
+
+	def isValidUrl(self, url):
+		"""Tries to parse a URL to see if it's valid"""
 		pieces = urlparse.urlparse(url)
 		
 		if not all([pieces.scheme, pieces.netloc]):
@@ -41,39 +41,33 @@ class URIParser(BaseParser):
 			return False
 			
 		return True
-		
-		
-	def isURL(self, url):
-		result = self.tryURL(url)
-		
-		if result:
-			return True
-			
-		if '://' not in url:
-			url = 'http://' + url
-			result = self.tryURL(url)
-			
-			if result:
-				return True
-				
-		return False
 			
 
 	def parse(self, dataString, **kwargs):
 		if len(dataString) < 4:
 			return
-			
+
 		dotCount = dataString.count(".")
 		colonCount = dataString.count(":")
 		
 		if dotCount >= 2 or colonCount >= 2:
 			if self.isIPv4Address(dataString):
+				#lowering the confidence because "Technically" and ipv4 address could be a phone number
+				self.Confidence -= 5
 				yield self.result("IP Address (v4)")
 			
 			if self.isIPv6Address(dataString):
 				yield self.result("IP Address (v6)")
-			
+
+
 		letters = [c for c in dataString if c in string.letters]
-		if dotCount > 0 and len(letters) >= 4 and self.isURL(dataString):
-			yield self.result("URL")
-		
+
+		if dotCount > 0 and len(letters) >= 4:
+			if self.isValidUrl(dataString):
+				yield self.result("URL")
+
+			if '://' not in dataString:
+				if self.isValidUrl('http://' + dataString):
+					# confidence hit since we had to modify the data
+					self.Confidence -= 25
+					yield self.result("URL", data='http://'+dataString)

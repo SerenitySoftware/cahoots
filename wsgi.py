@@ -4,16 +4,13 @@ import os, sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
 from werkzeug.wrappers import Request, Response
-from werkzeug.exceptions import HTTPException, NotFound
+from werkzeug.exceptions import HTTPException
 from werkzeug.wsgi import SharedDataMiddleware
 from werkzeug.serving import run_simple
-from werkzeug.utils import redirect
-from mako import *
-from mako.template import Template
 from mako.lookup import TemplateLookup
 from brain import parser
 from web import out
-import pymongo, urlparse, config
+import config
 
 
 class BrainiacWSGI(object):

@@ -1,8 +1,6 @@
 werkzeug
 mako
 dateutils
-lepl
-pymongo
 pyyaml
 pygments
 watchdog
