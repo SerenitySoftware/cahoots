@@ -3,102 +3,84 @@
 import os, sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
-from werkzeug.wrappers import Request, Response
-from werkzeug.exceptions import HTTPException
-from werkzeug.wsgi import SharedDataMiddleware
-from werkzeug.serving import run_simple
+from flask import Flask, request
 from mako.lookup import TemplateLookup
 from brain import parser
 from web import out
 import config
 
+app = Flask(__name__,static_folder='web/static')
+
 
 class BrainiacWSGI(object):
 
-	config = {}
-	
-	def __init__(self, config):
-		self.config = config
-		
-		self.configure_database()
-		self.configure_templating()
-		self.configure_routing()
-		
-	def configure_database(self):
-		pass
-		#self.db = pymongo.Connection(self.config.database['host'], self.config.database['port'])[self.config.database['database']]
-		
-	def configure_templating(self):
-		self.template_lookup = TemplateLookup(
-			directories = self.config.template['lookups'],
-			module_directory = self.config.template['modules']
-		)
-		
-	def configure_routing(self):
-		self.urls = self.config.urls
-		
-	def render(self, template, **context):
-		rendered_template = self.template_lookup.get_template(template)
-		return Response(rendered_template.render(**context), mimetype='text/html')
-		
-	def dispatch_request(self, request):
-		adapter = self.urls.bind_to_environ(request.environ)
-		
-		try:
-			endpoint, values = adapter.match()
-			return getattr(self, 'view_' + endpoint)(request, **values)
-		except HTTPException, e:
-			return e
-			
-	def wsgi_app(self, environ, start_response):
-		request = Request(environ)
-		response = self.dispatch_request(request)
-		return response(environ, start_response)
-		
-		
-	def __call__(self, environ, start_response):
-		return self.wsgi_app(environ, start_response)
+    config = {}
+    templateLookup = None
+    
+    def __init__(self, config):
+        self.config = config
+        self.configure_templating()
+
+    def configure_templating(self):
+        self.templateLookup = TemplateLookup(
+            directories = self.config.template['lookups'],
+            module_directory = self.config.template['modules']
+        )
+        
+    def render(self, template, **context):
+        rendered_template = self.templateLookup.get_template(template)
+        return rendered_template.render(**context)
+
+    def getRequestVariable(self, request, parameter):
+        if request.method == 'POST':
+            query = request.form.get(parameter, '')
+        elif request.method == 'GET':
+            query = request.args.get(parameter, '')
+
+        return query
 
 
-class BrainiacWeb(BrainiacWSGI):
-	
-	def __init__(self, config):
-		super(BrainiacWeb, self).__init__(config)
-		
-	def view_home(self, request):
-		query = request.form.get('q', '')
-		
-		results = None
-		if query != '':
-			results = parser.parse(query)
-		
-		return self.render('home.html', q = query, results = results, json_results = out.encode(results))
+class BrainiacClassifier(BrainiacWSGI):
+    
+    def __init__(self, config):
+        super(BrainiacClassifier, self).__init__(config)
+    
+    def renderHome(self, request):
+        query = self.getRequestVariable(request, 'q')
+        
+        results = None
+        if query != '':
+            results = parser.parse(query)
+        
+        return self.render('home.html', q = query, results = results, json_results = out.encode(results))
 
 
-class BrainiacAPI(BrainiacWSGI):
+class BrainiacClassifierApi(BrainiacWSGI):
 
-	def __init__(self, config):
-		super(BrainiacAPI, self).__init__(config)
-		
-	def view_home(self, request):
-		query = request.form.get('q', '')
-		
-		results = None
-		if query != '':
-			results = parser.parse(query)
-			
-		return Response(out.encode(results), mimetype='text/html')
-
-
-def wsgi_start(ip, port, app_type, use_reloader = True, use_debugger = True):
-	app = app_type(config)
-	app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
-		'/static':  os.path.join(os.path.dirname(__file__), 'web/static')
-	})
-	
-	run_simple(ip, port, app, use_reloader, use_debugger)
+    def __init__(self, config):
+        super(BrainiacClassifierApi, self).__init__(config)
+        
+    def renderApi(self, request):
+        query = self.getRequestVariable(request, 'q')
+        
+        results = None
+        if query != '':
+            results = parser.parse(query)
+            
+        return out.encode(results)
 
 
-if __name__ == '__main__':
-	wsgi_start('0.0.0.0', 8000, BrainiacWeb)
-	#wsgi_start('0.0.0.0', 8080, BrainiacAPI)
+@app.route("/classifier/", methods=['POST', 'GET'])
+def classifier():
+    classifier = BrainiacClassifier(config)
+    return classifier.renderHome(request)
+
+
+@app.route("/classifier/api/", methods=['POST', 'GET'])
+def classifierApi():
+    classifier = BrainiacClassifierApi(config)
+    return classifier.renderApi(request)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

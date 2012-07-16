@@ -1,4 +1,4 @@
-werkzeug
+flask
 mako
 dateutils
 pyyaml
