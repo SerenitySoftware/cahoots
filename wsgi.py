@@ -3,7 +3,7 @@
 import os, sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
-from flask import Flask, request
+from flask import Flask, request, redirect
 from mako.lookup import TemplateLookup
 from brain import parser
 from web import out
@@ -70,6 +70,11 @@ class BrainiacClassifierApi(BrainiacWSGI):
         return out.encode(results)
 
 
+@app.route("/")
+def classifierRedirect():
+    return redirect("/classifier/")
+
+
 @app.route("/classifier/", methods=['POST', 'GET'])
 def classifier():
     classifier = BrainiacClassifier(config)
@@ -83,4 +88,4 @@ def classifierApi():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=True)
