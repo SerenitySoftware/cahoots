@@ -6,5 +6,8 @@ apt-get update
 apt-get -y upgrade
 cat requirements.system | xargs sudo apt-get install -y
 
-echo "Installing pip Packages"
+echo "Installing required pip Packages"
 sudo pip install -r requirements.pip
+
+echo "Installing optional pip Packages"
+sudo pip install -r optional.pip

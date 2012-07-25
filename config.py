@@ -1,4 +1,4 @@
 template = {
-	'lookups': ['/opt/brainiac/web/templates/'],
+	'lookups': ['web/templates/'],
 	'modules': '/tmp/makocache/'
 }

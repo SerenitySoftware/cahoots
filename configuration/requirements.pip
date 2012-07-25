@@ -4,6 +4,6 @@ dateutils
 pyyaml
 pygments
 watchdog
-hiredis
 redisbayes
 phonenumbers
+simplejson
