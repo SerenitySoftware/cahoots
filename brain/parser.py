@@ -1,4 +1,4 @@
-from parsers import address, base, boolean, character, date, email, equation, grammar, measurement, name, number, phone, place, programming, uri
+from parsers import base, boolean, character, date, email, equation, grammar, location, measurement, name, number, phone, programming, uri
 from brain.util import truncateText
 import datetime, threading
 
@@ -12,10 +12,9 @@ checks = [
     phone.PhoneParser,
     uri.URIParser,
     email.EmailParser,
-    place.PlaceParser,
     programming.ProgrammingParser,
     grammar.GrammarParser,
-    address.AddressParser,
+    location.LocationParser,
     equation.EquationParser,
     measurement.MeasurementParser
 ]

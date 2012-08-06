@@ -10,9 +10,9 @@ class BaseParser:
         """Base parse method"""
         raise NotImplementedError, "Class must override the parse() method"
         
-    def result(self, subtype = "Unknown", Confidence = 0, data = {}):
+    def result(self, subtype = "Unknown", confidence = 0, value = None, data = {}):
         """Returns a ParseResult object detailing the results of parsing"""
-        if Confidence == 0:
-            Confidence = self.Confidence
+        if confidence == 0:
+            confidence = self.Confidence
             
-        return ParseResult(self.Type, subtype, Confidence, data)
+        return ParseResult(type=self.Type, subtype=subtype, confidence=confidence, value=value, additional_data=data)

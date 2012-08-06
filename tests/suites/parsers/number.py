@@ -42,14 +42,6 @@ class NumberParserTests(unittest.TestCase):
         self.assertFalse(self.np.isBinary("1234"))
 
 
-    def test_decodeBinary(self):
-
-        self.assertTrue(self.np.decodeBinary("0110100001100101011011000110110001101111"))
-
-        self.assertFalse(self.np.decodeBinary("1234"))
-        self.assertFalse(self.np.decodeBinary("0101010110101010"))
-
-
     def test_isOctal(self):
 
         self.assertTrue(self.np.isOctal("12345670"))
@@ -73,3 +65,8 @@ class NumberParserTests(unittest.TestCase):
         self.assertFalse(self.np.isFraction("abc123"))
         self.assertFalse(self.np.isFraction("1 1/"))
         self.assertFalse(self.np.isFraction("1 1"))
+
+    def test_isWordNumber(self):
+        self.assertTrue(self.np.isWordNumber("One"))
+        self.assertTrue(self.np.isWordNumber("Two Hundred"))
+        self.assertTrue(self.np.isWordNumber("Four Million, Five Hundred and Thirty Three Thousand, Four Hundred and Twelve"))

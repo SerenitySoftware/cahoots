@@ -14,6 +14,7 @@ class BrainiacEncoder(simplejson.JSONEncoder):
 				'type': obj.Type,
 				'subtype': obj.Subtype,
 				'confidence': obj.Confidence,
+				'value': obj.ResultValue,
 				'data': obj.Data
 			}
 			
