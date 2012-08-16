@@ -70,21 +70,14 @@ class BrainiacClassifierApi(BrainiacWSGI):
         return out.encode(results)
 
 
-@app.route("/")
-def classifierRedirect():
-    return redirect("/classifier/")
+@app.route("/", methods=['POST', 'GET'])
+def view_classifier():
+    return BrainiacClassifier(config).renderHome(request)
 
 
-@app.route("/classifier/", methods=['POST', 'GET'])
-def classifier():
-    classifier = BrainiacClassifier(config)
-    return classifier.renderHome(request)
-
-
-@app.route("/classifier/api/", methods=['POST', 'GET'])
-def classifierApi():
-    classifier = BrainiacClassifierApi(config)
-    return classifier.renderApi(request)
+@app.route("/api/", methods=['POST', 'GET'])
+def view_api():
+    return BrainiacClassifierApi(config).renderApi(request)
 
 
 if __name__ == "__main__":
