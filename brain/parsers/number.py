@@ -205,10 +205,11 @@ class NumberParser(BaseParser):
 
 
     def isWords(self, data):
-        numberValue = self.numberWords.parseString(data)[0]
-        return True, numberValue
-        #except ParseException, pe:
-        #    return False, 0
+        try:
+            numberValue = self.numberWords.parseString(data)[0]
+            return True, numberValue
+        except ParseException, pe:
+            return False, 0
 
     def isFraction(self, data):
         """Detects if input is a fraction"""
