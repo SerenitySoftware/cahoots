@@ -1,3 +1,4 @@
 python-dev
 python-pip
+python-virtualenv
 redis-server

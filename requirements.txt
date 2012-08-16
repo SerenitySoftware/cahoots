@@ -8,3 +8,4 @@ watchdog
 redisbayes
 phonenumbers
 simplejson
+hiredis

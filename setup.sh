@@ -7,7 +7,11 @@ apt-get -y upgrade
 cat requirements.system | xargs sudo apt-get install -y
 
 echo "Installing required pip Packages"
-sudo pip install -r requirements.pip
 
-echo "Installing optional pip Packages"
-sudo pip install -r optional.pip
+if [ ! -d ../.env ]
+then
+	virtualenv ../.env
+fi
+
+source ../.env/bin/activate
+pip install -r requirements.txt
