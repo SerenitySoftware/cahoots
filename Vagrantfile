@@ -1,13 +1,40 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+def Kernel.is_windows?
+    processor, platform, *rest = RUBY_PLATFORM.split("-")
+    platform == 'mingw32'
+end
 
-Vagrant::Config.run do |config|
-  config.vm.box = "brainiac"
-  config.vm.box_url = "http://files.vagrantup.com/precise32.box"
+Vagrant.configure("2") do |config|
+    # Standard VM Settings
+    config.vm.box = "hashicorp/precise64"
 
-  config.vm.forward_port 80, 8080
-  config.vm.forward_port 8000, 8000
-  config.vm.forward_port 5432, 5432
+    if Kernel.is_windows?
+        config.vm.network :public_network, :bridge => ENV['VAGRANT_BRIDGE']
+    elsif ENV['VAGRANT_PRIVATE_IP'].nil?
+        config.vm.network :private_network, type: :dhcp
+    else
+        config.vm.network :private_network, ip: ENV['VAGRANT_PRIVATE_IP']
+    end
 
-  config.vm.share_folder "brainiac", "/srv/brainiac", "../"
+	config.vm.network :forwarded_port, guest: 8000, host: 8000
+
+    config.vm.synced_folder ".", "/vagrant", type: "nfs"
+
+    # Provisioning
+    config.vm.provision :shell, :path => "setup/provision.sh"
+
+    # SSH Configuration
+    config.ssh.username = "vagrant"
+    config.ssh.shell = "bash -l"
+    config.ssh.keep_alive = true
+    config.ssh.forward_agent = true
+    config.ssh.forward_x11 = true
+    config.vagrant.host = :detect
+
+    # VirtualBox Provider
+    config.vm.provider :virtualbox do |virtualbox, override|
+        virtualbox.customize ["modifyvm", :id, "--name", "brainiac"]
+        virtualbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        virtualbox.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+        virtualbox.customize ["modifyvm", :id, "--memory", 2048]
+    end
 end
