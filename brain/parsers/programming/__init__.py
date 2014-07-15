@@ -3,18 +3,7 @@ from brain.parsers.programming.lexer import ProgrammingLexer
 from brain.parsers.programming.bayesian import ProgrammingBayesianClassifier
 from brain.result import ParseResult
 from brain.util import BrainRegistry
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
 import os, re, glob, yaml
-
-class LanguageFileChangeEventHandler(FileSystemEventHandler):
-    """Responsible for reloading language data if the yaml directory changes"""
-
-    # Static Programming Parser Instance
-    ppi = None
-
-    def on_any_event(self, event):
-        self.ppi.loadTokens(False)
 
 
 class ProgrammingParser(BaseParser):
@@ -44,7 +33,7 @@ class ProgrammingParser(BaseParser):
         self.loadTokens()
 
 
-    def loadTokens(self, setupWatcher=True):
+    def loadTokens(self):
         """
         Reloads tokens from the yaml files on disk
         Optionally sets of a watcher for changes of the yaml file directory
@@ -67,14 +56,6 @@ class ProgrammingParser(BaseParser):
 
         BrainRegistry.set('PPallKeywords', self.allKeywords)
         BrainRegistry.set('PPlanguageKeywords', self.languageKeywords)
-
-        # Launching an observer to watch for changes to the language directory
-        if setupWatcher:
-            LanguageFileChangeEventHandler.ppi = ProgrammingParser(False)
-            event_handler = LanguageFileChangeEventHandler()
-            observer = Observer()
-            observer.schedule(event_handler, os.path.join(directory, "languages/"))
-            observer.start()
     
 
     # finding common words/phrases in programming languages
@@ -92,10 +73,7 @@ class ProgrammingParser(BaseParser):
 
 
     def parse(self, data, **kwargs):
-        """
-        Determines if the data is an example of:
-            Java, C, C++, PHP, VB, Python, C#, Javascript, Perl, Ruby, or Actionscript
-        """
+        """Determines if the data is an example of one of our trained languages"""
 
         dataset = self.createDataset(data)
 

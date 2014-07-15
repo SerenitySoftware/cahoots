@@ -1,18 +1,6 @@
 from brain.parsers.base import BaseParser
 from brain.util import BrainRegistry, isNumber
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-import os, re, glob, yaml, string
-
-
-class MeasurementUnitFileChangeEventHandler(FileSystemEventHandler):
-    """Responsible for reloading unit data if the yaml directory changes"""
-
-    # Static Measurement Parser Instance
-    mpi = None
-
-    def on_any_event(self, event):
-        self.mpi.loadUnits(False)
+import os, glob, yaml, string
 
 
 class MeasurementParser(BaseParser):
@@ -47,7 +35,7 @@ class MeasurementParser(BaseParser):
         self.loadUnits()
 
 
-    def loadUnits(self, setupWatcher=True):
+    def loadUnits(self):
         """
         Reloads units from the yaml files on disk
         Optionally sets of a watcher for changes of the yaml file directory
@@ -76,14 +64,6 @@ class MeasurementParser(BaseParser):
 
         BrainRegistry.set('MPallUnits', self.allUnits)
         BrainRegistry.set('MPsystemUnits', self.systemUnits)
-
-        # Launching an observer to watch for changes to the language directory
-        if setupWatcher:
-            MeasurementUnitFileChangeEventHandler.mpi = MeasurementParser(False)
-            event_handler = MeasurementUnitFileChangeEventHandler()
-            observer = Observer()
-            observer.schedule(event_handler, os.path.join(directory, "units/"))
-            observer.start()
 
 
     def basicUnitCheck(self, data):

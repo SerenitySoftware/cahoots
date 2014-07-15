@@ -1,15 +1,5 @@
 from brain.util import BrainRegistry
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-import redis, redisbayes, os, glob, re, string
-
-
-class BayesianTrainerChangeEventHandler(FileSystemEventHandler):
-    """Responsible for reloading bayes training data if the training source directory changes"""
-
-    def on_any_event(self, event):
-        ProgrammingBayesianClassifier.trainClassifier(False)
-
+import redis, redisbayes, os, glob, string
 
 class ProgrammingBayesianClassifier:
     """Responsible for classifying an example of source code into a specific programming language"""
@@ -22,8 +12,9 @@ class ProgrammingBayesianClassifier:
             ProgrammingBayesianClassifier.trainClassifier()
 
 
+
     @staticmethod
-    def trainClassifier(setupWatcher=True):
+    def trainClassifier():
         """Trains the bayes classifier with examples from various programming languages"""
         rb = BrainRegistry.get('PPredisBayes')
 
@@ -42,11 +33,6 @@ class ProgrammingBayesianClassifier:
         for language in trainers:
             rb.train(language, trainers[language])
 
-        if setupWatcher:
-            event_handler = BayesianTrainerChangeEventHandler()
-            observer = Observer()
-            observer.schedule(event_handler, os.path.join(directory, "bayes_trainers/"))
-            observer.start()
 
     @staticmethod
     def bayesTokenizer(text):
@@ -54,6 +40,7 @@ class ProgrammingBayesianClassifier:
         text = text.replace('.', ' . ')
         text = text.replace('){', ') {')
         text = text.replace('$', ' $')
+        text = text.replace('\\', ' \\ ')
         words = text.split()
         return [w for w in words if len(w) > 0 and w not in string.whitespace]
 

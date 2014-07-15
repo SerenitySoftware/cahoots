@@ -4,7 +4,6 @@ dateutils
 pyyaml
 pygments
 pyparsing
-watchdog
 redisbayes
 phonenumbers
 simplejson
