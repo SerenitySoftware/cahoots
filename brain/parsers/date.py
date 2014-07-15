@@ -1,7 +1,6 @@
 from base import BaseParser
-from datetime import datetime, date, time, timedelta
-import calendar
-from dateutil.parser import parser as dateparser
+from datetime import date, timedelta
+import dateutil.parser as dateUtilParser
 import string
 
 
@@ -38,6 +37,7 @@ class DateParser(BaseParser):
         
         dsLength = len(dataString)
 
+
         if dsLength < 4:
             return
 
@@ -65,12 +65,10 @@ class DateParser(BaseParser):
 
         if len(letters) == 0 and len(digits) < 4:
             confidenceNormalizer *= 0.5
-        
 
         try:
-            parser = dateparser()
-            parsedDate = parser.parse(dataString)
-            
+            parsedDate = dateUtilParser.parse(dataString)
+
             if dsLength <= 4:
                 self.Confidence += 10
             elif dsLength <= 7:
@@ -79,7 +77,7 @@ class DateParser(BaseParser):
                 self.Confidence += 80
 
             self.Confidence = int(round(float(self.Confidence)*confidenceNormalizer))
-            
+
             yield self.result("Date", self.Confidence, parsedDate)
         except:
             pass

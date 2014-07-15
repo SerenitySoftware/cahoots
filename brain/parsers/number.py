@@ -158,8 +158,13 @@ class NumberParser(BaseParser):
         for c in data:
             if c not in ["0","1"]:
                 return False, 0
-                
-        return True, unicode(unhexlify('%x' % int(data, 2)))
+
+        try:
+            value = unicode(unhexlify('%x' % int(data, 2)))
+        except:
+            return False, 0
+
+        return True, value
 
 
     def isOctal(self, data):
@@ -179,9 +184,9 @@ class NumberParser(BaseParser):
            ([XLC]*)     # tens
            ([IVX]*)     # units
            $""", re.VERBOSE)
-        
+
         match = rgx_roman.match(data)
-        
+
         if match:
             value = 0
             index = 0
@@ -189,7 +194,7 @@ class NumberParser(BaseParser):
             while index < len(data):
                 found = False
                 for(roman_numeral, arabic_numeral) in self.roman_numerals:
-                    if data[index:len(roman_numeral)] == roman_numeral:
+                    if data[index:(index+len(roman_numeral))] == roman_numeral:
                         value += arabic_numeral
                         index += len(roman_numeral)
                         found = True
@@ -197,7 +202,6 @@ class NumberParser(BaseParser):
 
                 if not found:
                     index += 1
-
 
             return True, value
             

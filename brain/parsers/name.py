@@ -26,7 +26,7 @@ class NameParser(BaseParser):
     def isSuffix(self, word):
         """Checks to see if the word passed in is a name suffix"""
         np = NumberParser()
-        if np.isRomanNumeral(word):
+        if np.isRomanNumeral(word) != (False, 0):
             return True
 
         word = word.replace('.', '').upper()

@@ -2,7 +2,7 @@ from base import BaseParser
 from uri import URIParser
 from number import NumberParser
 from phonenumbers import phonenumberutil, geocoder
-import string, re
+import string
 
 class PhoneParser(BaseParser):
 
@@ -75,11 +75,12 @@ class PhoneParser(BaseParser):
 
     def parse(self, dataString, **kwargs):
         dataString = dataString.strip()
-        
-        if len(dataString) > 30 or len(dataString) < 7:
-            return
-            
+
         self.digits = [c for c in dataString if c in string.digits]
+
+        if len(dataString) > 30 or len(self.digits) < 7:
+            return
+
         letter_set = set()
         self.letters = [c for c in dataString if c in string.letters and c not in letter_set and not letter_set.add(c)]
         self.punctuation = [c for c in dataString if c in string.punctuation or c in string.whitespace]
@@ -100,7 +101,7 @@ class PhoneParser(BaseParser):
 
         # if this is an integer, we take a big hit.
         numParser = NumberParser()
-        if numParser.isInteger(dataString):
+        if numParser.isInteger(dataString) != (False, 0):
             self.Confidence -= 20
 
         # Length penalties

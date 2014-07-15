@@ -8,6 +8,7 @@ class MeasurementParserTests(unittest.TestCase):
     mp = None
 
     def setUp(self):
+        MeasurementParser.bootstrap()
         self.mp = MeasurementParser()
 
     def tearDown(self):
@@ -15,9 +16,6 @@ class MeasurementParserTests(unittest.TestCase):
 
 
     def test_loadUnits(self):
-
-        # if we have units in the registry, we know the loadunits method worked,
-        # because it's the only way they get loaded
         self.assertTrue(BrainRegistry.test('MPallUnits'))
         self.assertTrue(BrainRegistry.test('MPsystemUnits'))
 

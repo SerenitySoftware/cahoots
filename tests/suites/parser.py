@@ -9,8 +9,8 @@ class BrainiacTest(unittest.TestCase):
     def perform(self, data, expected_type, expected_subtype):
         results = parser.parse(data)['results']['matches']
         self.assertNotEqual(0, len(results), msg = "No Brainiac results returned")
-        
-        top_result = results[0]
+
+        top_result = parser.parse(data)['top']
         self.assertEqual(top_result.Type, expected_type, msg = "Top result was {0} instead of expected result {1}".format(top_result.Type, expected_type))
         self.assertEqual(top_result.Subtype, expected_subtype, msg = "Top result subtype was {0} instead of expected subtype {1}".format(top_result.Subtype, expected_subtype))
 
@@ -19,25 +19,25 @@ class BooleanTests(BrainiacTest):
     # Not testing 1 or 0 here, because they have a higher confidence of being an integer
 
     def test_true(self):
+        parser.bootstrap(True)
         self.perform("true", "Boolean", "True")
         self.perform("yes", "Boolean", "True")
         self.perform("yep", "Boolean", "True")
         self.perform("yup", "Boolean", "True")
         self.perform("t", "Boolean", "True")
-        self.perform("one", "Boolean", "True")
-        pass
+
 
     def test_false(self):
+        parser.bootstrap(True)
         self.perform("false", "Boolean", "False")
         self.perform("no", "Boolean", "False")
         self.perform("nope", "Boolean", "False")
         self.perform("f", "Boolean", "False")
-        self.perform("zero", "Boolean", "False")
-        pass
 
 class NumberTests(BrainiacTest):
 
     def test_integers(self):
+        parser.bootstrap(True)
         self.perform("1", "Number", "Integer")
         self.perform("123", "Number", "Integer")
         self.perform("-50", "Number", "Integer")
@@ -46,6 +46,7 @@ class NumberTests(BrainiacTest):
         self.perform("-100,440", "Number", "Integer")
 
     def test_decimals(self):
+        parser.bootstrap(True)
         self.perform("1.0", "Number", "Decimal")
         self.perform("10.0", "Number", "Decimal")
         self.perform("100,000.00", "Number", "Decimal")
@@ -54,15 +55,18 @@ class NumberTests(BrainiacTest):
         self.perform("-100,000.00", "Number", "Decimal")
         
     def test_hexadecimals(self):
+        parser.bootstrap(True)
         self.perform("0xdeadbeef", "Number", "Hexadecimal")
         self.perform("0xDEADBEEF", "Number", "Hexadecimal")
         self.perform("#FFFFFF", "Number", "Hexadecimal")
         
     def test_binary(self):
+        parser.bootstrap(True)
         self.perform("0010100101011001", "Number", "Binary")
-        self.perform("0001", "Number", "Binary")
+        self.perform("00110001001100100011001100110100", "Number", "Binary")
         
     def test_roman_numerals(self):
+        parser.bootstrap(True)
         self.perform("XIV", "Number", "Roman Numeral")
         self.perform("XXX", "Number", "Roman Numeral")
         self.perform("LXXXIX", "Number", "Roman Numeral")
@@ -70,21 +74,25 @@ class NumberTests(BrainiacTest):
         self.perform("MMMMCCCIX", "Number", "Roman Numeral")
         
     def test_fractions(self):
+        parser.bootstrap(True)
         self.perform("1 1/2", "Number", "Fraction")
 
 
 class CharacterTests(BrainiacTest):
     
     def test_letters(self):
+        parser.bootstrap(True)
         self.perform("a", "Character", "Letter")
         self.perform("A", "Character", "Letter")
         
     def test_punctuation(self):
+        parser.bootstrap(True)
         self.perform("?", "Character", "Punctuation")
         self.perform("-", "Character", "Punctuation")
         self.perform("/", "Character", "Punctuation")
         
     def test_whitespace(self):
+        parser.bootstrap(True)
         self.perform(" ", "Character", "Whitespace")
         self.perform("\t", "Character", "Whitespace")
 
@@ -92,14 +100,17 @@ class CharacterTests(BrainiacTest):
 class URITests(BrainiacTest):
     
     def test_IPv4(self):
+        parser.bootstrap(True)
         self.perform("127.0.0.1", "URI", "IP Address (v4)")
         self.perform("0.0.0.0", "URI", "IP Address (v4)")
         self.perform("192.168.1.1", "URI", "IP Address (v4)")
         
     def test_IPv6(self):
+        parser.bootstrap(True)
         self.perform("2607:f0d0:1002:51::4", "URI", "IP Address (v6)")
         
     def test_urls(self):
+        parser.bootstrap(True)
         self.perform("www.google.com", "URI", "URL")
         self.perform("http://www.google.com", "URI", "URL")
         self.perform("google.com", "URI", "URL")
@@ -111,6 +122,7 @@ class URITests(BrainiacTest):
 class EmailTests(BrainiacTest):
     
     def test_email(self):
+        parser.bootstrap(True)
         self.perform("jambra@photoflit.com", "Email", "Email Address")
         self.perform("jambra+brainiac@photoflit.com", "Email", "Email Address")
         self.perform("jambra@smithsonian.museum", "Email", "Email Address")
@@ -120,6 +132,7 @@ class EmailTests(BrainiacTest):
 class PhoneTests(BrainiacTest):
     
     def test_phone(self):
+        parser.bootstrap(True)
         self.perform("972-955-2538", "Phone", "Phone Number")
         self.perform("(02) 1234 5678", "Phone", "Phone Number")
         self.perform("0412 345 67", "Phone", "Phone Number")
@@ -162,6 +175,7 @@ class PhoneTests(BrainiacTest):
 class DateTester(BrainiacTest):
     
     def test_dates(self):
+        parser.bootstrap(True)
         self.perform("12/1/2004", "Date", "Date")
         self.perform("1997-04-13", "Date", "Date")
         self.perform("1997-07-16T19:20+01:00", "Date", "Date")
@@ -178,12 +192,14 @@ class DateTester(BrainiacTest):
 class EquationTester(BrainiacTest):
     
     def test_simple(self):
+        parser.bootstrap(True)
         self.perform("5 x 5", "Equation", "Simple")
         self.perform("(2*3)^4", "Equation", "Simple")
         self.perform("1/7+4-2", "Equation", "Simple")
         self.perform("124*76(45^4)-34.51+2345", "Equation", "Simple")
 
     def test_textual(self):
+        parser.bootstrap(True)
         self.perform("square root of 16", "Equation", "Text")
         self.perform("The square root of 169", "Equation", "Text")
         self.perform("square root of 123.456", "Equation", "Text")
@@ -201,6 +217,7 @@ class EquationTester(BrainiacTest):
 class ProgrammingTester(BrainiacTest):
 
     def test_programming(self):
+        parser.bootstrap(True)
         self.perform(getFixtureFileContents('actionscript.as'), 'Programming', 'ActionScript')
         self.perform(getFixtureFileContents('c++.cpp'), 'Programming', 'C++')
         self.perform(getFixtureFileContents('c.c'), 'Programming', 'C')
@@ -217,6 +234,7 @@ class ProgrammingTester(BrainiacTest):
 class NameTester(BrainiacTest):
 
     def test_programming(self):
+        parser.bootstrap(True)
         self.perform('Mr Ryan W Vennell Sr', 'Name', 'Name')
         self.perform('Mr R Vennell Sr', 'Name', 'Name')
         self.perform('Ryan W. Vennell Sr', 'Name', 'Name')
@@ -232,6 +250,7 @@ class NameTester(BrainiacTest):
 class MeasurementTester(BrainiacTest):
 
     def test_measurement(self):
+        parser.bootstrap(True)
         self.perform('73 Inches', 'Measurement', 'Imperial Length')
         self.perform('73"', 'Measurement', 'Imperial Length')
         self.perform('73\'', 'Measurement', 'Imperial Length')

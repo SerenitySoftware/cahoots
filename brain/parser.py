@@ -1,6 +1,6 @@
 from parsers import base, boolean, character, date, email, equation, grammar, location, measurement, name, number, phone, programming, uri
 from brain.util import truncateText
-import datetime, threading
+import datetime, threading, time
 
 # These are all the parser modules we want to test against
 parserModules = [
@@ -38,12 +38,12 @@ class ParserThread (threading.Thread):
         self.results = self.parser.parse(self.dataString, **self.kwargs) or []
 
 
-def bootstrap(*args, **kwargs):
+def bootstrap(silent=False, *args, **kwargs):
     """Bootstraps each parser. Can be used for cache warming, etc."""
     for module in parserModules:
         """If the module overrides the base bootstrap, we output a message about it"""
-        if module.bootstrap != base.BaseParser.bootstrap:
-            print ' * Bootstrapping '+module.__name__
+        if not silent and module.bootstrap != base.BaseParser.bootstrap:
+            print ' * '+time.strftime('%X %x %Z')+' * Bootstrapping '+module.__name__
 
         module.bootstrap();
 

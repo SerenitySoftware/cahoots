@@ -3,7 +3,7 @@
 import os, sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
-from flask import Flask, request, redirect
+from flask import Flask, request
 from mako.lookup import TemplateLookup
 from brain import parser as BrainiacParser
 from web import out
@@ -80,7 +80,7 @@ def view_api():
 
 
 # This bootstraps our parsing system and gets all modules ready for parsing.
-BrainiacParser.bootstrap();
+BrainiacParser.bootstrap()
 
 
 if __name__ == "__main__":
