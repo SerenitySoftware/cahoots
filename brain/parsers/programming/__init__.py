@@ -32,7 +32,7 @@ class ProgrammingParser(BaseParser):
         ProgrammingBayesianClassifier.bootstrap();
 
 
-    def __init__(self, initTokens=True):
+    def __init__(self):
         self.Type = "Programming"
         self.Confidence = 0
         self.allKeywords = BrainRegistry.get('PPallKeywords')
