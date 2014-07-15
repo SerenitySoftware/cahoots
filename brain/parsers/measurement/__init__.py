@@ -13,34 +13,9 @@ class MeasurementParser(BaseParser):
     allUnits = []
     systemUnits = {}
 
-
-    def __init__(self, initUnits = True):
-        self.Type = "Measurement"
-        self.Confidence = 50
-
-        if initUnits:
-            self.__initUnits()
-
-
-    def __initUnits(self):
+    @staticmethod
+    def bootstrap():
         """Loads unit lists for use in this instance of the measurement parser"""
-
-        # if we have already read in and stored the units in memory, we just pull them out of memory
-        if BrainRegistry.test('MPallUnits') and BrainRegistry.test('MPsystemUnits'):
-            self.allUnits = BrainRegistry.get('MPallUnits')
-            self.systemUnits = BrainRegistry.get('MPsystemUnits')
-            return
-
-        # Not found....Load it!
-        self.loadUnits()
-
-
-    def loadUnits(self):
-        """
-        Reloads units from the yaml files on disk
-        Optionally sets of a watcher for changes of the yaml file directory
-        """
-
         allUnits = []
         systemUnits = {}
 
@@ -54,16 +29,20 @@ class MeasurementParser(BaseParser):
                 systemUnits[unitType['id']] = unitType
 
         # we're sorting all keywords by length, so we can locate the longest first and not have conflicts from the smaller.
-
-        self.allUnits = sorted(set(allUnits), key=len, reverse=True)
+        allUnits = sorted(set(allUnits), key=len, reverse=True)
 
         for systemId in systemUnits:
             systemUnits[systemId]['keywords'] = sorted(systemUnits[systemId]['keywords'], key=len, reverse=True)
 
-        self.systemUnits = systemUnits
+        BrainRegistry.set('MPallUnits', allUnits)
+        BrainRegistry.set('MPsystemUnits', systemUnits)
 
-        BrainRegistry.set('MPallUnits', self.allUnits)
-        BrainRegistry.set('MPsystemUnits', self.systemUnits)
+
+    def __init__(self, initUnits = True):
+        self.Type = "Measurement"
+        self.Confidence = 50
+        self.allUnits = BrainRegistry.get('MPallUnits')
+        self.systemUnits = BrainRegistry.get('MPsystemUnits')
 
 
     def basicUnitCheck(self, data):

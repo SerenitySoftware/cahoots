@@ -6,6 +6,10 @@ class BaseParser:
     Type = "Base"
     Confidence = 10
 
+    @staticmethod
+    def bootstrap():
+        pass
+
     def parse(self, data, *args, **kwargs):
         """Base parse method"""
         raise NotImplementedError, "Class must override the parse() method"

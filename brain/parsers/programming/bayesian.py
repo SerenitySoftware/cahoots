@@ -6,17 +6,13 @@ class ProgrammingBayesianClassifier:
 
     def __init__(self):
         """Creates an instance of a bayes classifer for use in identifying programmng languages"""
-        if not BrainRegistry.test('PPredisBayes'):
-            rb = redisbayes.RedisBayes(redis=redis.Redis(), tokenizer=self.bayesTokenizer)
-            BrainRegistry.set('PPredisBayes', rb)
-            ProgrammingBayesianClassifier.trainClassifier()
-
+        pass
 
 
     @staticmethod
-    def trainClassifier():
+    def bootstrap():
         """Trains the bayes classifier with examples from various programming languages"""
-        rb = BrainRegistry.get('PPredisBayes')
+        rb = redisbayes.RedisBayes(redis=redis.Redis(), tokenizer=ProgrammingBayesianClassifier.bayesTokenizer)
 
         directory = os.path.dirname(os.path.abspath(__file__))
         path = os.path.join(directory, "bayes_trainers/*")
@@ -33,6 +29,8 @@ class ProgrammingBayesianClassifier:
         for language in trainers:
             rb.train(language, trainers[language])
 
+        BrainRegistry.set('PPredisBayes', rb)
+
 
     @staticmethod
     def bayesTokenizer(text):
@@ -40,6 +38,7 @@ class ProgrammingBayesianClassifier:
         text = text.replace('.', ' . ')
         text = text.replace('){', ') {')
         text = text.replace('$', ' $')
+        text = text.replace(':', ' $')
         text = text.replace('\\', ' \\ ')
         words = text.split()
         return [w for w in words if len(w) > 0 and w not in string.whitespace]

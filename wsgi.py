@@ -5,12 +5,11 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
 from flask import Flask, request, redirect
 from mako.lookup import TemplateLookup
-from brain import parser
+from brain import parser as BrainiacParser
 from web import out
 import config
 
 app = Flask(__name__,static_folder='web/static')
-
 
 class BrainiacWSGI(object):
 
@@ -50,7 +49,7 @@ class BrainiacClassifier(BrainiacWSGI):
         
         results = None
         if query != '':
-            results = parser.parse(query)
+            results = BrainiacParser.parse(query)
         
         return self.render('home.html', q = query, results = results, json_results = out.encode(results))
 
@@ -65,7 +64,7 @@ class BrainiacClassifierApi(BrainiacWSGI):
         
         results = None
         if query != '':
-            results = parser.parse(query)
+            results = BrainiacParser.parse(query)
             
         return out.encode(results)
 
@@ -78,6 +77,10 @@ def view_classifier():
 @app.route("/api/", methods=['POST', 'GET'])
 def view_api():
     return BrainiacClassifierApi(config).renderApi(request)
+
+
+# This bootstraps our parsing system and gets all modules ready for parsing.
+BrainiacParser.bootstrap();
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ from brain.util import truncateText
 import datetime, threading
 
 # These are all the parser modules we want to test against
-checks = [
+parserModules = [
     name.NameParser,
     number.NumberParser,
     character.CharacterParser,
@@ -38,14 +38,23 @@ class ParserThread (threading.Thread):
         self.results = self.parser.parse(self.dataString, **self.kwargs) or []
 
 
+def bootstrap(*args, **kwargs):
+    """Bootstraps each parser. Can be used for cache warming, etc."""
+    for module in parserModules:
+        """If the module overrides the base bootstrap, we output a message about it"""
+        if module.bootstrap != base.BaseParser.bootstrap:
+            print ' * Bootstrapping '+module.__name__
+
+        module.bootstrap();
+
+
 def parse(dataString, *args, **kwargs):
     """Parses input data and returns a dict of result data"""
-    match_types = []
     results = []
     threads = []
 
     # Creating/starting a thread for each parser module
-    for module in checks:
+    for module in parserModules:
         thread = ParserThread(module, dataString, **kwargs)
         thread.start()
         threads.append(thread)

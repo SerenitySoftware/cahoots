@@ -10,35 +10,10 @@ class ProgrammingParser(BaseParser):
 
     allKeywords = []
     languageKeywords = {}
-    
-    
-    def __init__(self, initTokens=True):
-        self.Type = "Programming"
-        self.Confidence = 0
 
-        if initTokens:
-            self.__initTokens()
-        
-
-    def __initTokens(self):
-        """Loads tokens for use in this instance of the programming parser"""
-
-        # if we have already read in and stored the language stuff in memory, we just pull them out of memory
-        if BrainRegistry.test('PPallKeywords') and BrainRegistry.test('PPlanguageKeywords'):
-            self.allKeywords = BrainRegistry.get('PPallKeywords')
-            self.languageKeywords = BrainRegistry.get('PPlanguageKeywords')
-            return
-
-        # Not found....Load it!
-        self.loadTokens()
-
-
-    def loadTokens(self):
-        """
-        Reloads tokens from the yaml files on disk
-        Optionally sets of a watcher for changes of the yaml file directory
-        """
-
+    @staticmethod
+    def bootstrap():
+        """Loads tokens from the yaml files on disk"""
         allKeywords = []
         languageKeywords = {}
 
@@ -51,11 +26,17 @@ class ProgrammingParser(BaseParser):
                 allKeywords.extend(language['keywords'])
                 languageKeywords[language['id']] = language
 
-        self.allKeywords = set(allKeywords)
-        self.languageKeywords = languageKeywords
+        BrainRegistry.set('PPallKeywords', set(allKeywords))
+        BrainRegistry.set('PPlanguageKeywords', languageKeywords)
 
-        BrainRegistry.set('PPallKeywords', self.allKeywords)
-        BrainRegistry.set('PPlanguageKeywords', self.languageKeywords)
+        ProgrammingBayesianClassifier.bootstrap();
+
+
+    def __init__(self, initTokens=True):
+        self.Type = "Programming"
+        self.Confidence = 0
+        self.allKeywords = BrainRegistry.get('PPallKeywords')
+        self.languageKeywords = BrainRegistry.get('PPlanguageKeywords')
     
 
     # finding common words/phrases in programming languages
