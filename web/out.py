@@ -2,7 +2,7 @@ import simplejson
 from datetime import *
 from brain.result import ParseResult
 
-class BrainiacEncoder(simplejson.JSONEncoder):
+class CahootsEncoder(simplejson.JSONEncoder):
 	
 	def default(self, obj):
 		if isinstance(obj, datetime):
@@ -18,7 +18,7 @@ class BrainiacEncoder(simplejson.JSONEncoder):
 				'data': obj.Data
 			}
 			
-		return super(BrainiacEncoder, self).default(obj)
+		return super(CahootsEncoder, self).default(obj)
 
 def encode(data, level = 0, indent = True):
-	return simplejson.dumps(data, indent = 4, cls = BrainiacEncoder)
+	return simplejson.dumps(data, indent = 4, cls = CahootsEncoder)

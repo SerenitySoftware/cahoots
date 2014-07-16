@@ -4,17 +4,17 @@ import unittest
 
 """Unit Testing of the Parser"""
 
-class BrainiacTest(unittest.TestCase):
+class CahootsTest(unittest.TestCase):
     
     def perform(self, data, expected_type, expected_subtype):
         results = parser.parse(data)['results']['matches']
-        self.assertNotEqual(0, len(results), msg = "No Brainiac results returned")
+        self.assertNotEqual(0, len(results), msg = "No Cahoots results returned")
 
         top_result = parser.parse(data)['top']
         self.assertEqual(top_result.Type, expected_type, msg = "Top result was {0} instead of expected result {1}".format(top_result.Type, expected_type))
         self.assertEqual(top_result.Subtype, expected_subtype, msg = "Top result subtype was {0} instead of expected subtype {1}".format(top_result.Subtype, expected_subtype))
 
-class BooleanTests(BrainiacTest):
+class BooleanTests(CahootsTest):
 
     # Not testing 1 or 0 here, because they have a higher confidence of being an integer
 
@@ -34,7 +34,7 @@ class BooleanTests(BrainiacTest):
         self.perform("nope", "Boolean", "False")
         self.perform("f", "Boolean", "False")
 
-class NumberTests(BrainiacTest):
+class NumberTests(CahootsTest):
 
     def test_integers(self):
         parser.bootstrap(True)
@@ -78,7 +78,7 @@ class NumberTests(BrainiacTest):
         self.perform("1 1/2", "Number", "Fraction")
 
 
-class CharacterTests(BrainiacTest):
+class CharacterTests(CahootsTest):
     
     def test_letters(self):
         parser.bootstrap(True)
@@ -97,7 +97,7 @@ class CharacterTests(BrainiacTest):
         self.perform("\t", "Character", "Whitespace")
 
 
-class URITests(BrainiacTest):
+class URITests(CahootsTest):
     
     def test_IPv4(self):
         parser.bootstrap(True)
@@ -119,17 +119,17 @@ class URITests(BrainiacTest):
         self.perform("http://example.com/public/index.php#anything", "URI", "URL")
 
 
-class EmailTests(BrainiacTest):
+class EmailTests(CahootsTest):
     
     def test_email(self):
         parser.bootstrap(True)
         self.perform("jambra@photoflit.com", "Email", "Email Address")
-        self.perform("jambra+brainiac@photoflit.com", "Email", "Email Address")
+        self.perform("jambra+cahoots@photoflit.com", "Email", "Email Address")
         self.perform("jambra@smithsonian.museum", "Email", "Email Address")
         self.perform("jambra@photoflit.co.uk", "Email", "Email Address")
 
 
-class PhoneTests(BrainiacTest):
+class PhoneTests(CahootsTest):
     
     def test_phone(self):
         parser.bootstrap(True)
@@ -172,7 +172,7 @@ class PhoneTests(BrainiacTest):
         self.perform("+44 (013) 33-44-122 ext 33549", "Phone", "Phone Number")
 
 
-class DateTester(BrainiacTest):
+class DateTester(CahootsTest):
     
     def test_dates(self):
         parser.bootstrap(True)
@@ -189,7 +189,7 @@ class DateTester(BrainiacTest):
         self.perform("16 Mar 1985", "Date", "Date")
 
 
-class EquationTester(BrainiacTest):
+class EquationTester(CahootsTest):
     
     def test_simple(self):
         parser.bootstrap(True)
@@ -214,7 +214,7 @@ class EquationTester(BrainiacTest):
         self.perform("45 dividedby 34", "Equation", "Text")
 
 
-class ProgrammingTester(BrainiacTest):
+class ProgrammingTester(CahootsTest):
 
     def test_programming(self):
         parser.bootstrap(True)
@@ -231,7 +231,7 @@ class ProgrammingTester(BrainiacTest):
         self.perform(getFixtureFileContents('visualbasic.vb'), 'Programming', 'Visual Basic')
 
 
-class NameTester(BrainiacTest):
+class NameTester(CahootsTest):
 
     def test_programming(self):
         parser.bootstrap(True)
@@ -247,7 +247,7 @@ class NameTester(BrainiacTest):
         self.perform('Ryan V.', 'Name', 'Name')
 
 
-class MeasurementTester(BrainiacTest):
+class MeasurementTester(CahootsTest):
 
     def test_measurement(self):
         parser.bootstrap(True)

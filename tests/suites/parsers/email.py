@@ -15,7 +15,7 @@ class EmailParserTests(unittest.TestCase):
     def test_matchesEmailPattern(self):
 
         self.assertTrue(self.ep.matchesEmailPattern("jambra@photoflit.com"))
-        self.assertTrue(self.ep.matchesEmailPattern("jambra+brainiac@photoflit.com"))
+        self.assertTrue(self.ep.matchesEmailPattern("jambra+cahoots@photoflit.com"))
         self.assertTrue(self.ep.matchesEmailPattern("jambra.vennell@gmail.com"))
         self.assertTrue(self.ep.matchesEmailPattern("foo@photoflit.co.uk"))
 

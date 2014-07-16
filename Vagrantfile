@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
 
     # VirtualBox Provider
     config.vm.provider :virtualbox do |virtualbox, override|
-        virtualbox.customize ["modifyvm", :id, "--name", "brainiac"]
+        virtualbox.customize ["modifyvm", :id, "--name", "cahoots"]
         virtualbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
         virtualbox.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
         virtualbox.customize ["modifyvm", :id, "--memory", 2048]

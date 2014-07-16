@@ -1,6 +1,6 @@
 from brain.parsers import boolean, character, date, email, equation, grammar, location, measurement, name, number, phone, programming, uri
 """
-Brainiac Configuration
+Cahoots Configuration
 Change this file to suit your installation's needs.
 """
 

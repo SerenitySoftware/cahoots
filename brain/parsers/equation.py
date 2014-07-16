@@ -7,7 +7,7 @@ import re, string, math, config
 
 class EquationParser(BaseParser):
     """
-    brainiac.brain.parsers.equation
+    brain.parsers.equation
     parser to identify and solve some mathematical equations
     """
 

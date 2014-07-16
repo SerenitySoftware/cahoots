@@ -22,6 +22,7 @@ keywords:
 - constexpr
 - const_cast
 - continue
+- cout
 - decltype
 - default
 - delete
@@ -29,6 +30,7 @@ keywords:
 - double
 - dynamic_cast
 - else
+- endl
 - enum
 - explicit
 - export
