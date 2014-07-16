@@ -6,7 +6,7 @@ A Text Comprehension Engine in Python
 Project State
 -------------
 ```
-Pre-Alpha / System Testing
+Pre-Alpha, Accepting Contributions
 ```
 
 Demo
