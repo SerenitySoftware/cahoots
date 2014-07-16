@@ -1,4 +1,5 @@
 from brain.util import BrainRegistry
+import config
 import redis, redisbayes, os, glob, string
 
 class ProgrammingBayesianClassifier:
@@ -12,7 +13,14 @@ class ProgrammingBayesianClassifier:
     @staticmethod
     def bootstrap():
         """Trains the bayes classifier with examples from various programming languages"""
-        rb = redisbayes.RedisBayes(redis=redis.Redis(), tokenizer=ProgrammingBayesianClassifier.bayesTokenizer)
+        bayesRedis = redis.Redis(
+            host=config.redis['host'],
+            port=config.redis['port'],
+            unix_socket_path=config.redis['unix_socket_path'],
+            connection_pool=config.redis['connection_pool']
+        )
+
+        rb = redisbayes.RedisBayes(redis=bayesRedis, tokenizer=ProgrammingBayesianClassifier.bayesTokenizer)
 
         directory = os.path.dirname(os.path.abspath(__file__))
         path = os.path.join(directory, "bayes_trainers/*")
