@@ -74,4 +74,4 @@ Setup
 
 3. Type `vagrant ssh` to connect to your vm. (Alternative: Use PuTTY with host `127.0.0.1`, port `2222` and username/password `vagrant`.)
 4. Type `./wsgi.py`  to start Cahoots.
-5. Visit `http://localhost:8000` to view the demo page.
+5. Visit `http://localhost:8000` to view the web interface.
