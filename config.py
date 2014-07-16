@@ -1,17 +1,35 @@
+from brain.parsers import boolean, character, date, email, equation, grammar, location, measurement, name, number, phone, programming, uri
 """
 Brainiac Configuration
 Change this file to suit your installation's needs.
 """
 
+"""
+To disable a module, simply comment it out of this list.
+    Be aware that modules may have soft-dependencies on one another,
+    and a disabled module may impact results results from other
+    modules which seek its "council." This may result in unexpected
+    confidence scores, a change in result determination, etc.
+"""
 enabledModules = [
-
+    name.NameParser,
+    number.NumberParser,
+    character.CharacterParser,
+    boolean.BooleanParser,
+    date.DateParser,
+    phone.PhoneParser,
+    uri.URIParser,
+    email.EmailParser,
+    programming.ProgrammingParser,
+    #grammar.GrammarParser,
+    #location.LocationParser,
+    equation.EquationParser,
+    measurement.MeasurementParser,
 ]
 
 """
 Redis config
-
     Specify one of the following three:
-
     1. host and port
      - Current values are the redis default
     2. unix_socket_path

@@ -1,6 +1,6 @@
 from base import BaseParser
 from number import NumberParser
-import re
+import re, config
 
 class NameParser(BaseParser):
 
@@ -25,9 +25,10 @@ class NameParser(BaseParser):
 
     def isSuffix(self, word):
         """Checks to see if the word passed in is a name suffix"""
-        np = NumberParser()
-        if np.isRomanNumeral(word) != (False, 0):
-            return True
+        if NumberParser in config.enabledModules:
+            np = NumberParser()
+            if np.isRomanNumeral(word) != (False, 0):
+                return True
 
         word = word.replace('.', '').upper()
         return word in self.suffixes

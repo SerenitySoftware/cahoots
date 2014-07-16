@@ -1,6 +1,5 @@
 from brain.util import BrainRegistry
-import config
-import redis, redisbayes, os, glob, string
+import redis, redisbayes, os, glob, string, config
 
 class ProgrammingBayesianClassifier:
     """Responsible for classifying an example of source code into a specific programming language"""

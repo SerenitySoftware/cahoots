@@ -1,23 +1,6 @@
-from parsers import base, boolean, character, date, email, equation, grammar, location, measurement, name, number, phone, programming, uri
+from parsers import base
 from brain.util import truncateText
-import datetime, threading, time
-
-# These are all the parser modules we want to test against
-parserModules = [
-    name.NameParser,
-    number.NumberParser,
-    character.CharacterParser,
-    boolean.BooleanParser,
-    date.DateParser,
-    phone.PhoneParser,
-    uri.URIParser,
-    email.EmailParser,
-    programming.ProgrammingParser,
-    grammar.GrammarParser,
-    location.LocationParser,
-    equation.EquationParser,
-    measurement.MeasurementParser
-]
+import datetime, threading, time, config
 
 class ParserThread (threading.Thread):
     """Represents a thread that will handle one parser parsing request"""
@@ -40,7 +23,7 @@ class ParserThread (threading.Thread):
 
 def bootstrap(silent=False, *args, **kwargs):
     """Bootstraps each parser. Can be used for cache warming, etc."""
-    for module in parserModules:
+    for module in config.enabledModules:
         """If the module overrides the base bootstrap, we output a message about it"""
         if not silent and module.bootstrap != base.BaseParser.bootstrap:
             print ' * '+time.strftime('%X %x %Z')+' * Bootstrapping '+module.__name__
@@ -54,7 +37,7 @@ def parse(dataString, *args, **kwargs):
     threads = []
 
     # Creating/starting a thread for each parser module
-    for module in parserModules:
+    for module in config.enabledModules:
         thread = ParserThread(module, dataString, **kwargs)
         thread.start()
         threads.append(thread)

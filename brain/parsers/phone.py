@@ -2,7 +2,7 @@ from base import BaseParser
 from uri import URIParser
 from number import NumberParser
 from phonenumbers import phonenumberutil, geocoder
-import string
+import string, config
 
 class PhoneParser(BaseParser):
 
@@ -95,14 +95,16 @@ class PhoneParser(BaseParser):
             return
 
         # if this is an ip address, we take a big hit.
-        uriParser = URIParser()
-        if uriParser.isIPv4Address(dataString):
-            self.Confidence -= 25
+        if URIParser in config.enabledModules:
+            uriParser = URIParser()
+            if uriParser.isIPv4Address(dataString):
+                self.Confidence -= 25
 
         # if this is an integer, we take a big hit.
-        numParser = NumberParser()
-        if numParser.isInteger(dataString) != (False, 0):
-            self.Confidence -= 20
+        if NumberParser in config.enabledModules:
+            numParser = NumberParser()
+            if numParser.isInteger(dataString) != (False, 0):
+                self.Confidence -= 20
 
         # Length penalties
         if len(self.digits) == 10:

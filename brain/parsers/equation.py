@@ -2,7 +2,7 @@ from brain.util import isNumber
 from base import BaseParser
 from phonenumbers import phonenumberutil
 from programming import ProgrammingParser
-import re, string, math
+import re, string, math, config
 
 
 class EquationParser(BaseParser):
@@ -52,7 +52,7 @@ class EquationParser(BaseParser):
         
         # Simple Powers
         parsedData = re.compile('[ ]{1,}SQUARED|[ ]{1,}CUBED').sub(self.__simplePowerReplace, parsedData)
-        
+
         if parsedData != data:
             parsedData = self.autoFloat(parsedData)
             self.__parsedEquation = self.autoMultiply(parsedData)
@@ -160,11 +160,12 @@ class EquationParser(BaseParser):
         except:
             pass
 
-
-        progParser = ProgrammingParser()
-        dataset = progParser.createDataset(data)
-        for token in set(progParser.findCommonTokens(dataset)):
-            confidence -= 5
+        # We remove confidence for every token shared with a programming language.
+        if (ProgrammingParser in config.enabledModules):
+            progParser = ProgrammingParser()
+            dataset = progParser.createDataset(data)
+            for token in set(progParser.findCommonTokens(dataset)):
+                confidence -= 5
 
         return confidence
 

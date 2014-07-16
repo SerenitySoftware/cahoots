@@ -4,7 +4,7 @@ from binascii import unhexlify
 from phonenumbers import phonenumberutil
 from pyparsing import *
 from operator import mul
-import re
+import re, config
 
 class NumberParser(BaseParser):
 
@@ -279,9 +279,10 @@ class NumberParser(BaseParser):
 
             # if the fraction isn't solve-able, we lower the confidence significantly
             # it might "technically" be a fraction made up of roman numerals, etc.
-            ep = EquationParser()
-            if not ep.solveEquation(ep.autoFloat(data)):
-                fraction_confidence -= 40
+            if EquationParser in config.enabledModules:
+                ep = EquationParser()
+                if not ep.solveEquation(ep.autoFloat(data)):
+                    fraction_confidence -= 40
 
             yield self.result("Fraction", fraction_confidence, value)
             return
