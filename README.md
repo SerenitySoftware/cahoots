@@ -9,6 +9,10 @@ Project State
 Pre-Alpha / System Testing
 ```
 
+Demo
+----
+[rwven.com:8000] (http://rwven.com:8000) (API is disabled, and queries are limited to 256 bytes)
+
 Contributors
 ------------
 1. [Jordan Ambra] (https://github.com/jordanambra)
