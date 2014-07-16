@@ -11,8 +11,8 @@ Pre-Alpha / System Testing
 
 Contributors
 ------------
-1) [Jordan Ambra] (https://github.com/jordanambra)
-2) [Ryan Vennell] (https://github.com/hickeroar)
+1. [Jordan Ambra] (https://github.com/jordanambra)
+2. [Ryan Vennell] (https://github.com/hickeroar)
 
 Requirements
 ------------
@@ -20,6 +20,7 @@ Requirements
 2. python-pip
 3. redis-server
 4. Python Packages:
+
     ```
     flask
     mako
@@ -67,6 +68,6 @@ Setup
     NOTE: Provisioning will continue here and output updates to the screen
     ```
 
-3. Type 'vagrant ssh' to connect to your vm. (Alternative: Use PuTTY with host `127.0.0.1`, port `2222` and username/password `vagrant`.)
+3. Type `vagrant ssh` to connect to your vm. (Alternative: Use PuTTY with host `127.0.0.1`, port `2222` and username/password `vagrant`.)
 4. Type `./wsgi.py`  to start Cahoots.
 5. Visit `http://localhost:8000` to view the demo page.
