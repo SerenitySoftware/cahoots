@@ -47,9 +47,9 @@ Contributor Dev Requirements
 Setup
 -----
 1. Clone this repository and `cd` into the clone's directory.
-2. Type `git submodule init`
-3. Type `git submodule update`
-4. Run vagrant up: `vagrant up` or `vagrant up --provider vmware_workstation` in the clone's root.
+2. Run the command `git submodule init`.
+3. Run the command `git submodule update`.
+4. Run the command `vagrant up` or `vagrant up --provider vmware_workstation` in the clone's root.
 
     ```
     $ vagrant up --provider vmware_workstation
@@ -74,6 +74,6 @@ Setup
     NOTE: Provisioning will continue here and output updates to the screen
     ```
 
-5. Type `vagrant ssh` to connect to your vm. (Alternative: Use PuTTY with host `127.0.0.1`, port `2222` and username/password `vagrant`.)
-6. Type `./wsgi.py`  to start Cahoots.
+5. Run the command `vagrant ssh` to connect to your VM. (Alternative: Use PuTTY with host `127.0.0.1`, port `2222` and username/password `vagrant`.)
+6. Run the command `./wsgi.py` in your VM  to start Cahoots.
 7. Visit `http://localhost:8000` to view the web interface.
