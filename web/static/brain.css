@@ -47,7 +47,7 @@ a:link, a:visited {
 }
 
 a:hover, a:active {
-	color: #282828;
+	color: #50adbf;
 }
 
 .container:before,
@@ -96,7 +96,7 @@ textarea.bordered {
 }
 
 #header:hover h1 a {
-	color: #99CC00;
+	color: #5bc4d9;
 }
 
 #header h2 {
@@ -116,7 +116,7 @@ textarea.bordered {
 }
 
 #primary h2 {
-	color: #99CC00;
+	color: #5bc4d9;
 	font-weight: normal;
 	margin: 65px 0 10px 0;
 	padding: 0;
@@ -168,7 +168,7 @@ textarea.bordered {
 
 
 #secondary {
-	border-top: 5px solid #99CC00;
+	border-top: 5px solid #50adbf;
 	padding-top: 15px;
 }
 
