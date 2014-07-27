@@ -11,7 +11,7 @@ Pre-Alpha, Accepting Contributions
 
 Demo
 ----
-[rwven.com:8000] (http://rwven.com:8000) (API is disabled, and queries are limited to 256 bytes)
+[rwven.com/cahoots/] (http://rwven.com/cahoots/) (API is disabled, and queries are limited to 256 bytes)
 
 Contributors
 ------------
