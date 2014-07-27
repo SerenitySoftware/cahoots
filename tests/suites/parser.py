@@ -218,17 +218,17 @@ class ProgrammingTester(CahootsTest):
 
     def test_programming(self):
         parser.bootstrap(True)
-        self.perform(getFixtureFileContents('actionscript.as'), 'Programming', 'ActionScript')
-        self.perform(getFixtureFileContents('c++.cpp'), 'Programming', 'C++')
-        self.perform(getFixtureFileContents('c.c'), 'Programming', 'C')
-        self.perform(getFixtureFileContents('csharp.cs'), 'Programming', 'C#')
-        self.perform(getFixtureFileContents('java.java'), 'Programming', 'Java')
-        self.perform(getFixtureFileContents('javascript.js'), 'Programming', 'JavaScript')
-        self.perform(getFixtureFileContents('perl.pl'), 'Programming', 'Perl')
-        self.perform(getFixtureFileContents('php.php'), 'Programming', 'PHP')
-        self.perform(getFixtureFileContents('python.py'), 'Programming', 'Python')
-        self.perform(getFixtureFileContents('ruby.rb'), 'Programming', 'Ruby')
-        self.perform(getFixtureFileContents('visualbasic.vb'), 'Programming', 'Visual Basic')
+        self.perform(getFixtureFileContents('programming/actionscript.as'), 'Programming', 'ActionScript')
+        self.perform(getFixtureFileContents('programming/c++.cpp'), 'Programming', 'C++')
+        self.perform(getFixtureFileContents('programming/c.c'), 'Programming', 'C')
+        self.perform(getFixtureFileContents('programming/csharp.cs'), 'Programming', 'C#')
+        self.perform(getFixtureFileContents('programming/java.java'), 'Programming', 'Java')
+        self.perform(getFixtureFileContents('programming/javascript.js'), 'Programming', 'JavaScript')
+        self.perform(getFixtureFileContents('programming/perl.pl'), 'Programming', 'Perl')
+        self.perform(getFixtureFileContents('programming/php.php'), 'Programming', 'PHP')
+        self.perform(getFixtureFileContents('programming/python.py'), 'Programming', 'Python')
+        self.perform(getFixtureFileContents('programming/ruby.rb'), 'Programming', 'Ruby')
+        self.perform(getFixtureFileContents('programming/visualbasic.vb'), 'Programming', 'Visual Basic')
 
 
 class NameTester(CahootsTest):
