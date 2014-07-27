@@ -14,7 +14,7 @@ class BrainRegistry:
         if key in BrainRegistry.storage:
             return BrainRegistry.storage[key]
         else:
-            None
+            return None
 
     @staticmethod
     def test(key):
@@ -31,6 +31,7 @@ def truncateText(text, limit=80):
     if len(text) > limit:
         text = text[:limit-3] + "..."
     return text
+
 
 def isNumber(text):
     """Checking if the text is a number"""

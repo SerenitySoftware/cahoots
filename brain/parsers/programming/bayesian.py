@@ -1,5 +1,5 @@
 from brain.util import BrainRegistry
-import redis, redisbayes, os, glob, string, config
+import redis, redisbayes, os, glob, string, config, time
 
 class ProgrammingBayesianClassifier:
     """Responsible for classifying an example of source code into a specific programming language"""
@@ -19,7 +19,13 @@ class ProgrammingBayesianClassifier:
             connection_pool=config.redis['connection_pool']
         )
 
-        rb = redisbayes.RedisBayes(redis=bayesRedis, tokenizer=ProgrammingBayesianClassifier.bayesTokenizer)
+        namespace = str(time.time())+':'
+
+        rb = redisbayes.RedisBayes(
+            redis=bayesRedis,
+            tokenizer=ProgrammingBayesianClassifier.bayesTokenizer,
+            prefix=namespace
+        )
 
         directory = os.path.dirname(os.path.abspath(__file__))
         path = os.path.join(directory, "bayes_trainers/*")
@@ -31,12 +37,16 @@ class ProgrammingBayesianClassifier:
                 language = filePath.split('.').pop()
                 trainers[language] = languageFile.read()
 
-        rb.flush()
-
         for language in trainers:
             rb.train(language, trainers[language])
 
+        oldRb = BrainRegistry.get('PPredisBayes')
+
         BrainRegistry.set('PPredisBayes', rb)
+
+        # Getting rid of the old namespaced data.
+        if oldRb:
+            oldRb.flush()
 
 
     @staticmethod
@@ -45,7 +55,7 @@ class ProgrammingBayesianClassifier:
         text = text.replace('.', ' . ')
         text = text.replace('){', ') {')
         text = text.replace('$', ' $')
-        text = text.replace(':', ' $')
+        text = text.replace(':', ' :')
         text = text.replace('\\', ' \\ ')
         words = text.split()
         return [w for w in words if len(w) > 0 and w not in string.whitespace]
