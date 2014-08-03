@@ -1,4 +1,4 @@
-from brain.util import BrainRegistry
+from cahoots.util import BrainRegistry
 import redis, redisbayes, os, glob, string, config, time
 
 class ProgrammingBayesianClassifier:

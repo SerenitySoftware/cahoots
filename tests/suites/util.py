@@ -1,4 +1,4 @@
-from brain.util import BrainRegistry, truncateText, isNumber
+from cahoots.util import BrainRegistry, truncateText, isNumber
 import unittest
 
 class BrainRegistryTests(unittest.TestCase):

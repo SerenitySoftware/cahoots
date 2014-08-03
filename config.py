@@ -1,4 +1,4 @@
-from brain.parsers import boolean, character, date, email, equation, grammar, location, measurement, name, number, phone, programming, uri
+from cahoots.parsers import boolean, character, date, email, equation, grammar, location, measurement, name, number, phone, programming, uri
 """
 Cahoots Configuration
 Change this file to suit your installation's needs.

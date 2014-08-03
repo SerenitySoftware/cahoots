@@ -1,5 +1,5 @@
-from brain.parsers.base import BaseParser
-from brain.result import ParseResult
+from cahoots.parsers.base import BaseParser
+from cahoots.result import ParseResult
 import unittest
 
 class BaseParserTests(unittest.TestCase):

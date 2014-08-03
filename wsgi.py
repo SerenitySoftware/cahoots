@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
 from flask import Flask, request
 from mako.lookup import TemplateLookup
-from brain import parser as CahootsParser
+from cahoots import parser as CahootsParser
 from web import out
 import config
 

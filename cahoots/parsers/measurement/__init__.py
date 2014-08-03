@@ -1,5 +1,5 @@
-from brain.parsers.base import BaseParser
-from brain.util import BrainRegistry, isNumber
+from cahoots.parsers.base import BaseParser
+from cahoots.util import BrainRegistry, isNumber
 import os, glob, yaml, string
 
 

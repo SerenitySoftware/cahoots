@@ -1,8 +1,8 @@
-from brain.parsers.base import BaseParser
-from brain.parsers.programming.lexer import ProgrammingLexer
-from brain.parsers.programming.bayesian import ProgrammingBayesianClassifier
-from brain.result import ParseResult
-from brain.util import BrainRegistry
+from cahoots.parsers.base import BaseParser
+from cahoots.parsers.programming.lexer import ProgrammingLexer
+from cahoots.parsers.programming.bayesian import ProgrammingBayesianClassifier
+from cahoots.result import ParseResult
+from cahoots.util import BrainRegistry
 import os, re, glob, yaml
 
 

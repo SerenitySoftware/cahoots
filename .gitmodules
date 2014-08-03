@@ -1,6 +1,3 @@
-[submodule "brain/parsers/programming/bayes_trainers"]
-	path = brain/parsers/programming/bayes_trainers
-	url = git@github.com:SerenitySoftwareLLC/cahoots-programming-bayes-trainers.git
 [submodule "tests/fixtures"]
 	path = tests/fixtures
 	url = git@github.com:SerenitySoftwareLLC/cahoots-test-fixtures.git

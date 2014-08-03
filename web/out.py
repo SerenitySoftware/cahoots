@@ -1,6 +1,6 @@
 import simplejson
 from datetime import *
-from brain.result import ParseResult
+from cahoots.result import ParseResult
 
 class CahootsEncoder(simplejson.JSONEncoder):
 	

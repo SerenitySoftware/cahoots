@@ -1,4 +1,4 @@
-from brain.parsers.base import BaseParser
+from cahoots.parsers.base import BaseParser
 
 class LocationParser(BaseParser):
 

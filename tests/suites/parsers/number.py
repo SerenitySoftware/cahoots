@@ -1,4 +1,4 @@
-from brain.parsers.number import NumberParser
+from cahoots.parsers.number import NumberParser
 import unittest
 
 class NumberParserTests(unittest.TestCase):

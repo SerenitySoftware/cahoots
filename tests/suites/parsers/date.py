@@ -1,4 +1,4 @@
-from brain.parsers.date import DateParser
+from cahoots.parsers.date import DateParser
 import unittest
 
 class DateParserTests(unittest.TestCase):

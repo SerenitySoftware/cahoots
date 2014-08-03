@@ -1,4 +1,4 @@
-from brain.parsers.phone import PhoneParser
+from cahoots.parsers.phone import PhoneParser
 from phonenumbers import phonenumberutil
 import unittest
 

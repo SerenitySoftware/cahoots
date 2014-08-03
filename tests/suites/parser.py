@@ -1,4 +1,4 @@
-from brain import parser
+from cahoots import parser
 from tests import getFixtureFileContents
 import unittest
 

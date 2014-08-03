@@ -1,5 +1,5 @@
-from brain.parsers.measurement import MeasurementParser
-from brain.util import BrainRegistry
+from cahoots.parsers.measurement import MeasurementParser
+from cahoots.util import BrainRegistry
 import unittest
 
 class MeasurementParserTests(unittest.TestCase):

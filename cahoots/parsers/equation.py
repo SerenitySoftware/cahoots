@@ -1,4 +1,4 @@
-from brain.util import isNumber
+from cahoots.util import isNumber
 from base import BaseParser
 from phonenumbers import phonenumberutil
 from programming import ProgrammingParser
@@ -7,7 +7,7 @@ import re, string, math, config
 
 class EquationParser(BaseParser):
     """
-    brain.parsers.equation
+    cahoots.parsers.equation
     parser to identify and solve some mathematical equations
     """
 

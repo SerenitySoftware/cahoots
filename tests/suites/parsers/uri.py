@@ -1,4 +1,4 @@
-from brain.parsers.uri import URIParser
+from cahoots.parsers.uri import URIParser
 import unittest
 
 class URIParserTests(unittest.TestCase):
