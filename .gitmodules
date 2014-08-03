@@ -1,3 +1,6 @@
 [submodule "tests/fixtures"]
 	path = tests/fixtures
 	url = git@github.com:SerenitySoftwareLLC/cahoots-test-fixtures.git
+[submodule "cahoots/parsers/programming/bayes_trainers"]
+	path = cahoots/parsers/programming/bayes_trainers
+	url = git@github.com:SerenitySoftwareLLC/cahoots-programming-bayes-trainers.git
