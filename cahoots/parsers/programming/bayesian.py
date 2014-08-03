@@ -1,4 +1,4 @@
-from cahoots.util import BrainRegistry
+from cahoots.util import CahootsRegistry
 import redis, redisbayes, os, glob, string, config, time
 
 class ProgrammingBayesianClassifier:
@@ -40,9 +40,9 @@ class ProgrammingBayesianClassifier:
         for language in trainers:
             rb.train(language, trainers[language])
 
-        oldRb = BrainRegistry.get('PPredisBayes')
+        oldRb = CahootsRegistry.get('PPredisBayes')
 
-        BrainRegistry.set('PPredisBayes', rb)
+        CahootsRegistry.set('PPredisBayes', rb)
 
         # Getting rid of the old namespaced data.
         if oldRb:
@@ -63,7 +63,7 @@ class ProgrammingBayesianClassifier:
 
     def classify(self, dataString):
         """Takes an string and creates a dict of programming language match probabilities"""
-        rb = BrainRegistry.get('PPredisBayes')
+        rb = CahootsRegistry.get('PPredisBayes')
 
         return rb.score(dataString)
         

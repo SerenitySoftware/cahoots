@@ -1,4 +1,4 @@
-class BrainRegistry:
+class CahootsRegistry:
     """A memory key/value registry"""
 
     storage = {}
@@ -6,25 +6,25 @@ class BrainRegistry:
     @staticmethod
     def set(key, value):
         """Sets a value in the registry"""
-        BrainRegistry.storage[key] = value
+        CahootsRegistry.storage[key] = value
 
     @staticmethod
     def get(key):
         """Gets a value from the registry"""
-        if key in BrainRegistry.storage:
-            return BrainRegistry.storage[key]
+        if key in CahootsRegistry.storage:
+            return CahootsRegistry.storage[key]
         else:
             return None
 
     @staticmethod
     def test(key):
         """Checks to see if there's a key in the registry"""
-        return key in BrainRegistry.storage
+        return key in CahootsRegistry.storage
 
     @staticmethod
     def flush():
         """Removes all values from the registry"""
-        BrainRegistry.storage = {}
+        CahootsRegistry.storage = {}
 
 
 def truncateText(text, limit=80):

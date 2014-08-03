@@ -1,5 +1,5 @@
 from cahoots.parsers.measurement import MeasurementParser
-from cahoots.util import BrainRegistry
+from cahoots.util import CahootsRegistry
 import unittest
 
 class MeasurementParserTests(unittest.TestCase):
@@ -16,8 +16,8 @@ class MeasurementParserTests(unittest.TestCase):
 
 
     def test_loadUnits(self):
-        self.assertTrue(BrainRegistry.test('MPallUnits'))
-        self.assertTrue(BrainRegistry.test('MPsystemUnits'))
+        self.assertTrue(CahootsRegistry.test('MPallUnits'))
+        self.assertTrue(CahootsRegistry.test('MPsystemUnits'))
 
 
     def test_basicUnitCheck(self):

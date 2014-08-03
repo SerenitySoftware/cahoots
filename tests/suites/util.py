@@ -1,45 +1,45 @@
-from cahoots.util import BrainRegistry, truncateText, isNumber
+from cahoots.util import CahootsRegistry, truncateText, isNumber
 import unittest
 
-class BrainRegistryTests(unittest.TestCase):
-    """Unit testing of the BrainRegistry"""
+class CahootsRegistryTests(unittest.TestCase):
+    """Unit testing of the CahootsRegistry"""
 
     def setUp(self):
-        BrainRegistry.storage = {}
+        CahootsRegistry.storage = {}
 
     def tearDown(self):
-        BrainRegistry.storage = {}
+        CahootsRegistry.storage = {}
 
     def test_set(self):
 
-        BrainRegistry.set('test', 'foo')
+        CahootsRegistry.set('test', 'foo')
 
-        self.assertEqual('foo', BrainRegistry.storage['test'])
+        self.assertEqual('foo', CahootsRegistry.storage['test'])
 
     def test_test(self):
 
-        BrainRegistry.set('test', 'foo')
+        CahootsRegistry.set('test', 'foo')
 
-        self.assertTrue(BrainRegistry.test('test'))
-        self.assertFalse(BrainRegistry.test('bar'))
+        self.assertTrue(CahootsRegistry.test('test'))
+        self.assertFalse(CahootsRegistry.test('bar'))
 
     def test_get(self):
 
-        BrainRegistry.set('test', 'foo')
+        CahootsRegistry.set('test', 'foo')
 
-        self.assertEqual('foo', BrainRegistry.get('test'))
-        self.assertIsNone(BrainRegistry.get('bar'))
+        self.assertEqual('foo', CahootsRegistry.get('test'))
+        self.assertIsNone(CahootsRegistry.get('bar'))
 
     def test_flush(self):
 
-        BrainRegistry.set('test', 'foo')
+        CahootsRegistry.set('test', 'foo')
 
-        self.assertEqual('foo', BrainRegistry.get('test'))
-        self.assertNotEqual(0, len(BrainRegistry.storage))
+        self.assertEqual('foo', CahootsRegistry.get('test'))
+        self.assertNotEqual(0, len(CahootsRegistry.storage))
 
-        BrainRegistry.flush()
+        CahootsRegistry.flush()
 
-        self.assertEqual(0, len(BrainRegistry.storage))
+        self.assertEqual(0, len(CahootsRegistry.storage))
 
 
 class truncateTextTests(unittest.TestCase):
