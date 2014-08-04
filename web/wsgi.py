@@ -8,12 +8,10 @@ from flask import Flask, request
 from mako.lookup import TemplateLookup
 from cahoots.parser import CahootsParser
 
-app = Flask(__name__,static_folder='web/static')
+app = Flask(__name__,static_folder='static')
 
 
 parser = CahootsParser()
-# This bootstraps our parsing system and gets all modules ready for parsing.
-parser.bootstrap()
 
 
 class CahootsWSGI(object):

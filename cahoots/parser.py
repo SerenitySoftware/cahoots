@@ -4,10 +4,8 @@ from config import BaseConfig
 from SereneRegistry import registry
 import datetime, threading, time
 
-
 class ParserThread (threading.Thread):
     """Represents a thread that will handle one parser parsing request"""
-
     dataString = None
     kwargs = None
     results = []
@@ -27,7 +25,7 @@ class CahootsParser:
 
     config = None
 
-    def __init__(self, config=None):
+    def __init__(self, config=None, bootstrap=True):
         if config != None:
             self.config = config
         else:
@@ -35,6 +33,10 @@ class CahootsParser:
 
         # this will be used in lots of places.
         registry.set('Config', self.config)
+
+        # This bootstraps our parsing system and gets all modules ready for parsing.
+        if bootstrap:
+            self.bootstrap()
 
 
     def bootstrap(self):
