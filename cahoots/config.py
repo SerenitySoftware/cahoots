@@ -1,13 +1,13 @@
 from cahoots.parsers import boolean, character, date, email, equation, grammar, location, measurement, name, number, phone, programming, uri
 
-class BaseConfig:
+class BaseConfig(object):
     """
     Cahoots Configuration
     Change this file to suit your installation's needs.
     """
 
     # Are we in debug mode?
-    debug = True
+    debug = False
 
     """
     To disable a module, simply comment it out of this list.

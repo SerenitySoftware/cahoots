@@ -11,7 +11,7 @@ class ProgrammingParser(BaseParser):
     languageKeywords = {}
 
     @staticmethod
-    def bootstrap():
+    def bootstrap(config):
         """Loads tokens from the yaml files on disk"""
         allKeywords = []
         languageKeywords = {}
@@ -28,12 +28,11 @@ class ProgrammingParser(BaseParser):
         registry.set('PPallKeywords', set(allKeywords))
         registry.set('PPlanguageKeywords', languageKeywords)
 
-        ProgrammingBayesianClassifier.bootstrap()
+        ProgrammingBayesianClassifier.bootstrap(config)
 
 
-    def __init__(self):
-        self.Type = "Programming"
-        self.Confidence = 0
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Programming", 0)
         self.allKeywords = registry.get('PPallKeywords')
         self.languageKeywords = registry.get('PPlanguageKeywords')
     

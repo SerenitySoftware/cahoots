@@ -10,13 +10,13 @@ class ProgrammingBayesianClassifier:
 
 
     @staticmethod
-    def bootstrap():
+    def bootstrap(config):
         """Trains the bayes classifier with examples from various programming languages"""
         bayesRedis = redis.Redis(
-            host=registry.get('Config').redis['host'],
-            port=registry.get('Config').redis['port'],
-            unix_socket_path=registry.get('Config').redis['unix_socket_path'],
-            connection_pool=registry.get('Config').redis['connection_pool']
+            host=config.redis['host'],
+            port=config.redis['port'],
+            unix_socket_path=config.redis['unix_socket_path'],
+            connection_pool=config.redis['connection_pool']
         )
 
         namespace = str(time.time())+':'

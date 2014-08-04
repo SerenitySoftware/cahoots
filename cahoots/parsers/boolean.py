@@ -11,8 +11,8 @@ class BooleanParser(BaseParser):
     weakFalse = ["0", "f", "zero"]
 
 
-    def __init__(self):
-        self.Type = "Boolean"
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Boolean")
 
 
     def isTrue(self, data):

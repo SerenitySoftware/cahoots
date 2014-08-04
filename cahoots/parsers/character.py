@@ -1,13 +1,11 @@
 from base import BaseParser
 from boolean import BooleanParser
 import string
-from SereneRegistry import registry
 
 class CharacterParser(BaseParser):
 
-    def __init__(self):
-        self.Type = "Character"
-        self.Confidence = 25
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Character", 25)
     
     def isLetter(self, data):
         """Checks if input is a letter"""
@@ -56,8 +54,8 @@ class CharacterParser(BaseParser):
 
         # If this character doesn't evaluate as a boolean, we're positive
         # it's a character if it passes one of the specific evaulations.
-        if BooleanParser in registry.get('Config').enabledModules:
-            bp = BooleanParser()
+        if BooleanParser in self.Config.enabledModules:
+            bp = BooleanParser(self.Config)
             if not bp.isTrue(data) and not bp.isFalse(data):
                 self.Confidence = 100
             

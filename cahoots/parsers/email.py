@@ -3,9 +3,8 @@ import re
 
 class EmailParser(BaseParser):
 
-    def __init__(self):
-        self.Type = "Email"
-        self.Confidence = 100
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Email", 100)
 
 
     def matchesEmailPattern(self, data):

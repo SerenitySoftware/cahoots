@@ -5,9 +5,8 @@ import string
 
 class DateParser(BaseParser):
 
-    def __init__(self):
-        self.Type = "Date"
-        self.Confidence = 0
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Date", 0)
         
     def naturalParse(self, dataString):
         """parse out natural-language strings like "yesterday", "next week", etc"""

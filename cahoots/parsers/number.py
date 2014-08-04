@@ -9,9 +9,8 @@ import re
 
 class NumberParser(BaseParser):
 
-    def __init__(self):
-        self.Type = "Number"
-        self.Confidence = 100
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Number", 100)
 
         def convertToLiteral(s, val):
             return CaselessLiteral(s).setName(s).setParseAction(replaceWith(val))
@@ -280,8 +279,8 @@ class NumberParser(BaseParser):
 
             # if the fraction isn't solve-able, we lower the confidence significantly
             # it might "technically" be a fraction made up of roman numerals, etc.
-            if EquationParser in registry.get('Config').enabledModules:
-                ep = EquationParser()
+            if EquationParser in self.Config.enabledModules:
+                ep = EquationParser(self.Config)
                 if not ep.solveEquation(ep.autoFloat(data)):
                     fraction_confidence -= 40
 

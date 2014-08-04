@@ -7,12 +7,12 @@ import out
 from flask import Flask, request
 from mako.lookup import TemplateLookup
 from cahoots.parser import CahootsParser
+from config import WSGIConfig
 
 app = Flask(__name__,static_folder='static')
 
-
-parser = CahootsParser()
-
+cfg = WSGIConfig()
+parser = CahootsParser(cfg)
 
 class CahootsWSGI(object):
 
@@ -25,8 +25,8 @@ class CahootsWSGI(object):
 
     def configure_templating(self):
         self.templateLookup = TemplateLookup(
-            directories = self.parser.config.template['lookups'],
-            module_directory = self.parser.config.template['modules']
+            directories = self.parser.Config.template['lookups'],
+            module_directory = self.parser.Config.template['modules']
         )
         
     def render(self, template, **context):
@@ -83,4 +83,4 @@ def view_api():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 8000)), debug=parser.config.debug)
+    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 8000)), debug=parser.Config.debug)

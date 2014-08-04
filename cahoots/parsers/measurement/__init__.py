@@ -14,7 +14,7 @@ class MeasurementParser(BaseParser):
     systemUnits = {}
 
     @staticmethod
-    def bootstrap():
+    def bootstrap(config):
         """Loads unit lists for use in this instance of the measurement parser"""
         allUnits = []
         systemUnits = {}
@@ -38,9 +38,8 @@ class MeasurementParser(BaseParser):
         registry.set('MPsystemUnits', systemUnits)
 
 
-    def __init__(self):
-        self.Type = "Measurement"
-        self.Confidence = 50
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Measurement", 50)
         self.allUnits = registry.get('MPallUnits')
         self.systemUnits = registry.get('MPsystemUnits')
 

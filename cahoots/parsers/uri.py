@@ -3,9 +3,8 @@ import socket, urlparse, string
 
 class URIParser(BaseParser):
 
-    def __init__(self):
-        self.Type = "URI"
-        self.Confidence = 100
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "URI", 100)
 
 
     def isIPv6Address(self, address):

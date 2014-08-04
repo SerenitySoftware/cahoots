@@ -3,15 +3,17 @@ from cahoots.result import ParseResult
 
 class BaseParser(object):
 
+    Config = None
     Type = "Base"
     Confidence = 10
 
-    def __init__(self, *args, **kwargs):
-        self.Type = "Base"
-        self.Confidence = 10
+    def __init__(self, config, Type="Base", Confidence=10, *args, **kwargs):
+        self.Config = config
+        self.Type = Type
+        self.Confidence = Confidence
 
     @staticmethod
-    def bootstrap():
+    def bootstrap(config):
         pass
 
     def parse(self, data, *args, **kwargs):

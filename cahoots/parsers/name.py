@@ -1,6 +1,5 @@
 from base import BaseParser
 from number import NumberParser
-from SereneRegistry import registry
 import re
 
 class NameParser(BaseParser):
@@ -8,9 +7,8 @@ class NameParser(BaseParser):
     prefixes = ['MS','MISS','MRS','MR','MASTER','REV','FR','DR','ATTY','PROF','HON','PRES','GOV','COACH','OFC','MSGR','SR','BR','SUPT','REP','SEN','AMB','TREAS','SEC','PVT','CPL','SGT','ADM','MAJ','CAPT','CMDR','LT','COL','GEN']
     suffixes = ['AB','BA','BFA','BTECH','LLB','BSC','MA','MFA','LLM','MLA','MBA','MSC','JD','MD','DO','PHARMD','PHD','DPHIL','LLD','ENGD','KBE','LLD','DD','ESQ','ESQUIRE','CSA','ASCAP','CA','CPA','CFA','PE','PG','CPL','CENG','RA','AIA','RIBA','MEOA','CISA','CISSP','CISM','PT','DPT','MCSP','SRP','RGN','USN','USMC','OFM','CSV','JR','SR','JNR','SNR','2ND','3RD','4TH','5TH','6TH','7TH','8TH','9TH','BT','BART','QC','MP','SSF','FRCP','FRSA','RAF','RN','RMP','FAIA','FRSE','SJ','OP','ICMA-CM','MBASW']
 
-    def __init__(self):
-        self.Type = "Name"
-        self.Confidence = 0
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Name", 0)
 
 
     def basicValidation(self, data):
@@ -26,8 +24,8 @@ class NameParser(BaseParser):
 
     def isSuffix(self, word):
         """Checks to see if the word passed in is a name suffix"""
-        if NumberParser in registry.get('Config').enabledModules:
-            np = NumberParser()
+        if NumberParser in self.Config.enabledModules:
+            np = NumberParser(self.Config)
             if np.isRomanNumeral(word) != (False, 0):
                 return True
 
