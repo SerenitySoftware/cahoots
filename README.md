@@ -35,6 +35,7 @@ Requirements
     redisbayes
     phonenumbers
     simplejson
+    SereneRegistry
     hiredis (optional)
     ```
 
