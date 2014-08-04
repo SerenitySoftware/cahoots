@@ -3,11 +3,12 @@ Cahoots
 A Text Comprehension Engine in Python
 -------------------------------------
 
-Project State
--------------
+Status
+------
 ```
 Pre-Alpha, Accepting Contributions
 ```
+[![Build Status](https://travis-ci.org/SerenitySoftwareLLC/cahoots.svg?branch=master)](https://travis-ci.org/SerenitySoftwareLLC/cahoots)
 
 Demo
 ----
