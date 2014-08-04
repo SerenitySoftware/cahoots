@@ -1,4 +1,5 @@
 from cahoots.parsers.name import NameParser
+from tests.unit.config import TestConfig
 import unittest
 
 class NameParserTests(unittest.TestCase):
@@ -7,7 +8,7 @@ class NameParserTests(unittest.TestCase):
     np = None
 
     def setUp(self):
-        self.np = NameParser()
+        self.np = NameParser(TestConfig())
 
     def tearDown(self):
         self.np = None

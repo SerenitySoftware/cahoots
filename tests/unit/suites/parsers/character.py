@@ -1,4 +1,5 @@
 from cahoots.parsers.character import CharacterParser
+from tests.unit.config import TestConfig
 import unittest
 
 class CharacterParserTests(unittest.TestCase):
@@ -7,7 +8,7 @@ class CharacterParserTests(unittest.TestCase):
     cp = None
 
     def setUp(self):
-        self.cp = CharacterParser()
+        self.cp = CharacterParser(TestConfig())
 
     def tearDown(self):
         self.cp = None

@@ -1,4 +1,5 @@
 from cahoots.parsers.number import NumberParser
+from tests.unit.config import TestConfig
 import unittest
 
 class NumberParserTests(unittest.TestCase):
@@ -7,7 +8,7 @@ class NumberParserTests(unittest.TestCase):
     np = None
 
     def setUp(self):
-        self.np = NumberParser()
+        self.np = NumberParser(TestConfig)
 
     def tearDown(self):
         self.np = None

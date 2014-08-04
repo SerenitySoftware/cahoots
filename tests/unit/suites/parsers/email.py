@@ -1,4 +1,5 @@
 from cahoots.parsers.email import EmailParser
+from tests.unit.config import TestConfig
 import unittest
 
 class EmailParserTests(unittest.TestCase):
@@ -7,7 +8,7 @@ class EmailParserTests(unittest.TestCase):
     ep = None
 
     def setUp(self):
-        self.ep = EmailParser()
+        self.ep = EmailParser(TestConfig())
 
     def tearDown(self):
         self.ep = None

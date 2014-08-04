@@ -1,4 +1,5 @@
 from cahoots.parsers.uri import URIParser
+from tests.unit.config import TestConfig
 import unittest
 
 class URIParserTests(unittest.TestCase):
@@ -7,7 +8,7 @@ class URIParserTests(unittest.TestCase):
     up = None
 
     def setUp(self):
-        self.up = URIParser()
+        self.up = URIParser(TestConfig())
 
     def tearDown(self):
         self.up = None

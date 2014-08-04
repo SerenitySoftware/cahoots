@@ -1,4 +1,5 @@
 from cahoots.parsers.boolean import BooleanParser
+from tests.unit.config import TestConfig
 import unittest
 
 class BooleanParserTests(unittest.TestCase):
@@ -12,7 +13,7 @@ class BooleanParserTests(unittest.TestCase):
 
 
     def setUp(self):
-        self.bp = BooleanParser()
+        self.bp = BooleanParser(TestConfig())
 
     def tearDown(self):
         self.bp = None

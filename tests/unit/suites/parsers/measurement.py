@@ -1,4 +1,5 @@
 from cahoots.parsers.measurement import MeasurementParser
+from tests.unit.config import TestConfig
 from SereneRegistry import registry
 import unittest
 
@@ -8,8 +9,8 @@ class MeasurementParserTests(unittest.TestCase):
     mp = None
 
     def setUp(self):
-        MeasurementParser.bootstrap()
-        self.mp = MeasurementParser()
+        MeasurementParser.bootstrap(TestConfig())
+        self.mp = MeasurementParser(TestConfig())
 
     def tearDown(self):
         self.mp = None
