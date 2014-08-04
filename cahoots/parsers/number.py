@@ -2,10 +2,17 @@ from base import BaseParser
 from equation import EquationParser
 from binascii import unhexlify
 from phonenumbers import phonenumberutil
-from pyparsing import *
+from pyparsing import\
+    Or,\
+    OneOrMore,\
+    Optional,\
+    CaselessLiteral,\
+    StringEnd,\
+    ParseException,\
+    replaceWith
 from operator import mul
-from SereneRegistry import registry
 import re
+
 
 class NumberParser(BaseParser):
 
@@ -13,7 +20,9 @@ class NumberParser(BaseParser):
         BaseParser.__init__(self, config, "Number", 100)
 
         def convertToLiteral(s, val):
-            return CaselessLiteral(s).setName(s).setParseAction(replaceWith(val))
+            return CaselessLiteral(s)\
+                .setName(s)\
+                .setParseAction(replaceWith(val))
 
         self.definedUnits = [
             ("zero",       0),
@@ -84,7 +93,9 @@ class NumberParser(BaseParser):
         self.units = Or([convertToLiteral(s, v) for s, v in self.definedUnits])
         self.tens = Or([convertToLiteral(s, v) for s, v in self.definedTens])
         self.hundreds = convertToLiteral("hundred", 100)
-        self.majors = Or([convertToLiteral(s, v) for s, v in self.definedMajors])
+        self.majors = Or(
+            [convertToLiteral(s, v) for s, v in self.definedMajors]
+        )
 
         self.wordProduct = lambda t: reduce(mul, t)
         self.wordSum = lambda t: sum(t)
@@ -92,16 +103,20 @@ class NumberParser(BaseParser):
         self.numberPartial = (
             (
                 (
-                    (self.units + Optional(self.hundreds)).setParseAction(self.wordProduct) + 
-                    Optional(self.tens)
-                ).setParseAction(self.wordSum) 
+                    (
+                        self.units + Optional(self.hundreds)
+                    ).setParseAction(self.wordProduct) + Optional(self.tens)
+                ).setParseAction(self.wordSum)
                 ^ self.tens
-            ) + Optional(self.units) ).setParseAction(self.wordSum)
+            ) + Optional(self.units)).setParseAction(self.wordSum)
 
-        self.numberWords = OneOrMore((self.numberPartial + Optional(self.majors)).setParseAction(self.wordProduct)).setParseAction(self.wordSum) + StringEnd()
+        self.numberWords = OneOrMore(
+            (self.numberPartial +
+             Optional(self.majors)).setParseAction(self.wordProduct)
+        ).setParseAction(self.wordSum) + StringEnd()
+
         self.numberWords.ignore(CaselessLiteral("-"))
         self.numberWords.ignore(CaselessLiteral("and"))
-
 
         self.roman_numerals = [
             ['M', 1000],
@@ -118,7 +133,6 @@ class NumberParser(BaseParser):
             ['IV', 4],
             ['I', 1]
         ]
-    
 
     def isFloat(self, data):
         """Checks to see if the value is a float"""
@@ -127,7 +141,6 @@ class NumberParser(BaseParser):
         except ValueError:
             return False, 0
 
-
     def isInteger(self, data):
         """Checks to see if the value is an integer"""
         try:
@@ -135,28 +148,26 @@ class NumberParser(BaseParser):
         except ValueError:
             return False, 0
 
-
     def isHex(self, data):
         """Checks to see if the value is hexidecimal"""
         if data[0] == '#':
             data = data[1:]
-            
+
         try:
             return True, int(data, 16)
         except ValueError:
             return False, 0
 
-
     def isBinary(self, data):
         """Checks to see if the value looks like a binary"""
         if len(data) < 4:
             return False, 0
-        
+
         if len(data) % 4 != 0:
             return False, 0
-            
+
         for c in data:
-            if c not in ["0","1"]:
+            if c not in ["0", "1"]:
                 return False, 0
 
         try:
@@ -166,14 +177,12 @@ class NumberParser(BaseParser):
 
         return True, value
 
-
     def isOctal(self, data):
         """Checks to see if the value is octal"""
         try:
             return True, int(data, 8)
         except ValueError:
             return False, 0
-
 
     def isRomanNumeral(self, data):
         """Checks to see if the value is a roman numeral"""
@@ -204,44 +213,46 @@ class NumberParser(BaseParser):
                     index += 1
 
             return True, value
-            
-        return False, 0
 
+        return False, 0
 
     def isWords(self, data):
         try:
             numberValue = self.numberWords.parseString(data)[0]
             return True, numberValue
-        except ParseException, pe:
+        except ParseException:
             return False, 0
 
     def isFraction(self, data):
         """Detects if input is a fraction"""
-        if not '/' in data:
+        if '/' not in data:
             return False, 0
 
         fraction_split = data.split("/")
-        
+
         if len(fraction_split) > 2:
             return False, 0
-        
 
         whitespace_split = data.split()
         if len(whitespace_split) > 1:
             for whitespace_section in whitespace_split:
-                if not self.__recursiveIsNumberCheck(whitespace_section.strip()):
+                if not self.__recursiveIsNumberCheck(
+                        whitespace_section.strip()
+                ):
                     return False, 0
 
         else:
             for split_section in fraction_split:
                 if not self.__recursiveIsNumberCheck(split_section):
                     return False, 0
-                
+
         return True, data
 
-
     def __recursiveIsNumberCheck(self, data):
-        """Calls this parser on a piece of data derived from one of the internal tests"""
+        """
+        Calls this parser on a piece of data
+        derived from one of the internal tests
+        """
 
         result = self.parse(data)
 
@@ -253,32 +264,37 @@ class NumberParser(BaseParser):
 
         return False
 
-
     def parse(self, data, **kwargs):
         data = data.strip()
 
         if data == "":
             return
-            
+
         if data[0] == "-":
             data = data[1:]
 
         data = data.replace(",", "")
-        
+
         if data == '':
             return
-        
+
         is_fraction, value = self.isFraction(data)
         if is_fraction:
             fraction_confidence = 100
 
-            # for every character in the data other than the /, we lower the confidence a bit. Fractions are USUALLY short
+            """
+            for every character in the data other than the /, we lower
+            the confidence a bit. Fractions are USUALLY short
+            """
             for c in data:
                 if c != "/":
                     fraction_confidence -= 3
 
-            # if the fraction isn't solve-able, we lower the confidence significantly
-            # it might "technically" be a fraction made up of roman numerals, etc.
+            """
+            if the fraction isn't solve-able, we lower the confidence
+            significantly it might "technically" be a fraction made up
+            of roman numerals, etc.
+            """
             if EquationParser in self.Config.enabledModules:
                 ep = EquationParser(self.Config)
                 if not ep.solveEquation(ep.autoFloat(data)):
@@ -286,13 +302,11 @@ class NumberParser(BaseParser):
 
             yield self.result("Fraction", fraction_confidence, value)
             return
-                    
 
         is_binary, value = self.isBinary(data)
         if is_binary:
             yield self.result("Binary", 100, value)
             return
-
 
         is_integer, value = self.isInteger(data)
         if is_integer:
@@ -315,21 +329,19 @@ class NumberParser(BaseParser):
             # Just an int
             yield self.result("Integer", integer_confidence, value)
             return
-            
 
         if '.' in data:
             is_float, value = self.isFloat(data)
             if is_float:
                 yield self.result("Decimal", 100, value)
                 return
-            
 
         if len(data) > 1:
             is_hex, value = self.isHex(data)
             if is_hex:
                 yield self.result("Hexadecimal", 100, value)
                 return
-            
+
         is_roman_numeral, value = self.isRomanNumeral(data)
         if is_roman_numeral:
             yield self.result("Roman Numeral", 100, value)

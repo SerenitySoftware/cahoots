@@ -2,6 +2,7 @@ from cahoots.parsers.date import DateParser
 from tests.unit.config import TestConfig
 import unittest
 
+
 class DateParserTests(unittest.TestCase):
     """Unit Testing of the DateParser"""
 

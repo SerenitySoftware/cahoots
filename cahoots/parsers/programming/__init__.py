@@ -3,7 +3,11 @@ from cahoots.parsers.programming.lexer import ProgrammingLexer
 from cahoots.parsers.programming.bayesian import ProgrammingBayesianClassifier
 from cahoots.result import ParseResult
 from SereneRegistry import registry
-import os, re, glob, yaml
+import os
+import re
+import glob
+import yaml
+
 
 class ProgrammingParser(BaseParser):
 
@@ -30,44 +34,43 @@ class ProgrammingParser(BaseParser):
 
         ProgrammingBayesianClassifier.bootstrap(config)
 
-
     def __init__(self, config):
         BaseParser.__init__(self, config, "Programming", 0)
         self.allKeywords = registry.get('PPallKeywords')
         self.languageKeywords = registry.get('PPlanguageKeywords')
-    
 
     # finding common words/phrases in programming languages
     def findCommonTokens(self, dataset):
         return [keyword for keyword in dataset if keyword in self.allKeywords]
 
-
     def basicLanguageHeuristic(self, language, languageData, dataset):
-        return [keyword for keyword in dataset if keyword in languageData['keywords']]
-
+        return [keyword for keyword in
+                dataset if keyword in languageData['keywords']]
 
     def createDataset(self, data):
         """Takes a data string and converts it into a dataset for analysis"""
         return set(re.split('[ ;,{}()\n\t\r]', data.lower()))
 
-
     def parse(self, data, **kwargs):
-        """Determines if the data is an example of one of our trained languages"""
+        """
+        Determines if the data is an example of one of our trained languages
+        """
 
         dataset = self.createDataset(data)
-
 
         # Step 1: Is this possibly code?
         if not self.findCommonTokens(dataset):
             return
-        
 
         # Step 2: Which languages match, based on keywords alone?
-        matchedLanguages = [language for language, languageData in self.languageKeywords.items() if self.basicLanguageHeuristic(language, languageData, dataset)]
+        matchedLanguages = [language for language, languageData in
+                            self.languageKeywords.items() if
+                            self.basicLanguageHeuristic(
+                                language, languageData, dataset
+                            )]
 
         if not matchedLanguages:
             return
-
 
         # Step 3: Which languages match, based on a smarter lexer?
         lexer = ProgrammingLexer(matchedLanguages, data.lower())
@@ -76,27 +79,39 @@ class ProgrammingParser(BaseParser):
         if not lexedLanguages:
             return
 
-        # Giving ourselves a maximum of 10% confidence addition for lexer detection
-        normalizer = 10 / float(max([scr for lexid, scr in lexedLanguages.items()]))
+        """
+        Giving ourselves a maximum of 10% confidence
+        addition for lexer detection
+        """
+        normalizer = 10 / float(
+            max([scr for lexid, scr in lexedLanguages.items()])
+        )
         normalScores = {}
 
         for langId, score in lexedLanguages.items():
             normalScores[langId] = (normalizer * score)
 
-
-        #Step 4: Using a Naive Bayes Classifier to pinpoint the best language fits
+        """
+        Step 4: Using a Naive Bayes Classifier
+        to pinpoint the best language fits
+        """
         classifier = ProgrammingBayesianClassifier()
         bayesLanguages = classifier.classify(data)
 
-        # Pulling some stats out of our bayes results so we can calculate a confidence
-        results = [[lid, scr] for lid, scr in bayesLanguages.items() if lid in lexedLanguages]
+        """
+        Pulling some stats out of our bayes
+        results so we can calculate a confidence
+        """
+        results = [[lid, scr] for lid, scr in
+                   bayesLanguages.items() if lid in lexedLanguages]
         scores = [scr for lid, scr in results]
         minScore = min(scores)
         spread = max(scores) - minScore
 
         '''
-        We want to add up to 90% confidence based on the spread from min to max matches
-        Math for the actual normalization is explained in a comment below
+        We want to add up to 90% confidence based on the spread from min
+        to max matches Math for the actual normalization is explained in
+        a comment below
         '''
         if spread > 90:
             normalizer = 90.00 / spread
@@ -139,17 +154,20 @@ class ProgrammingParser(BaseParser):
             '''
             normalScores[langId] += (normalizer * score)
 
-
-        # We reduce our confidence significantly if the string provided is very short
+        """
+        We reduce our confidence significantly
+        if the string provided is very short
+        """
         normalizer = (min(100, float(len(data))) / 100)
         if (normalizer < 1):
             for langId in normalScores:
                 normalScores[langId] = normalScores[langId] * normalizer
-
 
         # turning the score into an integer
         for langId in normalScores:
             normalScores[langId] = int(round(normalScores[langId]))
 
         for langId, confidence in normalScores.items():
-            yield ParseResult(self.Type, self.languageKeywords[langId]['name'], confidence)
+            yield ParseResult(self.Type,
+                              self.languageKeywords[langId]['name'],
+                              confidence)

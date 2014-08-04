@@ -6,7 +6,7 @@ def truncateText(text, limit=80):
 
 def isNumber(text):
     """Checking if the text is a number"""
-    
+
     try:
         float(text.strip())
     except:

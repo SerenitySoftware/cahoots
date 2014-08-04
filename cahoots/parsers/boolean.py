@@ -1,5 +1,6 @@
 from base import BaseParser
 
+
 class BooleanParser(BaseParser):
 
     strongTrue = ["true", "yes"]
@@ -10,10 +11,8 @@ class BooleanParser(BaseParser):
     mediumFalse = ["nope"]
     weakFalse = ["0", "f", "zero"]
 
-
     def __init__(self, config):
         BaseParser.__init__(self, config, "Boolean")
-
 
     def isTrue(self, data):
         """Checks if a value is true"""
@@ -25,7 +24,6 @@ class BooleanParser(BaseParser):
             return 50
         return 0
 
-
     def isFalse(self, data):
         """Checks if a value is false"""
         if data in self.strongFalse:
@@ -35,7 +33,6 @@ class BooleanParser(BaseParser):
         elif data in self.weakFalse:
             return 50
         return 0
-
 
     def parse(self, data, **kwargs):
         data = data.lower()

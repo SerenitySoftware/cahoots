@@ -2,6 +2,7 @@ from cahoots.parsers.character import CharacterParser
 from tests.unit.config import TestConfig
 import unittest
 
+
 class CharacterParserTests(unittest.TestCase):
     """Unit Testing of the CharacterParser"""
 
@@ -12,7 +13,6 @@ class CharacterParserTests(unittest.TestCase):
 
     def tearDown(self):
         self.cp = None
-
 
     def test_isLetter(self):
 
@@ -35,7 +35,7 @@ class CharacterParserTests(unittest.TestCase):
     def test_isWhitespace(self):
 
         self.assertTrue(self.cp.isWhitespace(" "))
-        
+
         self.assertFalse(self.cp.isWhitespace("1"))
         self.assertFalse(self.cp.isWhitespace("a"))
         self.assertFalse(self.cp.isWhitespace("."))

@@ -1,21 +1,30 @@
 from cahoots.parsers.base import BaseParser
 from cahoots.util import isNumber
-import os, glob, yaml, string
 from SereneRegistry import registry
+import os
+import glob
+import yaml
+import string
+
 
 class MeasurementParser(BaseParser):
 
-    # to be used to determine if this is an area described using "3 square miles" etc
+    """
+    to be used to determine if this is an area
+    described using "3 square miles" etc
+    """
     areaDescriptors = ["square", "sr", "sq"]
     allowedPunctuation = ["'", '"', "."]
     integerStrings = ["quarter", "half"]
-    
+
     allUnits = []
     systemUnits = {}
 
     @staticmethod
     def bootstrap(config):
-        """Loads unit lists for use in this instance of the measurement parser"""
+        """
+        Loads unit lists for use in this instance of the measurement parser
+        """
         allUnits = []
         systemUnits = {}
 
@@ -28,33 +37,34 @@ class MeasurementParser(BaseParser):
                 allUnits.extend(unitType['keywords'])
                 systemUnits[unitType['id']] = unitType
 
-        # we're sorting all keywords by length, so we can locate the longest first and not have conflicts from the smaller.
+        """
+        we're sorting all keywords by length, so we can locate the
+        longest first and not have conflicts from the smaller.
+        """
         allUnits = sorted(set(allUnits), key=len, reverse=True)
 
         for systemId in systemUnits:
-            systemUnits[systemId]['keywords'] = sorted(systemUnits[systemId]['keywords'], key=len, reverse=True)
+            systemUnits[systemId]['keywords'] = sorted(
+                systemUnits[systemId]['keywords'], key=len, reverse=True
+            )
 
         registry.set('MPallUnits', allUnits)
         registry.set('MPsystemUnits', systemUnits)
-
 
     def __init__(self, config):
         BaseParser.__init__(self, config, "Measurement", 50)
         self.allUnits = registry.get('MPallUnits')
         self.systemUnits = registry.get('MPsystemUnits')
 
-
     def basicUnitCheck(self, data):
         """Checks to see if the data is simply a reference to a unit"""
         return data in self.allUnits
-
 
     def determineSystemUnit(self, data):
         """Determines what system this unit is a member of"""
         for systemId, systemData in self.systemUnits.items():
             if data in systemData['keywords']:
                 return systemId
-
 
     def identifyUnitsInData(self, data):
         """Finds all units of measurement in a set of data"""
@@ -63,10 +73,13 @@ class MeasurementParser(BaseParser):
         for unit in self.allUnits:
             unitStart = data.find(unit)
             if unitStart != -1:
-                #replacing the located unit with a space
+                # replacing the located unit with a space
                 data = data[:unitStart] + ' ' + data[(unitStart+len(unit)):]
 
-                # if we find the term again, we can't classify this as measurement.
+                """
+                if we find the term again, we can't
+                classify this as measurement.
+                """
                 if data.find(unit) != -1:
                     raise Exception("Invalid Measurement Data")
 
@@ -74,28 +87,35 @@ class MeasurementParser(BaseParser):
 
         return data.strip(), matches
 
-
     def getSubType(self, systemId):
-        """Gets a string we can set as our result subtype"""
-        return self.systemUnits[systemId]['system'] + ' ' + self.systemUnits[systemId]['type']
-
+        # Gets a string we can set as our result subtype
+        subtype = self.systemUnits[systemId]['system'] + ' ' +\
+            self.systemUnits[systemId]['type']
+        return subtype
 
     def parse(self, data, **kwargs):
 
         data = data.strip().lower()
 
-        # If the length of the data is longer than 50...almost certainly not a measurement
+        """
+        If the length of the data is longer than 50...
+        almost certainly not a measurement
+        """
         if len(data) > 50 or len(data) == 0:
             return
 
-        #checking if the dataset IS a unit reference.
+        # checking if the dataset IS a unit reference.
         if self.basicUnitCheck(data):
             systemId = self.determineSystemUnit(data)
             yield self.result(self.getSubType(systemId))
             return
 
-        # If there aren't any digits or whitespace in the data, we pretty much can just eliminate it at this point
-        elif not set(data).intersection(set(string.digits)) and not set(data).intersection(set(string.whitespace)):
+        elif not set(data).intersection(set(string.digits))\
+                and not set(data).intersection(set(string.whitespace)):
+            """
+            If there aren't any digits or whitespace in the data,
+            we pretty much can just eliminate it at this point
+            """
             return
 
         # processing the data by identifying and removing found units from it
@@ -110,7 +130,6 @@ class MeasurementParser(BaseParser):
 
         # Turning this into a float so we can operate on it more bettererly
         self.Confidence = float(self.Confidence)
-
 
         # Finding system ids the found units belong to
         systemIds = []
@@ -127,15 +146,20 @@ class MeasurementParser(BaseParser):
             for i in systemIds:
                 self.Confidence = self.Confidence * 0.75
 
-
         # if all we have left is a number, it helps our case a lot.
         if isNumber(data):
             self.Confidence += 50
         else:
-            # our penalty for extra words is 25% of whatever our confidence is right now
+            """
+            our penalty for extra words is 25% of
+            whatever our confidence is right now
+            """
             extraWordPenalty = self.Confidence * 0.25
 
-            # cutting our confidence down for every unidentified word we have in the data string
+            """
+            cutting our confidence down for every unidentified
+            word we have in the data string
+            """
             data = data.split()
             for i in data:
                 # if we found a number, we dont penalize for that
@@ -146,12 +170,10 @@ class MeasurementParser(BaseParser):
                 if int(self.Confidence) < 2:
                     return
 
-
         # If there aren't any numbers in the data, we lower the confidence.
         if not set(''.join(data)).intersection(set(string.digits)):
             print "foobar"
             self.Confidence = self.Confidence * 0.75
-
 
         # Cleaning up our final confidence number
         self.Confidence = min(100, int(round(self.Confidence)))
