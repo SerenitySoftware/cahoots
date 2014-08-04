@@ -1,5 +1,6 @@
 from base import BaseParser
 
+
 class GrammarParser(BaseParser):
 
     def __init__(self, config):

@@ -2,6 +2,7 @@ from cahoots.parsers.boolean import BooleanParser
 from tests.unit.config import TestConfig
 import unittest
 
+
 class BooleanParserTests(unittest.TestCase):
     """Unit Testing of the BooleanParser"""
 
@@ -11,13 +12,11 @@ class BooleanParserTests(unittest.TestCase):
     falseValues = ["false", "no", "nope", "0", "f", "zero"]
     junkValues = ["asdfasdf", "burp", "2"]
 
-
     def setUp(self):
         self.bp = BooleanParser(TestConfig())
 
     def tearDown(self):
         self.bp = None
-
 
     def test_isTrue(self):
 
@@ -30,7 +29,6 @@ class BooleanParserTests(unittest.TestCase):
         for testValue in self.falseValues:
             self.assertFalse(self.bp.isTrue(testValue))
 
-
     def test_isFalse(self):
 
         for testValue in self.trueValues:
@@ -41,4 +39,3 @@ class BooleanParserTests(unittest.TestCase):
 
         for testValue in self.falseValues:
             self.assertTrue(self.bp.isFalse(testValue))
-

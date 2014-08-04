@@ -1,17 +1,31 @@
 from SereneRegistry import registry
-import redis, redisbayes, os, glob, string, time
+import redis
+import redisbayes
+import os
+import glob
+import string
+import time
+
 
 class ProgrammingBayesianClassifier:
-    """Responsible for classifying an example of source code into a specific programming language"""
+    """
+    Responsible for classifying an example of source
+    code into a specific programming language
+    """
 
     def __init__(self):
-        """Creates an instance of a bayes classifer for use in identifying programmng languages"""
+        """
+        Creates an instance of a bayes classifer for
+        use in identifying programmng languages
+        """
         pass
-
 
     @staticmethod
     def bootstrap(config):
-        """Trains the bayes classifier with examples from various programming languages"""
+        """
+        Trains the bayes classifier with examples
+        from various programming languages
+        """
         bayesRedis = redis.Redis(
             host=config.redis['host'],
             port=config.redis['port'],
@@ -48,7 +62,6 @@ class ProgrammingBayesianClassifier:
         if oldRb:
             oldRb.flush()
 
-
     @staticmethod
     def bayesTokenizer(text):
         text = text.replace('->', ' -> ')
@@ -60,10 +73,11 @@ class ProgrammingBayesianClassifier:
         words = text.split()
         return [w for w in words if len(w) > 0 and w not in string.whitespace]
 
-
     def classify(self, dataString):
-        """Takes an string and creates a dict of programming language match probabilities"""
+        """
+        Takes an string and creates a dict of
+        programming language match probabilities
+        """
         rb = registry.get('PPredisBayes')
 
         return rb.score(dataString)
-        

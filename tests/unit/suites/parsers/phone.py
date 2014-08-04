@@ -3,6 +3,7 @@ from tests.unit.config import TestConfig
 from phonenumbers import phonenumberutil
 import unittest
 
+
 class PhoneParserTests(unittest.TestCase):
     """Unit Testing of the PhoneParser"""
 
@@ -25,7 +26,6 @@ class PhoneParserTests(unittest.TestCase):
     def tearDown(self):
         self.pp = None
 
-
     def test_buildPhoneNumberDict(self):
 
         numObj = phonenumberutil.parse("+1-979-549-5150")
@@ -34,9 +34,10 @@ class PhoneParserTests(unittest.TestCase):
 
         self.assertEqual(numDict, self.testDict)
 
-
     def test_getPhoneNumberObject(self):
 
-        self.assertFalse(self.pp.getPhoneNumberObject("The rain in spain falls mainly in the plain."))
+        self.assertFalse(self.pp.getPhoneNumberObject(
+            "The rain in spain falls mainly in the plain.")
+        )
 
         self.assertTrue(self.pp.getPhoneNumberObject("+1-979-549-5150"))

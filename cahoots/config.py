@@ -1,4 +1,16 @@
-from cahoots.parsers import boolean, character, date, email, equation, grammar, location, measurement, name, number, phone, programming, uri
+from cahoots.parsers import\
+    boolean,\
+    character,\
+    date,\
+    email,\
+    equation,\
+    measurement,\
+    name,\
+    number,\
+    phone,\
+    programming,\
+    uri
+
 
 class BaseConfig(object):
     """
@@ -26,8 +38,8 @@ class BaseConfig(object):
         uri.URIParser,
         email.EmailParser,
         programming.ProgrammingParser,
-        #grammar.GrammarParser,
-        #location.LocationParser,
+        # grammar.GrammarParser,
+        # location.LocationParser,
         equation.EquationParser,
         measurement.MeasurementParser,
     ]
@@ -48,7 +60,6 @@ class BaseConfig(object):
         'unix_socket_path': None,
         'connection_pool': None
     }
-
 
     """
     Configuration for the templating system

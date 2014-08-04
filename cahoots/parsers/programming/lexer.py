@@ -25,7 +25,8 @@ class ProgrammingLexerThread (threading.Thread):
         Lexes the data to see what lexers can tokenize it.
         Any successful lexers are considered possible matches.
         """
-        tokens = [tok for tok, text in lex(self.dataString, self.lexer) if (tok != Token.Text and text != '')]
+        tokens = [tok for tok, text in lex(self.dataString, self.lexer)
+                  if (tok != Token.Text and text != '')]
         tokenCount = len(tokens)
 
         # Errors mean we definitely didn't find the right language
@@ -54,23 +55,24 @@ class ProgrammingLexer:
     matchedLanguages = []
     data = None
 
-
     def __init__(self, matchedLangs, dataString):
         self.matchedLanguages = matchedLangs
         self.data = dataString
 
-
     def lex(self):
         """
-        For every possible matched language, we run a lexer to see if we can eliminate
-        it as a possible match. If we detect errors, or have no lexer matches, we remove it from the list.
+        For every possible matched language, we run a lexer to see if we can
+        eliminate it as a possible match. If we detect errors, or have no
+        lexer matches, we remove it from the list.
         """
 
         results = {}
         threads = []
-        
+
         # Looping through each matched language that has a lexer
-        for lexerId, lexer in [[lexid, lxr] for lexid, lxr in self.lexers.items() if lexid in self.matchedLanguages]:
+        for lexerId, lexer in \
+                [[lexid, lxr] for lexid, lxr in
+                 self.lexers.items() if lexid in self.matchedLanguages]:
             # Creating a thread for each lexer
             thread = ProgrammingLexerThread(lexerId, lexer, self.data)
             thread.start()

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-import os, sys
+import os
+import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__))[:-4])
 
 import out
@@ -9,26 +10,27 @@ from mako.lookup import TemplateLookup
 from cahoots.parser import CahootsParser
 from config import WSGIConfig
 
-app = Flask(__name__,static_folder='static')
+app = Flask(__name__, static_folder='static')
 
 cfg = WSGIConfig()
 parser = CahootsParser(cfg)
+
 
 class CahootsWSGI(object):
 
     parser = None
     templateLookup = None
-    
+
     def __init__(self, parser):
         self.parser = parser
         self.configure_templating()
 
     def configure_templating(self):
         self.templateLookup = TemplateLookup(
-            directories = self.parser.Config.template['lookups'],
-            module_directory = self.parser.Config.template['modules']
+            directories=self.parser.Config.template['lookups'],
+            module_directory=self.parser.Config.template['modules']
         )
-        
+
     def render(self, template, **context):
         rendered_template = self.templateLookup.get_template(template)
         return rendered_template.render(**context)
@@ -43,32 +45,37 @@ class CahootsWSGI(object):
 
 
 class CahootsClassifier(CahootsWSGI):
-    
+
     def __init__(self, parser):
         super(CahootsClassifier, self).__init__(parser)
-    
+
     def renderHome(self, request):
         query = self.getRequestVariable(request, 'q')
-        
+
         results = None
         if query != '':
             results = parser.parse(query)
-        
-        return self.render('home.html', q = query, results = results, json_results = out.encode(results))
+
+        return self.render(
+            'home.html',
+            q=query,
+            results=results,
+            json_results=out.encode(results)
+        )
 
 
 class CahootsClassifierApi(CahootsWSGI):
 
     def __init__(self, parser):
         super(CahootsClassifierApi, self).__init__(parser)
-        
+
     def renderApi(self, request):
         query = self.getRequestVariable(request, 'q')
-        
+
         results = None
         if query != '':
             results = parser.parse(query)
-            
+
         return out.encode(results)
 
 
@@ -83,4 +90,8 @@ def view_api():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get('PORT', 8000)), debug=parser.Config.debug)
+    app.run(
+        host="0.0.0.0",
+        port=int(os.environ.get('PORT', 8000)),
+        debug=parser.Config.debug
+    )

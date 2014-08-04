@@ -1,5 +1,10 @@
 language: python
-install: "pip install -r setup/requirements.txt"
+install:
+  - pip install -r setup/requirements.txt
+  - pip install coveralls
+  - pip install flake8
 python:
   - "2.7"
-script: nosetests tests/unit/test.py
+script:
+  - nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 60
+  - flake8 cahoots tests web

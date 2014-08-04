@@ -1,7 +1,11 @@
 from parsers import base
 from cahoots.util import truncateText
 from config import BaseConfig
-import datetime, threading, time, inspect
+import datetime
+import threading
+import time
+import inspect
+
 
 class ParserThread (threading.Thread):
     """Represents a thread that will handle one parser parsing request"""
@@ -27,35 +31,42 @@ class CahootsParser:
     Config = None
 
     """
-    The 'config' variable, if set, needs to be a class that extends BaseConfig, or an instance of a class that does.
+    The 'config' variable, if set, needs to be a class that extends
+    BaseConfig, or an instance of a class that does.
     In the case that it's a class, we will instantiate the class.
     """
     def __init__(self, config=None, bootstrap=True):
 
-        if config != None:
+        if config is not None:
             if inspect.isclass(config) and issubclass(config, BaseConfig):
                 self.Config = config()
             elif isinstance(config, BaseConfig):
                 self.Config = config
 
         # Config fallback
-        if self.Config == None:
+        if self.Config is None:
             self.Config = BaseConfig()
 
-        # This bootstraps our parsing system and gets all modules ready for parsing.
+        """
+        This bootstraps our parsing system and
+        gets all modules ready for parsing.
+        """
         if bootstrap:
             self.bootstrap()
-
 
     def bootstrap(self):
         """Bootstraps each parser. Can be used for cache warming, etc."""
         for module in self.Config.enabledModules:
-            """If the module overrides the base bootstrap, we output a message about it"""
-            if self.Config.debug and module.bootstrap != base.BaseParser.bootstrap:
-                print ' * '+time.strftime('%X %x %Z')+' * Bootstrapping '+module.__name__
+            """
+            If the module overrides the base bootstrap,
+            we output a message about it
+            """
+            if self.Config.debug\
+               and module.bootstrap != base.BaseParser.bootstrap:
+                print ' * ' + time.strftime('%X %x %Z') +\
+                      ' * Bootstrapping '+module.__name__
 
             module.bootstrap(self.Config)
-
 
     def parse(self, dataString, *args, **kwargs):
         """Parses input data and returns a dict of result data"""
@@ -78,7 +89,11 @@ class CahootsParser:
             results.extend(th.results)
 
         match_types = list(set([result.Type for result in results]))
-        matches = sorted(results, key = lambda result: result.Confidence, reverse = True)
+        matches = sorted(
+            results,
+            key=lambda result: result.Confidence,
+            reverse=True
+        )
         match_count = len(matches)
         query = dataString
 

@@ -2,7 +2,7 @@
 
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.realpath(__file__))[:-17]) # -6 gets rid of "/tests/functional"
+sys.path.append(os.path.dirname(os.path.realpath(__file__))[:-17])
 
 from cahoots.parser import CahootsParser
 from SereneRegistry import registry
@@ -11,8 +11,10 @@ import unittest
 
 """
 These are functional/acceptance tests of the parser.
-We're using the unit test system since it's easy to work with for this kind of testing.
+We're using the unit test system since it's easy to
+work with for this kind of testing.
 """
+
 
 class CahootsTest(unittest.TestCase):
 
@@ -24,18 +26,35 @@ class CahootsTest(unittest.TestCase):
     def tearDown(self):
         self.parser = None
         registry.flush()
-    
+
     def perform(self, data, expected_type, expected_subtype):
         results = self.parser.parse(data)['results']['matches']
-        self.assertNotEqual(0, len(results), msg = "No Cahoots results returned")
+        self.assertNotEqual(
+            0,
+            len(results),
+            msg="No Cahoots results returned"
+        )
 
         top_result = self.parser.parse(data)['top']
-        self.assertEqual(top_result.Type, expected_type, msg = "Top result was {0} instead of expected result {1}".format(top_result.Type, expected_type))
-        self.assertEqual(top_result.Subtype, expected_subtype, msg = "Top result subtype was {0} instead of expected subtype {1}".format(top_result.Subtype, expected_subtype))
+        self.assertEqual(
+            top_result.Type,
+            expected_type,
+            msg="Top result was {0} instead of expected result {1}"
+            .format(top_result.Type, expected_type)
+        )
+        self.assertEqual(
+            top_result.Subtype,
+            expected_subtype,
+            msg="Top result subtype was {0} instead of expected subtype {1}"
+            .format(top_result.Subtype, expected_subtype)
+        )
+
 
 class BooleanTests(CahootsTest):
-
-    # Not testing 1 or 0 here, because they have a higher confidence of being an integer
+    """
+    Not testing 1 or 0 here, because they have a
+    higher confidence of being an integer
+    """
 
     def test_true(self):
         self.perform("true", "Boolean", "True")
@@ -44,12 +63,12 @@ class BooleanTests(CahootsTest):
         self.perform("yup", "Boolean", "True")
         self.perform("t", "Boolean", "True")
 
-
     def test_false(self):
         self.perform("false", "Boolean", "False")
         self.perform("no", "Boolean", "False")
         self.perform("nope", "Boolean", "False")
         self.perform("f", "Boolean", "False")
+
 
 class NumberTests(CahootsTest):
 
@@ -68,64 +87,76 @@ class NumberTests(CahootsTest):
         self.perform("94092420490294092409.0", "Number", "Decimal")
         self.perform("-0.0", "Number", "Decimal")
         self.perform("-100,000.00", "Number", "Decimal")
-        
+
     def test_hexadecimals(self):
         self.perform("0xdeadbeef", "Number", "Hexadecimal")
         self.perform("0xDEADBEEF", "Number", "Hexadecimal")
         self.perform("#FFFFFF", "Number", "Hexadecimal")
-        
+
     def test_binary(self):
         self.perform("0010100101011001", "Number", "Binary")
         self.perform("00110001001100100011001100110100", "Number", "Binary")
-        
+
     def test_roman_numerals(self):
         self.perform("XIV", "Number", "Roman Numeral")
         self.perform("XXX", "Number", "Roman Numeral")
         self.perform("LXXXIX", "Number", "Roman Numeral")
         self.perform("DCXCI", "Number", "Roman Numeral")
         self.perform("MMMMCCCIX", "Number", "Roman Numeral")
-        
+
     def test_fractions(self):
         self.perform("1 1/2", "Number", "Fraction")
 
 
 class CharacterTests(CahootsTest):
-    
+
     def test_letters(self):
         self.perform("a", "Character", "Letter")
         self.perform("A", "Character", "Letter")
-        
+
     def test_punctuation(self):
         self.perform("?", "Character", "Punctuation")
         self.perform("-", "Character", "Punctuation")
         self.perform("/", "Character", "Punctuation")
-        
+
     def test_whitespace(self):
         self.perform(" ", "Character", "Whitespace")
         self.perform("\t", "Character", "Whitespace")
 
 
 class URITests(CahootsTest):
-    
+
     def test_IPv4(self):
         self.perform("127.0.0.1", "URI", "IP Address (v4)")
         self.perform("0.0.0.0", "URI", "IP Address (v4)")
         self.perform("192.168.1.1", "URI", "IP Address (v4)")
-        
+
     def test_IPv6(self):
         self.perform("2607:f0d0:1002:51::4", "URI", "IP Address (v6)")
-        
+
     def test_urls(self):
         self.perform("www.google.com", "URI", "URL")
         self.perform("http://www.google.com", "URI", "URL")
         self.perform("google.com", "URI", "URL")
-        self.perform("http://www.activecollab.com/docs/manuals/admin/tweak/url-formats", "URI", "URL")
-        self.perform("http://example.com/public/index.php?/projects/12", "URI", "URL")
-        self.perform("http://example.com/public/index.php#anything", "URI", "URL")
+        self.perform(
+            "http://www.activecollab.com/docs/manuals/admin/tweak/url-formats",
+            "URI",
+            "URL"
+        )
+        self.perform(
+            "http://example.com/public/index.php?/projects/12",
+            "URI",
+            "URL"
+        )
+        self.perform(
+            "http://example.com/public/index.php#anything",
+            "URI",
+            "URL"
+        )
 
 
 class EmailTests(CahootsTest):
-    
+
     def test_email(self):
         self.perform("jambra@photoflit.com", "Email", "Email Address")
         self.perform("jambra+cahoots@photoflit.com", "Email", "Email Address")
@@ -134,7 +165,7 @@ class EmailTests(CahootsTest):
 
 
 class PhoneTests(CahootsTest):
-    
+
     def test_phone(self):
         self.perform("972-955-2538", "Phone", "Phone Number")
         self.perform("(02) 1234 5678", "Phone", "Phone Number")
@@ -176,7 +207,7 @@ class PhoneTests(CahootsTest):
 
 
 class DateTester(CahootsTest):
-    
+
     def test_dates(self):
         self.perform("12/1/2004", "Date", "Date")
         self.perform("1997-04-13", "Date", "Date")
@@ -192,7 +223,7 @@ class DateTester(CahootsTest):
 
 
 class EquationTester(CahootsTest):
-    
+
     def test_simple(self):
         self.perform("5 x 5", "Equation", "Simple")
         self.perform("(2*3)^4", "Equation", "Simple")

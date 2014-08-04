@@ -3,6 +3,7 @@ from cahoots.result import ParseResult
 from tests.unit.config import TestConfig
 import unittest
 
+
 class BaseParserTests(unittest.TestCase):
     """Unit Testing of the BaseParser"""
 
@@ -14,11 +15,9 @@ class BaseParserTests(unittest.TestCase):
     def tearDown(self):
         self.bp = None
 
-
     def test_parse(self):
 
         self.assertRaises(NotImplementedError, self.bp.parse, "")
-
 
     def test_result(self):
 
