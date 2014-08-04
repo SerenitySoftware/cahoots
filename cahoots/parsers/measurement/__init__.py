@@ -3,7 +3,6 @@ from cahoots.util import isNumber
 import os, glob, yaml, string
 from SereneRegistry import registry
 
-
 class MeasurementParser(BaseParser):
 
     # to be used to determine if this is an area described using "3 square miles" etc

@@ -1,12 +1,12 @@
 #!/usr/bin/python
 
 import os, sys
-sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+sys.path.append(os.path.dirname(os.path.realpath(__file__))[:-4])
 
+import out
 from flask import Flask, request
 from mako.lookup import TemplateLookup
 from cahoots.parser import CahootsParser
-from web import out
 
 app = Flask(__name__,static_folder='web/static')
 

@@ -5,7 +5,6 @@ from cahoots.result import ParseResult
 from SereneRegistry import registry
 import os, re, glob, yaml
 
-
 class ProgrammingParser(BaseParser):
 
     allKeywords = []
