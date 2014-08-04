@@ -1,4 +1,4 @@
-from brain import parser
+from cahoots import parser
 from tests import getFixtureFileContents
 import unittest
 
@@ -214,6 +214,7 @@ class EquationTester(CahootsTest):
         self.perform("45 dividedby 34", "Equation", "Text")
 
 
+"""
 class ProgrammingTester(CahootsTest):
 
     def test_programming(self):
@@ -229,7 +230,7 @@ class ProgrammingTester(CahootsTest):
         self.perform(getFixtureFileContents('programming/python.py'), 'Programming', 'Python')
         self.perform(getFixtureFileContents('programming/ruby.rb'), 'Programming', 'Ruby')
         self.perform(getFixtureFileContents('programming/visualbasic.vb'), 'Programming', 'Visual Basic')
-
+"""
 
 class NameTester(CahootsTest):
 

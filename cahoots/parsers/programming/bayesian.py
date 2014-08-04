@@ -1,5 +1,5 @@
-from brain.util import BrainRegistry
-import redis, redisbayes, os, glob, string, config, time
+from SereneRegistry import registry
+import redis, redisbayes, os, glob, string, time
 
 class ProgrammingBayesianClassifier:
     """Responsible for classifying an example of source code into a specific programming language"""
@@ -10,7 +10,7 @@ class ProgrammingBayesianClassifier:
 
 
     @staticmethod
-    def bootstrap():
+    def bootstrap(config):
         """Trains the bayes classifier with examples from various programming languages"""
         bayesRedis = redis.Redis(
             host=config.redis['host'],
@@ -40,9 +40,9 @@ class ProgrammingBayesianClassifier:
         for language in trainers:
             rb.train(language, trainers[language])
 
-        oldRb = BrainRegistry.get('PPredisBayes')
+        oldRb = registry.get('PPredisBayes')
 
-        BrainRegistry.set('PPredisBayes', rb)
+        registry.set('PPredisBayes', rb)
 
         # Getting rid of the old namespaced data.
         if oldRb:
@@ -63,7 +63,7 @@ class ProgrammingBayesianClassifier:
 
     def classify(self, dataString):
         """Takes an string and creates a dict of programming language match probabilities"""
-        rb = BrainRegistry.get('PPredisBayes')
+        rb = registry.get('PPredisBayes')
 
         return rb.score(dataString)
         

@@ -1,10 +1,9 @@
-from brain.parsers.base import BaseParser
-from brain.parsers.programming.lexer import ProgrammingLexer
-from brain.parsers.programming.bayesian import ProgrammingBayesianClassifier
-from brain.result import ParseResult
-from brain.util import BrainRegistry
+from cahoots.parsers.base import BaseParser
+from cahoots.parsers.programming.lexer import ProgrammingLexer
+from cahoots.parsers.programming.bayesian import ProgrammingBayesianClassifier
+from cahoots.result import ParseResult
+from SereneRegistry import registry
 import os, re, glob, yaml
-
 
 class ProgrammingParser(BaseParser):
 
@@ -12,7 +11,7 @@ class ProgrammingParser(BaseParser):
     languageKeywords = {}
 
     @staticmethod
-    def bootstrap():
+    def bootstrap(config):
         """Loads tokens from the yaml files on disk"""
         allKeywords = []
         languageKeywords = {}
@@ -26,17 +25,16 @@ class ProgrammingParser(BaseParser):
                 allKeywords.extend(language['keywords'])
                 languageKeywords[language['id']] = language
 
-        BrainRegistry.set('PPallKeywords', set(allKeywords))
-        BrainRegistry.set('PPlanguageKeywords', languageKeywords)
+        registry.set('PPallKeywords', set(allKeywords))
+        registry.set('PPlanguageKeywords', languageKeywords)
 
-        ProgrammingBayesianClassifier.bootstrap();
+        ProgrammingBayesianClassifier.bootstrap(config)
 
 
-    def __init__(self):
-        self.Type = "Programming"
-        self.Confidence = 0
-        self.allKeywords = BrainRegistry.get('PPallKeywords')
-        self.languageKeywords = BrainRegistry.get('PPlanguageKeywords')
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Programming", 0)
+        self.allKeywords = registry.get('PPallKeywords')
+        self.languageKeywords = registry.get('PPlanguageKeywords')
     
 
     # finding common words/phrases in programming languages

@@ -7,4 +7,5 @@ pyparsing
 redisbayes
 phonenumbers
 simplejson
+SereneRegistry
 hiredis

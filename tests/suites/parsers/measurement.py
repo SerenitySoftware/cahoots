@@ -1,5 +1,5 @@
-from brain.parsers.measurement import MeasurementParser
-from brain.util import BrainRegistry
+from cahoots.parsers.measurement import MeasurementParser
+from SereneRegistry import registry
 import unittest
 
 class MeasurementParserTests(unittest.TestCase):
@@ -16,8 +16,8 @@ class MeasurementParserTests(unittest.TestCase):
 
 
     def test_loadUnits(self):
-        self.assertTrue(BrainRegistry.test('MPallUnits'))
-        self.assertTrue(BrainRegistry.test('MPsystemUnits'))
+        self.assertTrue(registry.test('MPallUnits'))
+        self.assertTrue(registry.test('MPsystemUnits'))
 
 
     def test_basicUnitCheck(self):

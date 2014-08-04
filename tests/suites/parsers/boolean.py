@@ -1,4 +1,4 @@
-from brain.parsers.boolean import BooleanParser
+from cahoots.parsers.boolean import BooleanParser
 import unittest
 
 class BooleanParserTests(unittest.TestCase):

@@ -1,4 +1,4 @@
-from brain.parsers.email import EmailParser
+from cahoots.parsers.email import EmailParser
 import unittest
 
 class EmailParserTests(unittest.TestCase):

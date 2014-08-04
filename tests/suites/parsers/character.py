@@ -1,4 +1,4 @@
-from brain.parsers.character import CharacterParser
+from cahoots.parsers.character import CharacterParser
 import unittest
 
 class CharacterParserTests(unittest.TestCase):

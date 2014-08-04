@@ -1,45 +1,5 @@
-from brain.util import BrainRegistry, truncateText, isNumber
+from cahoots.util import truncateText, isNumber
 import unittest
-
-class BrainRegistryTests(unittest.TestCase):
-    """Unit testing of the BrainRegistry"""
-
-    def setUp(self):
-        BrainRegistry.storage = {}
-
-    def tearDown(self):
-        BrainRegistry.storage = {}
-
-    def test_set(self):
-
-        BrainRegistry.set('test', 'foo')
-
-        self.assertEqual('foo', BrainRegistry.storage['test'])
-
-    def test_test(self):
-
-        BrainRegistry.set('test', 'foo')
-
-        self.assertTrue(BrainRegistry.test('test'))
-        self.assertFalse(BrainRegistry.test('bar'))
-
-    def test_get(self):
-
-        BrainRegistry.set('test', 'foo')
-
-        self.assertEqual('foo', BrainRegistry.get('test'))
-        self.assertIsNone(BrainRegistry.get('bar'))
-
-    def test_flush(self):
-
-        BrainRegistry.set('test', 'foo')
-
-        self.assertEqual('foo', BrainRegistry.get('test'))
-        self.assertNotEqual(0, len(BrainRegistry.storage))
-
-        BrainRegistry.flush()
-
-        self.assertEqual(0, len(BrainRegistry.storage))
 
 
 class truncateTextTests(unittest.TestCase):

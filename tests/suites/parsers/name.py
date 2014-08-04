@@ -1,4 +1,4 @@
-from brain.parsers.name import NameParser
+from cahoots.parsers.name import NameParser
 import unittest
 
 class NameParserTests(unittest.TestCase):

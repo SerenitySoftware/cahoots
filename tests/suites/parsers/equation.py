@@ -1,4 +1,4 @@
-from brain.parsers.equation import EquationParser
+from cahoots.parsers.equation import EquationParser
 import unittest
 
 class EquationParserTests(unittest.TestCase):

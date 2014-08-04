@@ -1,7 +1,7 @@
-from brain.parsers.base import BaseParser
-from brain.util import BrainRegistry, isNumber
+from cahoots.parsers.base import BaseParser
+from cahoots.util import isNumber
 import os, glob, yaml, string
-
+from SereneRegistry import registry
 
 class MeasurementParser(BaseParser):
 
@@ -14,7 +14,7 @@ class MeasurementParser(BaseParser):
     systemUnits = {}
 
     @staticmethod
-    def bootstrap():
+    def bootstrap(config):
         """Loads unit lists for use in this instance of the measurement parser"""
         allUnits = []
         systemUnits = {}
@@ -34,15 +34,14 @@ class MeasurementParser(BaseParser):
         for systemId in systemUnits:
             systemUnits[systemId]['keywords'] = sorted(systemUnits[systemId]['keywords'], key=len, reverse=True)
 
-        BrainRegistry.set('MPallUnits', allUnits)
-        BrainRegistry.set('MPsystemUnits', systemUnits)
+        registry.set('MPallUnits', allUnits)
+        registry.set('MPsystemUnits', systemUnits)
 
 
-    def __init__(self, initUnits = True):
-        self.Type = "Measurement"
-        self.Confidence = 50
-        self.allUnits = BrainRegistry.get('MPallUnits')
-        self.systemUnits = BrainRegistry.get('MPsystemUnits')
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Measurement", 50)
+        self.allUnits = registry.get('MPallUnits')
+        self.systemUnits = registry.get('MPsystemUnits')
 
 
     def basicUnitCheck(self, data):

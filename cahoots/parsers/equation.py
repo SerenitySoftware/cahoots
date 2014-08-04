@@ -1,13 +1,12 @@
-from brain.util import isNumber
+from cahoots.util import isNumber
 from base import BaseParser
 from phonenumbers import phonenumberutil
 from programming import ProgrammingParser
-import re, string, math, config
-
+import re, string, math
 
 class EquationParser(BaseParser):
     """
-    brain.parsers.equation
+    cahoots.parsers.equation
     parser to identify and solve some mathematical equations
     """
 
@@ -15,9 +14,8 @@ class EquationParser(BaseParser):
     """After we've processed the input string from the user, this var will contain the assembled result"""
 
 
-    def __init__(self):
-        self.Type = "Equation"
-        self.Confidence = 100
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Equation", 100)
 
 
     def isSimpleEquation(self, data):
@@ -161,8 +159,8 @@ class EquationParser(BaseParser):
             pass
 
         # We remove confidence for every token shared with a programming language.
-        if (ProgrammingParser in config.enabledModules):
-            progParser = ProgrammingParser()
+        if (ProgrammingParser in self.Config.enabledModules):
+            progParser = ProgrammingParser(self.Config)
             dataset = progParser.createDataset(data)
             for token in set(progParser.findCommonTokens(dataset)):
                 confidence -= 5
