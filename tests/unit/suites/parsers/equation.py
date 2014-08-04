@@ -1,4 +1,5 @@
 from cahoots.parsers.equation import EquationParser
+from tests.unit.config import TestConfig
 import unittest
 
 class EquationParserTests(unittest.TestCase):
@@ -7,7 +8,7 @@ class EquationParserTests(unittest.TestCase):
     ep = None
 
     def setUp(self):
-        self.ep = EquationParser()
+        self.ep = EquationParser(TestConfig)
 
     def tearDown(self):
         self.ep = None
@@ -70,4 +71,4 @@ class EquationParserTests(unittest.TestCase):
 
         self.assertEqual(self.ep.calculateConfidence("979-549-5150"), 80)
         self.assertEqual(self.ep.calculateConfidence("1-979-549-5150"), 70)
-        self.assertEqual(self.ep.calculateConfidence("the square root of 1234"), 95)
+        self.assertEqual(self.ep.calculateConfidence("the square root of 1234"), 100)

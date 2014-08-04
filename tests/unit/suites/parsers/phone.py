@@ -1,4 +1,5 @@
 from cahoots.parsers.phone import PhoneParser
+from tests.unit.config import TestConfig
 from phonenumbers import phonenumberutil
 import unittest
 
@@ -19,7 +20,7 @@ class PhoneParserTests(unittest.TestCase):
     }
 
     def setUp(self):
-        self.pp = PhoneParser()
+        self.pp = PhoneParser(TestConfig())
 
     def tearDown(self):
         self.pp = None

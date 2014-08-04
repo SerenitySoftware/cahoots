@@ -1,5 +1,6 @@
 from cahoots.parsers.base import BaseParser
 from cahoots.result import ParseResult
+from tests.unit.config import TestConfig
 import unittest
 
 class BaseParserTests(unittest.TestCase):
@@ -8,7 +9,7 @@ class BaseParserTests(unittest.TestCase):
     bp = None
 
     def setUp(self):
-        self.bp = BaseParser()
+        self.bp = BaseParser(TestConfig())
 
     def tearDown(self):
         self.bp = None

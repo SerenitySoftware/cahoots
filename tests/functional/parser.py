@@ -1,16 +1,35 @@
-from cahoots import parser
-from tests import getFixtureFileContents
+#!/usr/bin/python
+
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.realpath(__file__))[:-17]) # -6 gets rid of "/tests/functional"
+
+from cahoots.parser import CahootsParser
+from SereneRegistry import registry
+from tests.unit.config import TestConfig
 import unittest
 
-"""Unit Testing of the Parser"""
+"""
+These are functional/acceptance tests of the parser.
+We're using the unit test system since it's easy to work with for this kind of testing.
+"""
 
 class CahootsTest(unittest.TestCase):
+
+    parser = None
+
+    def setUp(self):
+        self.parser = CahootsParser(TestConfig())
+
+    def tearDown(self):
+        self.parser = None
+        registry.flush()
     
     def perform(self, data, expected_type, expected_subtype):
-        results = parser.parse(data)['results']['matches']
+        results = self.parser.parse(data)['results']['matches']
         self.assertNotEqual(0, len(results), msg = "No Cahoots results returned")
 
-        top_result = parser.parse(data)['top']
+        top_result = self.parser.parse(data)['top']
         self.assertEqual(top_result.Type, expected_type, msg = "Top result was {0} instead of expected result {1}".format(top_result.Type, expected_type))
         self.assertEqual(top_result.Subtype, expected_subtype, msg = "Top result subtype was {0} instead of expected subtype {1}".format(top_result.Subtype, expected_subtype))
 
@@ -19,7 +38,6 @@ class BooleanTests(CahootsTest):
     # Not testing 1 or 0 here, because they have a higher confidence of being an integer
 
     def test_true(self):
-        parser.bootstrap(True)
         self.perform("true", "Boolean", "True")
         self.perform("yes", "Boolean", "True")
         self.perform("yep", "Boolean", "True")
@@ -28,7 +46,6 @@ class BooleanTests(CahootsTest):
 
 
     def test_false(self):
-        parser.bootstrap(True)
         self.perform("false", "Boolean", "False")
         self.perform("no", "Boolean", "False")
         self.perform("nope", "Boolean", "False")
@@ -37,7 +54,6 @@ class BooleanTests(CahootsTest):
 class NumberTests(CahootsTest):
 
     def test_integers(self):
-        parser.bootstrap(True)
         self.perform("1", "Number", "Integer")
         self.perform("123", "Number", "Integer")
         self.perform("-50", "Number", "Integer")
@@ -46,7 +62,6 @@ class NumberTests(CahootsTest):
         self.perform("-100,440", "Number", "Integer")
 
     def test_decimals(self):
-        parser.bootstrap(True)
         self.perform("1.0", "Number", "Decimal")
         self.perform("10.0", "Number", "Decimal")
         self.perform("100,000.00", "Number", "Decimal")
@@ -55,18 +70,15 @@ class NumberTests(CahootsTest):
         self.perform("-100,000.00", "Number", "Decimal")
         
     def test_hexadecimals(self):
-        parser.bootstrap(True)
         self.perform("0xdeadbeef", "Number", "Hexadecimal")
         self.perform("0xDEADBEEF", "Number", "Hexadecimal")
         self.perform("#FFFFFF", "Number", "Hexadecimal")
         
     def test_binary(self):
-        parser.bootstrap(True)
         self.perform("0010100101011001", "Number", "Binary")
         self.perform("00110001001100100011001100110100", "Number", "Binary")
         
     def test_roman_numerals(self):
-        parser.bootstrap(True)
         self.perform("XIV", "Number", "Roman Numeral")
         self.perform("XXX", "Number", "Roman Numeral")
         self.perform("LXXXIX", "Number", "Roman Numeral")
@@ -74,25 +86,21 @@ class NumberTests(CahootsTest):
         self.perform("MMMMCCCIX", "Number", "Roman Numeral")
         
     def test_fractions(self):
-        parser.bootstrap(True)
         self.perform("1 1/2", "Number", "Fraction")
 
 
 class CharacterTests(CahootsTest):
     
     def test_letters(self):
-        parser.bootstrap(True)
         self.perform("a", "Character", "Letter")
         self.perform("A", "Character", "Letter")
         
     def test_punctuation(self):
-        parser.bootstrap(True)
         self.perform("?", "Character", "Punctuation")
         self.perform("-", "Character", "Punctuation")
         self.perform("/", "Character", "Punctuation")
         
     def test_whitespace(self):
-        parser.bootstrap(True)
         self.perform(" ", "Character", "Whitespace")
         self.perform("\t", "Character", "Whitespace")
 
@@ -100,17 +108,14 @@ class CharacterTests(CahootsTest):
 class URITests(CahootsTest):
     
     def test_IPv4(self):
-        parser.bootstrap(True)
         self.perform("127.0.0.1", "URI", "IP Address (v4)")
         self.perform("0.0.0.0", "URI", "IP Address (v4)")
         self.perform("192.168.1.1", "URI", "IP Address (v4)")
         
     def test_IPv6(self):
-        parser.bootstrap(True)
         self.perform("2607:f0d0:1002:51::4", "URI", "IP Address (v6)")
         
     def test_urls(self):
-        parser.bootstrap(True)
         self.perform("www.google.com", "URI", "URL")
         self.perform("http://www.google.com", "URI", "URL")
         self.perform("google.com", "URI", "URL")
@@ -122,7 +127,6 @@ class URITests(CahootsTest):
 class EmailTests(CahootsTest):
     
     def test_email(self):
-        parser.bootstrap(True)
         self.perform("jambra@photoflit.com", "Email", "Email Address")
         self.perform("jambra+cahoots@photoflit.com", "Email", "Email Address")
         self.perform("jambra@smithsonian.museum", "Email", "Email Address")
@@ -132,7 +136,6 @@ class EmailTests(CahootsTest):
 class PhoneTests(CahootsTest):
     
     def test_phone(self):
-        parser.bootstrap(True)
         self.perform("972-955-2538", "Phone", "Phone Number")
         self.perform("(02) 1234 5678", "Phone", "Phone Number")
         self.perform("0412 345 67", "Phone", "Phone Number")
@@ -175,7 +178,6 @@ class PhoneTests(CahootsTest):
 class DateTester(CahootsTest):
     
     def test_dates(self):
-        parser.bootstrap(True)
         self.perform("12/1/2004", "Date", "Date")
         self.perform("1997-04-13", "Date", "Date")
         self.perform("1997-07-16T19:20+01:00", "Date", "Date")
@@ -192,14 +194,12 @@ class DateTester(CahootsTest):
 class EquationTester(CahootsTest):
     
     def test_simple(self):
-        parser.bootstrap(True)
         self.perform("5 x 5", "Equation", "Simple")
         self.perform("(2*3)^4", "Equation", "Simple")
         self.perform("1/7+4-2", "Equation", "Simple")
         self.perform("124*76(45^4)-34.51+2345", "Equation", "Simple")
 
     def test_textual(self):
-        parser.bootstrap(True)
         self.perform("square root of 16", "Equation", "Text")
         self.perform("The square root of 169", "Equation", "Text")
         self.perform("square root of 123.456", "Equation", "Text")
@@ -214,28 +214,9 @@ class EquationTester(CahootsTest):
         self.perform("45 dividedby 34", "Equation", "Text")
 
 
-"""
-class ProgrammingTester(CahootsTest):
-
-    def test_programming(self):
-        parser.bootstrap(True)
-        self.perform(getFixtureFileContents('programming/actionscript.as'), 'Programming', 'ActionScript')
-        self.perform(getFixtureFileContents('programming/c++.cpp'), 'Programming', 'C++')
-        self.perform(getFixtureFileContents('programming/c.c'), 'Programming', 'C')
-        self.perform(getFixtureFileContents('programming/csharp.cs'), 'Programming', 'C#')
-        self.perform(getFixtureFileContents('programming/java.java'), 'Programming', 'Java')
-        self.perform(getFixtureFileContents('programming/javascript.js'), 'Programming', 'JavaScript')
-        self.perform(getFixtureFileContents('programming/perl.pl'), 'Programming', 'Perl')
-        self.perform(getFixtureFileContents('programming/php.php'), 'Programming', 'PHP')
-        self.perform(getFixtureFileContents('programming/python.py'), 'Programming', 'Python')
-        self.perform(getFixtureFileContents('programming/ruby.rb'), 'Programming', 'Ruby')
-        self.perform(getFixtureFileContents('programming/visualbasic.vb'), 'Programming', 'Visual Basic')
-"""
-
 class NameTester(CahootsTest):
 
     def test_programming(self):
-        parser.bootstrap(True)
         self.perform('Mr Ryan W Vennell Sr', 'Name', 'Name')
         self.perform('Mr R Vennell Sr', 'Name', 'Name')
         self.perform('Ryan W. Vennell Sr', 'Name', 'Name')
@@ -251,7 +232,6 @@ class NameTester(CahootsTest):
 class MeasurementTester(CahootsTest):
 
     def test_measurement(self):
-        parser.bootstrap(True)
         self.perform('73 Inches', 'Measurement', 'Imperial Length')
         self.perform('73"', 'Measurement', 'Imperial Length')
         self.perform('73\'', 'Measurement', 'Imperial Length')
@@ -272,3 +252,7 @@ class MeasurementTester(CahootsTest):
         self.perform('3 liter', 'Measurement', 'Metric Volume')
         self.perform('3 ml', 'Measurement', 'Metric Volume')
         self.perform('400 parsecs', 'Measurement', 'Miscellaneous Length')
+
+
+if __name__ == '__main__':
+    unittest.main()

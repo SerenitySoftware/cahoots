@@ -1,4 +1,5 @@
 from cahoots.parsers.date import DateParser
+from tests.unit.config import TestConfig
 import unittest
 
 class DateParserTests(unittest.TestCase):
@@ -7,7 +8,7 @@ class DateParserTests(unittest.TestCase):
     dp = None
 
     def setUp(self):
-        self.dp = DateParser()
+        self.dp = DateParser(TestConfig())
 
     def tearDown(self):
         self.dp = None

@@ -1,0 +1,5 @@
+language: python
+install: "pip install -r setup/requirements.txt"
+python:
+  - "2.7"
+script: nosetests tests/unit/test.py
