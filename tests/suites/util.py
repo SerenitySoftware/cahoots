@@ -1,45 +1,5 @@
-from cahoots.util import CahootsRegistry, truncateText, isNumber
+from cahoots.util import truncateText, isNumber
 import unittest
-
-class CahootsRegistryTests(unittest.TestCase):
-    """Unit testing of the CahootsRegistry"""
-
-    def setUp(self):
-        CahootsRegistry.storage = {}
-
-    def tearDown(self):
-        CahootsRegistry.storage = {}
-
-    def test_set(self):
-
-        CahootsRegistry.set('test', 'foo')
-
-        self.assertEqual('foo', CahootsRegistry.storage['test'])
-
-    def test_test(self):
-
-        CahootsRegistry.set('test', 'foo')
-
-        self.assertTrue(CahootsRegistry.test('test'))
-        self.assertFalse(CahootsRegistry.test('bar'))
-
-    def test_get(self):
-
-        CahootsRegistry.set('test', 'foo')
-
-        self.assertEqual('foo', CahootsRegistry.get('test'))
-        self.assertIsNone(CahootsRegistry.get('bar'))
-
-    def test_flush(self):
-
-        CahootsRegistry.set('test', 'foo')
-
-        self.assertEqual('foo', CahootsRegistry.get('test'))
-        self.assertNotEqual(0, len(CahootsRegistry.storage))
-
-        CahootsRegistry.flush()
-
-        self.assertEqual(0, len(CahootsRegistry.storage))
 
 
 class truncateTextTests(unittest.TestCase):

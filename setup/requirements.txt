@@ -8,3 +8,4 @@ redisbayes
 phonenumbers
 simplejson
 hiredis
+SereneRegistry

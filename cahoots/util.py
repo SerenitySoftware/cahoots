@@ -1,32 +1,3 @@
-class CahootsRegistry:
-    """A memory key/value registry"""
-
-    storage = {}
-
-    @staticmethod
-    def set(key, value):
-        """Sets a value in the registry"""
-        CahootsRegistry.storage[key] = value
-
-    @staticmethod
-    def get(key):
-        """Gets a value from the registry"""
-        if key in CahootsRegistry.storage:
-            return CahootsRegistry.storage[key]
-        else:
-            return None
-
-    @staticmethod
-    def test(key):
-        """Checks to see if there's a key in the registry"""
-        return key in CahootsRegistry.storage
-
-    @staticmethod
-    def flush():
-        """Removes all values from the registry"""
-        CahootsRegistry.storage = {}
-
-
 def truncateText(text, limit=80):
     if len(text) > limit:
         text = text[:limit-3] + "..."

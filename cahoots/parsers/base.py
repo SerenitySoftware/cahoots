@@ -1,10 +1,14 @@
 from exceptions import NotImplementedError
 from cahoots.result import ParseResult
 
-class BaseParser:
+class BaseParser(object):
 
     Type = "Base"
     Confidence = 10
+
+    def __init__(self, *args, **kwargs):
+        self.Type = "Base"
+        self.Confidence = 10
 
     @staticmethod
     def bootstrap():

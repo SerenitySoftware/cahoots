@@ -4,7 +4,8 @@ from binascii import unhexlify
 from phonenumbers import phonenumberutil
 from pyparsing import *
 from operator import mul
-import re, config
+from SereneRegistry import registry
+import re
 
 class NumberParser(BaseParser):
 
@@ -279,7 +280,7 @@ class NumberParser(BaseParser):
 
             # if the fraction isn't solve-able, we lower the confidence significantly
             # it might "technically" be a fraction made up of roman numerals, etc.
-            if EquationParser in config.enabledModules:
+            if EquationParser in registry.get('Config').enabledModules:
                 ep = EquationParser()
                 if not ep.solveEquation(ep.autoFloat(data)):
                     fraction_confidence -= 40

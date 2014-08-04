@@ -1,6 +1,7 @@
 from cahoots.parsers.base import BaseParser
-from cahoots.util import CahootsRegistry, isNumber
+from cahoots.util import isNumber
 import os, glob, yaml, string
+from SereneRegistry import registry
 
 
 class MeasurementParser(BaseParser):
@@ -34,15 +35,15 @@ class MeasurementParser(BaseParser):
         for systemId in systemUnits:
             systemUnits[systemId]['keywords'] = sorted(systemUnits[systemId]['keywords'], key=len, reverse=True)
 
-        CahootsRegistry.set('MPallUnits', allUnits)
-        CahootsRegistry.set('MPsystemUnits', systemUnits)
+        registry.set('MPallUnits', allUnits)
+        registry.set('MPsystemUnits', systemUnits)
 
 
-    def __init__(self, initUnits = True):
+    def __init__(self):
         self.Type = "Measurement"
         self.Confidence = 50
-        self.allUnits = CahootsRegistry.get('MPallUnits')
-        self.systemUnits = CahootsRegistry.get('MPsystemUnits')
+        self.allUnits = registry.get('MPallUnits')
+        self.systemUnits = registry.get('MPsystemUnits')
 
 
     def basicUnitCheck(self, data):

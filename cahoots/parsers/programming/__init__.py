@@ -2,7 +2,7 @@ from cahoots.parsers.base import BaseParser
 from cahoots.parsers.programming.lexer import ProgrammingLexer
 from cahoots.parsers.programming.bayesian import ProgrammingBayesianClassifier
 from cahoots.result import ParseResult
-from cahoots.util import CahootsRegistry
+from SereneRegistry import registry
 import os, re, glob, yaml
 
 
@@ -26,17 +26,17 @@ class ProgrammingParser(BaseParser):
                 allKeywords.extend(language['keywords'])
                 languageKeywords[language['id']] = language
 
-        CahootsRegistry.set('PPallKeywords', set(allKeywords))
-        CahootsRegistry.set('PPlanguageKeywords', languageKeywords)
+        registry.set('PPallKeywords', set(allKeywords))
+        registry.set('PPlanguageKeywords', languageKeywords)
 
-        ProgrammingBayesianClassifier.bootstrap();
+        ProgrammingBayesianClassifier.bootstrap()
 
 
     def __init__(self):
         self.Type = "Programming"
         self.Confidence = 0
-        self.allKeywords = CahootsRegistry.get('PPallKeywords')
-        self.languageKeywords = CahootsRegistry.get('PPlanguageKeywords')
+        self.allKeywords = registry.get('PPallKeywords')
+        self.languageKeywords = registry.get('PPlanguageKeywords')
     
 
     # finding common words/phrases in programming languages

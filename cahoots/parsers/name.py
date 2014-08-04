@@ -1,6 +1,7 @@
 from base import BaseParser
 from number import NumberParser
-import re, config
+from SereneRegistry import registry
+import re
 
 class NameParser(BaseParser):
 
@@ -25,7 +26,7 @@ class NameParser(BaseParser):
 
     def isSuffix(self, word):
         """Checks to see if the word passed in is a name suffix"""
-        if NumberParser in config.enabledModules:
+        if NumberParser in registry.get('Config').enabledModules:
             np = NumberParser()
             if np.isRomanNumeral(word) != (False, 0):
                 return True

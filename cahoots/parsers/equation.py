@@ -2,8 +2,8 @@ from cahoots.util import isNumber
 from base import BaseParser
 from phonenumbers import phonenumberutil
 from programming import ProgrammingParser
-import re, string, math, config
-
+from SereneRegistry import registry
+import re, string, math
 
 class EquationParser(BaseParser):
     """
@@ -161,7 +161,7 @@ class EquationParser(BaseParser):
             pass
 
         # We remove confidence for every token shared with a programming language.
-        if (ProgrammingParser in config.enabledModules):
+        if (ProgrammingParser in registry.get('Config').enabledModules):
             progParser = ProgrammingParser()
             dataset = progParser.createDataset(data)
             for token in set(progParser.findCommonTokens(dataset)):

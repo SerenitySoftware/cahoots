@@ -1,6 +1,7 @@
 from base import BaseParser
 from boolean import BooleanParser
-import string, config
+import string
+from SereneRegistry import registry
 
 class CharacterParser(BaseParser):
 
@@ -55,7 +56,7 @@ class CharacterParser(BaseParser):
 
         # If this character doesn't evaluate as a boolean, we're positive
         # it's a character if it passes one of the specific evaulations.
-        if BooleanParser in config.enabledModules:
+        if BooleanParser in registry.get('Config').enabledModules:
             bp = BooleanParser()
             if not bp.isTrue(data) and not bp.isFalse(data):
                 self.Confidence = 100

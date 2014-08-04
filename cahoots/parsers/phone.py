@@ -2,7 +2,8 @@ from base import BaseParser
 from uri import URIParser
 from number import NumberParser
 from phonenumbers import phonenumberutil, geocoder
-import string, config
+from SereneRegistry import registry
+import string
 
 class PhoneParser(BaseParser):
 
@@ -95,13 +96,13 @@ class PhoneParser(BaseParser):
             return
 
         # if this is an ip address, we take a big hit.
-        if URIParser in config.enabledModules:
+        if URIParser in registry.get('Config').enabledModules:
             uriParser = URIParser()
             if uriParser.isIPv4Address(dataString):
                 self.Confidence -= 25
 
         # if this is an integer, we take a big hit.
-        if NumberParser in config.enabledModules:
+        if NumberParser in registry.get('Config').enabledModules:
             numParser = NumberParser()
             if numParser.isInteger(dataString) != (False, 0):
                 self.Confidence -= 20

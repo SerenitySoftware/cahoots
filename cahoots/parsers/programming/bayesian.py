@@ -1,5 +1,5 @@
-from cahoots.util import CahootsRegistry
-import redis, redisbayes, os, glob, string, config, time
+from SereneRegistry import registry
+import redis, redisbayes, os, glob, string, time
 
 class ProgrammingBayesianClassifier:
     """Responsible for classifying an example of source code into a specific programming language"""
@@ -13,10 +13,10 @@ class ProgrammingBayesianClassifier:
     def bootstrap():
         """Trains the bayes classifier with examples from various programming languages"""
         bayesRedis = redis.Redis(
-            host=config.redis['host'],
-            port=config.redis['port'],
-            unix_socket_path=config.redis['unix_socket_path'],
-            connection_pool=config.redis['connection_pool']
+            host=registry.get('Config').redis['host'],
+            port=registry.get('Config').redis['port'],
+            unix_socket_path=registry.get('Config').redis['unix_socket_path'],
+            connection_pool=registry.get('Config').redis['connection_pool']
         )
 
         namespace = str(time.time())+':'
@@ -40,9 +40,9 @@ class ProgrammingBayesianClassifier:
         for language in trainers:
             rb.train(language, trainers[language])
 
-        oldRb = CahootsRegistry.get('PPredisBayes')
+        oldRb = registry.get('PPredisBayes')
 
-        CahootsRegistry.set('PPredisBayes', rb)
+        registry.set('PPredisBayes', rb)
 
         # Getting rid of the old namespaced data.
         if oldRb:
@@ -63,7 +63,7 @@ class ProgrammingBayesianClassifier:
 
     def classify(self, dataString):
         """Takes an string and creates a dict of programming language match probabilities"""
-        rb = CahootsRegistry.get('PPredisBayes')
+        rb = registry.get('PPredisBayes')
 
         return rb.score(dataString)
         
