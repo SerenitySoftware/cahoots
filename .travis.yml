@@ -1,5 +1,7 @@
 language: python
-install: "pip install -r setup/requirements.txt"
+install:
+  - pip install -r setup/requirements.txt
+  - pip install coveralls
 python:
   - "2.7"
-script: nosetests tests/unit/test.py
+script: nosetests tests/unit/test.py --with-coverage --cover-package=cahoots
