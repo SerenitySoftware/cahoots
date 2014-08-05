@@ -37,7 +37,7 @@ Requirements
     phonenumbers
     simplejson
     SereneRegistry
-    hiredis (optional)
+    hiredis (recommended)
     ```
 
 Contributor Dev Requirements
@@ -77,5 +77,5 @@ Setup
     ```
 
 5. Run the command `vagrant ssh` to connect to your VM. (Alternative: Use PuTTY with host `127.0.0.1`, port `2222` and username/password `vagrant`.)
-6. Run the command `../web/wsgi.py` in your VM  to start Cahoots.
+6. Run the command `./web/wsgi.py` in your VM  to start Cahoots.
 7. Visit `http://localhost:8000` to view the web interface.

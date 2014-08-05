@@ -1,8 +1,7 @@
 language: python
 install:
   - pip install -r setup/requirements.txt
-  - pip install coveralls
-  - pip install flake8
+  - pip install -r setup/requirements.dev.txt
 python:
   - "2.7"
 script:

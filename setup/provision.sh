@@ -14,12 +14,15 @@ echo "Step 2: Upgrading Base System Packages"
 apt-get -y upgrade > /dev/null
 
 echo "Step 3: Installing Required System Packages"
-cat setup/requirements.system | xargs apt-get install -y > /dev/null
+cat setup/requirements.system.txt | xargs apt-get install -y > /dev/null
 
 echo "Step 4: Installing Required Python Packages"
 pip install -r setup/requirements.txt > /dev/null
 
-echo "Step 5: Moving files around"
+echo "Step 5: Installing Development Python Packages"
+pip install -r setup/requirements.dev.txt > /dev/null
+
+echo "Step 6: Moving files around"
 echo "cd /vagrant" >> /home/vagrant/.bashrc
 
 echo " "
