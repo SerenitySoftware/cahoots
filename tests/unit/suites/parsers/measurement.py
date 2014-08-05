@@ -21,13 +21,10 @@ class MeasurementParserTests(unittest.TestCase):
         self.assertTrue(registry.test('MPsystemUnits'))
 
     def test_basicUnitCheck(self):
-
         self.assertTrue(self.mp.basicUnitCheck('parsec'))
-
         self.assertFalse(self.mp.basicUnitCheck('heffalump'))
 
     def test_determineSystemUnit(self):
-
         self.assertEqual(
             self.mp.determineSystemUnit('inches'),
             'imperial_length'
@@ -36,18 +33,20 @@ class MeasurementParserTests(unittest.TestCase):
             self.mp.determineSystemUnit('parsecs'),
             'miscellaneous_length'
         )
-
         self.assertIsNone(self.mp.determineSystemUnit('asdfasdf'))
 
     def test_identifyUnitsInData(self):
-
         data, matches = self.mp.identifyUnitsInData('3 square feet')
-
         self.assertEqual(data, '3')
         self.assertEqual(matches, ['square feet'])
 
-    def test_getSubType(self):
+        self.assertRaises(
+            Exception,
+            self.mp.identifyUnitsInData,
+            '3 feet feet'
+        )
 
+    def test_getSubType(self):
         self.assertEqual(
             self.mp.getSubType('imperial_length'),
             'Imperial Length'

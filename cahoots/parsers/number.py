@@ -201,16 +201,11 @@ class NumberParser(BaseParser):
             index = 0
 
             while index < len(data):
-                found = False
                 for(roman_numeral, arabic_numeral) in self.roman_numerals:
                     if data[index:(index+len(roman_numeral))] == roman_numeral:
                         value += arabic_numeral
                         index += len(roman_numeral)
-                        found = True
                         continue
-
-                if not found:
-                    index += 1
 
             return True, value
 
@@ -236,33 +231,23 @@ class NumberParser(BaseParser):
         whitespace_split = data.split()
         if len(whitespace_split) > 1:
             for whitespace_section in whitespace_split:
-                if not self.__recursiveIsNumberCheck(
-                        whitespace_section.strip()
+                test = whitespace_section.strip()
+                if (
+                    self.isFraction(test) == (False, 0)
+                    and self.isInteger(test) == (False, 0)
                 ):
                     return False, 0
 
         else:
             for split_section in fraction_split:
-                if not self.__recursiveIsNumberCheck(split_section):
+                test = split_section.strip()
+                if (
+                    len(test) == 0
+                    or self.isInteger(split_section.strip()) == (False, 0)
+                ):
                     return False, 0
 
         return True, data
-
-    def __recursiveIsNumberCheck(self, data):
-        """
-        Calls this parser on a piece of data
-        derived from one of the internal tests
-        """
-
-        result = self.parse(data)
-
-        try:
-            result.next()
-            return True
-        except StopIteration:
-            return False
-
-        return False
 
     def parse(self, data, **kwargs):
         data = data.strip()
