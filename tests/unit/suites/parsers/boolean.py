@@ -1,4 +1,5 @@
 from cahoots.parsers.boolean import BooleanParser
+from cahoots.result import ParseResult
 from tests.unit.config import TestConfig
 import unittest
 
@@ -39,3 +40,49 @@ class BooleanParserTests(unittest.TestCase):
 
         for testValue in self.falseValues:
             self.assertTrue(self.bp.isFalse(testValue))
+
+    def test_parseLongStringYieldsNothing(self):
+        resultTest = None
+
+        for result in self.bp.parse("LookALongString"):
+            resultTest = result
+
+        self.assertIsNone(resultTest)
+
+    def test_parseTrueValuesYieldsExpectedConfidence(self):
+        valueConfidence = [("true", 100),
+                           ("yes", 100),
+                           ("yep", 75),
+                           ("yup", 75),
+                           ("1", 50),
+                           ("t", 50),
+                           ("one", 50)]
+
+        for value, confidence in valueConfidence:
+            for result in self.bp.parse(value):
+                self.assertIsInstance(result, ParseResult)
+                self.assertEqual(result.Confidence, confidence)
+                self.assertTrue(result.ResultValue)
+
+    def test_parseFalseValuesYieldsExpectedConfidence(self):
+        valueConfidence = [("false", 100),
+                           ("no", 100),
+                           ("nope", 75),
+                           ("0", 50),
+                           ("f", 50),
+                           ("zero", 50)]
+
+        for value, confidence in valueConfidence:
+            for result in self.bp.parse(value):
+                self.assertIsInstance(result, ParseResult)
+                self.assertEqual(result.Confidence, confidence)
+                self.assertFalse(result.ResultValue)
+
+    def test_parseTrueValuesYieldsNothing(self):
+        resultTest = None
+
+        for value in self.junkValues:
+            for result in self.bp.parse(value):
+                resultTest = result
+
+        self.assertIsNone(resultTest)

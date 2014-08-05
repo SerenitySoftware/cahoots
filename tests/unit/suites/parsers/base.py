@@ -10,15 +10,14 @@ class BaseParserTests(unittest.TestCase):
     bp = None
 
     def setUp(self):
+        BaseParser.bootstrap(TestConfig())
         self.bp = BaseParser(TestConfig())
 
     def tearDown(self):
         self.bp = None
 
     def test_parse(self):
-
         self.assertRaises(NotImplementedError, self.bp.parse, "")
 
     def test_result(self):
-
         self.assertIsInstance(self.bp.result(), ParseResult)
