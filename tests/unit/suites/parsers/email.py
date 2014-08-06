@@ -15,15 +15,23 @@ class EmailParserTests(unittest.TestCase):
         self.ep = None
 
     def test_matchesEmailPattern(self):
-
-        self.assertTrue(self.ep.matchesEmailPattern("jambra@photoflit.com"))
-        self.assertTrue(
-            self.ep.matchesEmailPattern("jambra+cahoots@photoflit.com")
-        )
-        self.assertTrue(
-            self.ep.matchesEmailPattern("jambra.vennell@gmail.com")
-        )
+        self.assertTrue(self.ep.matchesEmailPattern("foobar@photoflit.com"))
+        self.assertTrue(self.ep.matchesEmailPattern("foo+bar@photoflit.com"))
+        self.assertTrue(self.ep.matchesEmailPattern("foo.bar@gmail.com"))
         self.assertTrue(self.ep.matchesEmailPattern("foo@photoflit.co.uk"))
-
         self.assertFalse(self.ep.matchesEmailPattern("asdf@asdf"))
         self.assertFalse(self.ep.matchesEmailPattern("asdfasdf"))
+
+    def test_parseWithNoAtSymbolReturnsNothing(self):
+        count = 0
+        for result in self.ep.parse("Foo"):
+            count += 1
+        self.assertEqual(0, count)
+
+    def test_parseDeterminesEmailValidityProperly(self):
+        count = 0
+        for result in self.ep.parse("foo@bar.com"):
+            count += 1
+            self.assertEqual("Email Address", result.Subtype)
+            self.assertEqual(100, result.Confidence)
+        self.assertEqual(1, count)
