@@ -33,24 +33,8 @@ class CharacterParser(BaseParser):
         if len(data) != 1:
             return
 
-        try:
-            data = data.decode('utf-8')
-        except:
-            return
-
-        try:
-            ascii_version = ord(data)
-        except UnicodeEncodeError:
-            ascii_version = None
-
-        try:
-            utf8_version = ord(unicode(data))
-        except UnicodeEncodeError:
-            utf8_version = None
-
         characterData = {
-            "ascii": ascii_version,
-            "utf-8": utf8_version
+            'char-code': ord(data)
         }
 
         # If this character doesn't evaluate as a boolean, we're positive
@@ -63,8 +47,8 @@ class CharacterParser(BaseParser):
         if self.isLetter(data):
             yield self.result("Letter", data=characterData)
 
-        if self.isPunctuation(data):
+        elif self.isPunctuation(data):
             yield self.result("Punctuation", data=characterData)
 
-        if self.isWhitespace(data):
+        elif self.isWhitespace(data):
             yield self.result("Whitespace", data=characterData)
