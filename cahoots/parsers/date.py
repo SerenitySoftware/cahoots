@@ -67,7 +67,7 @@ class DateParser(BaseParser):
         try:
             parsedDate = dateUtilParser.parse(dataString)
 
-            if dsLength <= 4:
+            if dsLength == 4:
                 self.Confidence += 10
             elif dsLength <= 7:
                 self.Confidence += 40
