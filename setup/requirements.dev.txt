@@ -1,3 +1,4 @@
 nose
 coveralls
 flake8
+mock
