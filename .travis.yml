@@ -5,5 +5,5 @@ install:
 python:
   - "2.7"
 script:
-  - nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 60
+  - nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 63
   - flake8 cahoots tests web
