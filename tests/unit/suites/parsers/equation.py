@@ -68,8 +68,8 @@ class EquationParserTests(unittest.TestCase):
     def test_solveEquation(self):
 
         self.assertEqual(self.ep.solveEquation("float(5) * float(5)"), 25.0)
-
         self.assertFalse(self.ep.solveEquation("asdf * float(5)"))
+        self.assertFalse(self.ep.solveEquation("math.sqrt * float(5)"))
 
     def test_calculateConfidence(self):
 
@@ -77,5 +77,9 @@ class EquationParserTests(unittest.TestCase):
         self.assertEqual(self.ep.calculateConfidence("1-979-549-5150"), 70)
         self.assertEqual(
             self.ep.calculateConfidence("the square root of 1234"),
+            100
+        )
+        self.assertEqual(
+            self.ep.calculateConfidence("Rain in spain is plain."),
             100
         )
