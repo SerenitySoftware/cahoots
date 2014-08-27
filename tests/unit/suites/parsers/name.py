@@ -46,3 +46,45 @@ class NameParserTests(unittest.TestCase):
 
         self.assertTrue(self.np.isInitial('Q'))
         self.assertTrue(self.np.isInitial('Q.'))
+
+    def test_parseWithNoUpperCaseLettersYieldsNothing(self):
+        count = 0
+        for result in self.np.parse('foo'):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseWithGreaterThanTenWordsYieldsNothing(self):
+        count = 0
+        for result in self.np.parse(
+                'Foo bar baz buns barf blarg bleh bler blue sner sneh snaf.'
+        ):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseWithNonBasicValidatedAttributesYieldsNothing(self):
+        count = 0
+        for result in self.np.parse('Foo bar The Third'):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseYieldsExpectedConfidenceWithFiveWordName(self):
+        count = 0
+        for result in self.np.parse('Dr. Foo Q. Ben Bleh Bar Sr.'):
+            self.assertEqual(result.Confidence, 65)
+            self.assertEqual(result.Subtype, 'Name')
+            count += 1
+        self.assertEqual(count, 1)
+
+    def test_parseYieldsExpectedConfidenceWithThreeWordName(self):
+        count = 0
+        for result in self.np.parse('Dr. Foo Q. Ben Sr.'):
+            self.assertEqual(result.Confidence, 95)
+            self.assertEqual(result.Subtype, 'Name')
+            count += 1
+        self.assertEqual(count, 1)
+
+    def test_parseYieldsNothingWithOneWordName(self):
+        count = 0
+        for result in self.np.parse('Foo'):
+            count += 1
+        self.assertEqual(count, 0)

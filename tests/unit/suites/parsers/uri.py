@@ -31,7 +31,7 @@ class URIParserTests(unittest.TestCase):
         self.assertFalse(self.up.isValidUrl("www.google.com/"))
         self.assertFalse(self.up.isValidUrl("Your mother was a hamster"))
 
-    def test_parseWithLessThanFourCharacters(self):
+    def test_parseWithLessThanFourCharactersYieldsNothing(self):
         count = 0
         for result in self.up.parse('htt'):
             count += 1
