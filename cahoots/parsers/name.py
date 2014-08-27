@@ -31,7 +31,7 @@ class NameParser(BaseParser):
         """
         return len(data) == len(
             [word for word in data
-             if (word[0].isupper() or (len(data) > 1and word[0].isdigit()))
+             if (word[0].isupper() or (len(data) > 1 and word[0].isdigit()))
              and not word.isdigit()]
         )
 
@@ -72,7 +72,7 @@ class NameParser(BaseParser):
 
         """
         If someone has a name longer than 10 words...they need
-        help making sure each word in the phrase starts with an
+        help. Making sure each word in the phrase starts with an
         uppercase letter or a number
         """
         if len(data) > 10 or not self.basicValidation(data):
@@ -89,7 +89,7 @@ class NameParser(BaseParser):
                 self.Confidence += 20
 
         """
-        If we have a two or three word "name" here we boost its
+        If we have a two - four word "name" here we boost its
         confidence since this is something of a giveaway
         """
         if len(data) in xrange(2, 4):
@@ -113,10 +113,10 @@ class NameParser(BaseParser):
         If our "name" is longer than 4 words, we
         reduce the likelihood that it's a name
         """
-        if len(data) > 5:
+        if len(data) > 4:
             self.Confidence -= (7*len(data))
 
-        if self.Confidence == 0:
+        if self.Confidence <= 0:
             return
 
         yield self.result("Name", min(100, self.Confidence))
