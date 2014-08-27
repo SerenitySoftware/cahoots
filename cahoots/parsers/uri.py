@@ -58,7 +58,7 @@ class URIParser(BaseParser):
                 self.Confidence -= 5
                 yield self.result("IP Address (v4)")
 
-            if self.isIPv6Address(dataString):
+            elif self.isIPv6Address(dataString):
                 yield self.result("IP Address (v6)")
 
         letters = [c for c in dataString if c in string.letters]
@@ -67,7 +67,7 @@ class URIParser(BaseParser):
             if self.isValidUrl(dataString):
                 yield self.result("URL")
 
-            if '://' not in dataString:
+            elif '://' not in dataString:
                 if self.isValidUrl('http://' + dataString):
                     # confidence hit since we had to modify the data
                     self.Confidence -= 25

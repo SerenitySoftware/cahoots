@@ -30,3 +30,41 @@ class URIParserTests(unittest.TestCase):
         self.assertFalse(self.up.isValidUrl("http://www.go_ogle.com/"))
         self.assertFalse(self.up.isValidUrl("www.google.com/"))
         self.assertFalse(self.up.isValidUrl("Your mother was a hamster"))
+
+    def test_parseWithLessThanFourCharacters(self):
+        count = 0
+        for result in self.up.parse('htt'):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseIPV4AddressReturnsExpectedConfidence(self):
+        count = 0
+        for result in self.up.parse('192.168.0.1'):
+            self.assertEqual(result.Confidence, 95)
+            self.assertEqual(result.Subtype, 'IP Address (v4)')
+            count += 1
+        self.assertEqual(count, 1)
+
+    def test_parseIPV6AddressReturnsExpectedConfidence(self):
+        count = 0
+        for result in self.up.parse('2607:f0d0:1002:51::4'):
+            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.Subtype, 'IP Address (v6)')
+            count += 1
+        self.assertEqual(count, 1)
+
+    def test_parseURLReturnsExpectedConfidence(self):
+        count = 0
+        for result in self.up.parse('http://www.google.com/'):
+            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.Subtype, 'URL')
+            count += 1
+        self.assertEqual(count, 1)
+
+    def test_parseNonHTTPURLReturnsExpectedConfidence(self):
+        count = 0
+        for result in self.up.parse('www.google.com/'):
+            self.assertEqual(result.Confidence, 75)
+            self.assertEqual(result.Subtype, 'URL')
+            count += 1
+        self.assertEqual(count, 1)
