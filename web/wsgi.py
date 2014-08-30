@@ -91,7 +91,7 @@ def view_api():
 
 if __name__ == "__main__":
     app.run(
-        host="0.0.0.0",
+        # host="0.0.0.0",
         port=int(os.environ.get('PORT', 8000)),
         debug=parser.Config.debug
     )
