@@ -1,7 +1,8 @@
 from base import BaseParser
-import socket
 import urlparse
 import string
+import win_inet_pton   # NOQA
+import socket
 
 
 class URIParser(BaseParser):
