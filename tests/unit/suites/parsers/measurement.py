@@ -55,3 +55,73 @@ class MeasurementParserTests(unittest.TestCase):
             self.mp.getSubType('miscellaneous_length'),
             'Miscellaneous Length'
         )
+
+    def test_parseZeroLengthYieldNothing(self):
+        count = 0
+        for result in self.mp.parse(' '):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseLongStringYieldsNothing(self):
+        count = 0
+        for result in self.mp.parse(
+            'hellohellohellohellohellohellohellohellohellohellohello'
+        ):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseBasicUnitYieldsProperResult(self):
+        count = 0
+        for result in self.mp.parse('inches'):
+            self.assertEqual(result.Confidence, 50)
+            self.assertEqual(result.Subtype, 'Imperial Length')
+            count += 1
+        self.assertEqual(count, 1)
+
+    def test_parseNoWhitespaceOrDigitsYieldsNothing(self):
+        count = 0
+        for result in self.mp.parse('scoobydoo'):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseDoubleUnitYieldsNothing(self):
+        count = 0
+        for result in self.mp.parse('4 inches inches'):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseLooksLikeMeasurementButNoUnitsYieldsNothing(self):
+        count = 0
+        for result in self.mp.parse('4 lafawndas'):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseSimpleMeasurementYieldsExpectedConfidence(self):
+        count = 0
+        for result in self.mp.parse('4 inches'):
+            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.Subtype, 'Imperial Length')
+            count += 1
+        self.assertEqual(count, 1)
+
+    def test_parseWithUnitButNoNumberYieldsExpectedConfidence(self):
+        count = 0
+        for result in self.mp.parse('snarf inches'):
+            self.assertEqual(result.Confidence, 31)
+            self.assertEqual(result.Subtype, 'Imperial Length')
+            count += 1
+        self.assertEqual(count, 1)
+
+    def test_parseWithMultipleUnitTypesYieldsProperSubtype(self):
+        count = 0
+        for result in self.mp.parse('4 inches 50 liters'):
+            self.assertEqual(result.Confidence, 34)
+            self.assertEqual(result.Subtype, 'Imperial Length, Metric Volume')
+            count += 1
+        self.assertEqual(count, 1)
+
+    def test_parseWithUnitButTooManyNonNumbersYieldsNothing(self):
+        count = 0
+        for result in self.mp.parse('foo bar biz baz inches'):
+            count += 1
+        self.assertEqual(count, 0)
