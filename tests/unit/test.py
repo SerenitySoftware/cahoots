@@ -5,6 +5,28 @@ import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__))[:-11])
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
+import cahoots  # NOQA
+import cahoots.parser  # NOQA
+import cahoots.config  # NOQA
+import cahoots.parsers.base  # NOQA
+import cahoots.parsers.boolean  # NOQA
+import cahoots.parsers.character  # NOQA
+import cahoots.parsers.date  # NOQA
+import cahoots.parsers.email  # NOQA
+import cahoots.parsers.equation  # NOQA
+import cahoots.parsers.grammar  # NOQA
+import cahoots.parsers.location  # NOQA
+import cahoots.parsers.measurement  # NOQA
+import cahoots.parsers.name  # NOQA
+import cahoots.parsers.number  # NOQA
+import cahoots.parsers.phone  # NOQA
+import cahoots.parsers.programming  # NOQA
+import cahoots.parsers.programming.bayesian  # NOQA
+import cahoots.parsers.programming.lexer  # NOQA
+import cahoots.parsers.uri  # NOQA
+import cahoots.result  # NOQA
+import cahoots.util  # NOQA
+
 from tests.unit.suites.util import *  # NOQA
 from tests.unit.suites.parsers.base import *  # NOQA
 from tests.unit.suites.parsers.boolean import *  # NOQA
