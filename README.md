@@ -37,6 +37,7 @@ Requirements
     phonenumbers
     simplejson
     SereneRegistry
+    win_inet_pton
     hiredis (recommended)
     ```
 

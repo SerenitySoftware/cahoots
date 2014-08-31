@@ -172,7 +172,6 @@ class MeasurementParser(BaseParser):
 
         # If there aren't any numbers in the data, we lower the confidence.
         if not set(''.join(data)).intersection(set(string.digits)):
-            print "foobar"
             self.Confidence = self.Confidence * 0.75
 
         # Cleaning up our final confidence number
