@@ -2,6 +2,7 @@ from cahoots.parsers.measurement import MeasurementParser
 from tests.unit.config import TestConfig
 from SereneRegistry import registry
 import unittest
+import mock
 
 
 class MeasurementParserTests(unittest.TestCase):
@@ -15,6 +16,60 @@ class MeasurementParserTests(unittest.TestCase):
 
     def tearDown(self):
         self.mp = None
+
+    def mock_miscTextReturnSingleParameter(param1):
+        return 'foo'
+
+    def mock_miscTextReturnDoubleParameter(param1, param2):
+        return 'foo'
+
+    def mock_globGlob(path):
+        return ['foo', 'bar']
+
+    def mock_open(file, mode):
+        if file == 'foo':
+            contents = ("system: Imperial\n"
+                        "type: Area\n"
+                        "id: imperial_area\n"
+                        "keywords:\n"
+                        "- acre\n"
+                        "- acres")
+            return contents
+        elif file == 'bar':
+            contents = ("system: Imperial\n"
+                        "type: Length\n"
+                        "id: imperial_length\n"
+                        "keywords:\n"
+                        "- yard\n"
+                        "- yards")
+            return contents
+        else:
+            raise Exception("Invalid File Names")
+
+    @mock.patch('os.path.dirname', mock_miscTextReturnSingleParameter)
+    @mock.patch('os.path.abspath', mock_miscTextReturnSingleParameter)
+    @mock.patch('os.path.join', mock_miscTextReturnDoubleParameter)
+    @mock.patch('glob.glob', mock_globGlob)
+    @mock.patch('__builtin__.open', mock_open)
+    def test_bootStrap(self):
+        MeasurementParser.bootstrap(TestConfig)
+        self.assertEqual(
+            ['acres', 'yards', 'yard', 'acre'],
+            registry.get('MPallUnits')
+        )
+        self.assertEqual({
+            'imperial_length':
+                {'keywords': ['yards', 'yard'],
+                 'type': 'Length',
+                 'system': 'Imperial',
+                 'id': 'imperial_length'},
+            'imperial_area':
+                {'keywords': ['acres', 'acre'],
+                 'type': 'Area',
+                 'system': 'Imperial',
+                 'id': 'imperial_area'}
+            }, registry.get('MPsystemUnits')
+        )
 
     def test_loadUnits(self):
         self.assertTrue(registry.test('MPallUnits'))

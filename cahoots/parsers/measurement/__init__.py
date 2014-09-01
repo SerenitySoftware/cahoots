@@ -32,10 +32,10 @@ class MeasurementParser(BaseParser):
         path = os.path.join(directory, "units/*.yaml")
 
         for filePath in glob.glob(path):
-            with open(filePath, 'r') as unitFile:
-                unitType = yaml.load(unitFile)
-                allUnits.extend(unitType['keywords'])
-                systemUnits[unitType['id']] = unitType
+            unitFile = open(filePath, 'r')
+            unitType = yaml.load(unitFile)
+            allUnits.extend(unitType['keywords'])
+            systemUnits[unitType['id']] = unitType
 
         """
         we're sorting all keywords by length, so we can locate the
