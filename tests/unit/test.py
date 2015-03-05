@@ -28,6 +28,7 @@ import cahoots.result  # NOQA
 import cahoots.util  # NOQA
 
 from tests.unit.suites.util import *  # NOQA
+from tests.unit.suites.parser import *  # NOQA
 from tests.unit.suites.parsers.base import *  # NOQA
 from tests.unit.suites.parsers.boolean import *  # NOQA
 from tests.unit.suites.parsers.character import *  # NOQA
