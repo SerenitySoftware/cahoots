@@ -10,10 +10,6 @@ Pre-Alpha, Accepting Contributions
 ```
 [![Build Status](https://travis-ci.org/SerenitySoftwareLLC/cahoots.svg?branch=master)](https://travis-ci.org/SerenitySoftwareLLC/cahoots)
 
-Demo
-----
-[rwven.com/cahoots/] (http://rwven.com/cahoots/) (API is disabled, and queries are limited to 256 bytes)
-
 Contributors
 ------------
 1. [Jordan Ambra] (https://github.com/jordanambra)
