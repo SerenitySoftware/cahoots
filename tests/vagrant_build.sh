@@ -4,12 +4,12 @@ cd /vagrant
 
 echo
 echo "Step 1: Removing old coverage files"
-rm -f .covera*
+rm -f .coverage*
 
 echo
 echo "Step 2: Executing Unit Tests"
 echo
-nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 74
+nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 75
 echo "Exit Code:" $?
 
 echo

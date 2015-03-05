@@ -7,5 +7,5 @@ install:
   - pip install -r setup/requirements.dev.txt
   - export PATH=$PATH:$TRAVIS_BUILD_DIR
 script:
-  - nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 74
+  - nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 75
   - flake8 cahoots tests web
