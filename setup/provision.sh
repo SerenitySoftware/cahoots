@@ -24,7 +24,7 @@ pip install -r setup/requirements.dev.txt > /dev/null
 
 echo "Step 6: Moving files around"
 echo 'cd /vagrant' >> /home/vagrant/.bashrc
-echo 'export PATH=$PATH:/vagrant' >> /home/vagrant/.bashrc
+echo 'export PYTHONPATH=$PYTHONPATH:/vagrant' >> /home/vagrant/.bashrc
 
 echo " "
 echo " "

@@ -1,4 +1,4 @@
-from parsers import base
+from parsers.base import BaseParser
 from cahoots.util import truncateText
 from config import BaseConfig
 import datetime
@@ -62,7 +62,7 @@ class CahootsParser:
             we output a message about it
             """
             if self.Config.debug\
-               and module.bootstrap != base.BaseParser.bootstrap:
+               and module.bootstrap != BaseParser.bootstrap:
                 print ' * ' + time.strftime('%X %x %Z') +\
                       ' * Bootstrapping '+module.__name__
 
