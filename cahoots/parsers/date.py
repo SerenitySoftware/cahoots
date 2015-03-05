@@ -31,9 +31,9 @@ class DateParser(BaseParser):
         return False
 
     def parse(self, dataString, **kwargs):
-        punctuation = [c for c in dataString
-                       if c in string.punctuation
-                       or c in string.whitespace]
+        punctuation = [c for c in dataString if
+                       c in string.punctuation or
+                       c in string.whitespace]
         letters = [c for c in dataString if c in string.letters]
         digits = [c for c in dataString if c in string.digits]
 

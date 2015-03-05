@@ -30,9 +30,9 @@ class NameParser(BaseParser):
         starts with a Capital Letter or a Number
         """
         return len(data) == len(
-            [word for word in data
-             if (word[0].isupper() or (len(data) > 1 and word[0].isdigit()))
-             and not word.isdigit()]
+            [word for word in data if
+             (word[0].isupper() or (len(data) > 1 and word[0].isdigit())) and
+             not word.isdigit()]
         )
 
     def isPrefix(self, word):

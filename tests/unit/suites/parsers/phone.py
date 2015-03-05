@@ -10,7 +10,7 @@ class PhoneParserTests(unittest.TestCase):
     pp = None
 
     testDict = {
-        "leadingZero": False,
+        "leadingZero": None,
         "extension": None,
         "countryCode": 1,
         "countryCodeSource": None,

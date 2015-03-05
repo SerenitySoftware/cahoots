@@ -46,8 +46,8 @@ class PhoneParser(BaseParser):
                 prefix = "+"
             elif len(self.digits) == 10\
                     and dataString[0] != "1"\
-                    and (dataString[0].isdigit()
-                         or dataString[0] in string.punctuation):
+                    and (dataString[0].isdigit() or
+                         dataString[0] in string.punctuation):
                 prefix = "+1"
 
             if prefix:
@@ -101,13 +101,13 @@ class PhoneParser(BaseParser):
             return
 
         letter_set = set()
-        self.letters = [c for c in dataString
-                        if c in string.letters
-                        and c not in letter_set
-                        and not letter_set.add(c)]
-        self.punctuation = [c for c in dataString
-                            if c in string.punctuation
-                            or c in string.whitespace]
+        self.letters = [c for c in dataString if
+                        c in string.letters and
+                        c not in letter_set and
+                        not letter_set.add(c)]
+        self.punctuation = [c for c in dataString if
+                            c in string.punctuation or
+                            c in string.whitespace]
 
         if len(self.letters) > len(self.digits):
             return
