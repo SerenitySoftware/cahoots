@@ -1,6 +1,6 @@
-import simplejson
 from datetime import date, datetime
 from cahoots.result import ParseResult
+import simplejson
 
 
 class CahootsEncoder(simplejson.JSONEncoder):

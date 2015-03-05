@@ -1,12 +1,11 @@
 #!/usr/bin/python
 
-import os
-import out
-
 from flask import Flask, request
 from mako.lookup import TemplateLookup
 from cahoots.parser import CahootsParser
 from config import WSGIConfig
+import os
+import out
 
 app = Flask(__name__, static_folder='static')
 
