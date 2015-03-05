@@ -23,14 +23,13 @@ echo "Step 5: Installing Development Python Packages"
 pip install -r setup/requirements.dev.txt > /dev/null
 
 echo "Step 6: Moving files around"
-echo "cd /vagrant" >> /home/vagrant/.bashrc
+echo 'cd /vagrant' >> /home/vagrant/.bashrc
+echo 'export PATH=$PATH:/vagrant' >> /home/vagrant/.bashrc
 
 echo " "
 echo " "
 echo "Provisioning Complete!"
 echo " "
-echo "Instructions:"
+echo "Instructions for web client:"
 echo "1) Type 'vagrant ssh' to connect to your vm."
 echo "2) Type './web/wsgi.py' to start Cahoots."
-echo "3) ???"
-echo "4) Profit!"

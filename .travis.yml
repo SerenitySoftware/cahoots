@@ -2,6 +2,7 @@ language: python
 install:
   - pip install -r setup/requirements.txt
   - pip install -r setup/requirements.dev.txt
+  - export PATH=$PATH:$TRAVIS_BUILD_DIR
 python:
   - "2.7"
 script:

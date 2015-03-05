@@ -106,8 +106,7 @@ class NumberParser(BaseParser):
                     (
                         self.units + Optional(self.hundreds)
                     ).setParseAction(self.wordProduct) + Optional(self.tens)
-                ).setParseAction(self.wordSum)
-                ^ self.tens
+                ).setParseAction(self.wordSum) ^ self.tens
             ) + Optional(self.units)).setParseAction(self.wordSum)
 
         self.numberWords = OneOrMore(
@@ -233,8 +232,8 @@ class NumberParser(BaseParser):
             for whitespace_section in whitespace_split:
                 test = whitespace_section.strip()
                 if (
-                    self.isFraction(test) == (False, 0)
-                    and self.isInteger(test) == (False, 0)
+                    self.isFraction(test) == (False, 0) and
+                    self.isInteger(test) == (False, 0)
                 ):
                     return False, 0
 
@@ -242,8 +241,8 @@ class NumberParser(BaseParser):
             for split_section in fraction_split:
                 test = split_section.strip()
                 if (
-                    len(test) == 0
-                    or self.isInteger(split_section.strip()) == (False, 0)
+                    len(test) == 0 or
+                    self.isInteger(split_section.strip()) == (False, 0)
                 ):
                     return False, 0
 

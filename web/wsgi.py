@@ -1,10 +1,8 @@
 #!/usr/bin/python
 
 import os
-import sys
-sys.path.append(os.path.dirname(os.path.realpath(__file__))[:-4])
-
 import out
+
 from flask import Flask, request
 from mako.lookup import TemplateLookup
 from cahoots.parser import CahootsParser
@@ -91,7 +89,7 @@ def view_api():
 
 if __name__ == "__main__":
     app.run(
-        # host="0.0.0.0",
+        host="0.0.0.0",
         port=int(os.environ.get('PORT', 8000)),
         debug=parser.Config.debug
     )
