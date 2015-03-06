@@ -6,5 +6,5 @@ install:
   - pip install -r setup/requirements.txt
   - pip install -r setup/requirements.dev.txt
 script:
-  - nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 78
+  - nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 84
   - flake8 cahoots tests web

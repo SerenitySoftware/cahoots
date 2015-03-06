@@ -1,5 +1,6 @@
 from cahoots.parsers.number import NumberParser
 from tests.unit.config import TestConfig
+import mock
 import unittest
 
 
@@ -63,3 +64,110 @@ class NumberParserTests(unittest.TestCase):
             "Three Thousand Four Hundred and Twelve")
         )
         self.assertEqual((False, 0), self.np.isWords("foobar"))
+
+    def test_parseWithEmptyDataReturnsNone(self):
+        count = 0
+        for result in self.np.parse(''):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseWithStrippedDataReturnsNone(self):
+        count = 0
+        for result in self.np.parse('-,'):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseWithFractionYieldsProperResult(self):
+        count = 0
+        for result in self.np.parse('1/2'):
+            count += 1
+            self.assertEqual(result.Subtype, 'Fraction')
+            self.assertEqual(result.ResultValue, '1/2')
+            self.assertEqual(result.Confidence, 94)
+        self.assertEqual(count, 1)
+
+    def mock_returnsFalse(self, param1):
+        return False
+
+    @mock.patch(
+        'cahoots.parsers.equation.EquationParser.solveEquation',
+        mock_returnsFalse
+    )
+    def test_parseWithNonSolveableFractionYieldsProperResult(self):
+        count = 0
+        for result in self.np.parse('1/2'):
+            count += 1
+            self.assertEqual(result.Subtype, 'Fraction')
+            self.assertEqual(result.ResultValue, '1/2')
+            self.assertEqual(result.Confidence, 54)
+        self.assertEqual(count, 1)
+
+    def test_parseWithBinaryYieldsProperResult(self):
+        count = 0
+        for result in self.np.parse(
+                '0110100001100101011011000110110001101111'
+        ):
+            count += 1
+            self.assertEqual(result.Subtype, 'Binary')
+            self.assertEqual(result.ResultValue, 'hello')
+            self.assertEqual(result.Confidence, 100)
+        self.assertEqual(count, 1)
+
+    def test_parseWithIntegerNumberYieldsProperResult(self):
+        count = 0
+        for result in self.np.parse('123456789'):
+            count += 1
+            self.assertEqual(result.Subtype, 'Integer')
+            self.assertEqual(result.ResultValue, 123456789)
+            self.assertEqual(result.Confidence, 65)
+        self.assertEqual(count, 1)
+
+    def test_parseWithOctalNumberYieldsProperResult(self):
+        count = 0
+        for result in self.np.parse('1'):
+            count += 1
+            if count == 1:
+                self.assertEqual(result.Subtype, 'Integer')
+                self.assertEqual(result.ResultValue, 1)
+                self.assertEqual(result.Confidence, 75)
+            if count == 2:
+                self.assertEqual(result.Subtype, 'Octal')
+                self.assertEqual(result.ResultValue, 1)
+                self.assertEqual(result.Confidence, 25)
+        self.assertEqual(count, 2)
+
+    def test_parseWithFloatYieldsProperResult(self):
+        count = 0
+        for result in self.np.parse('35.75'):
+            count += 1
+            self.assertEqual(result.Subtype, 'Decimal')
+            self.assertEqual(result.ResultValue, 35.75)
+            self.assertEqual(result.Confidence, 100)
+        self.assertEqual(count, 1)
+
+    def test_parseWithHexYieldsProperResult(self):
+        count = 0
+        for result in self.np.parse('0xDEADBEEF'):
+            count += 1
+            self.assertEqual(result.Subtype, 'Hexadecimal')
+            self.assertEqual(result.ResultValue, 3735928559)
+            self.assertEqual(result.Confidence, 100)
+        self.assertEqual(count, 1)
+
+    def test_parseWithRomanNumeralYieldsProperResult(self):
+        count = 0
+        for result in self.np.parse('MMDCXLVI'):
+            count += 1
+            self.assertEqual(result.Subtype, 'Roman Numeral')
+            self.assertEqual(result.ResultValue, 2646)
+            self.assertEqual(result.Confidence, 100)
+        self.assertEqual(count, 1)
+
+    def test_parseWithWordsYieldsProperResult(self):
+        count = 0
+        for result in self.np.parse('Five Thousand'):
+            count += 1
+            self.assertEqual(result.Subtype, 'Word Number')
+            self.assertEqual(result.ResultValue, 5000)
+            self.assertEqual(result.Confidence, 100)
+        self.assertEqual(count, 1)
