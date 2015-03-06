@@ -9,7 +9,7 @@ rm -f .coverage*
 echo
 echo "Step 2: Executing Unit Tests"
 echo
-nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 75
+nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 78
 echo "Exit Code:" $?
 
 echo
