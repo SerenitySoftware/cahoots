@@ -41,5 +41,6 @@ from tests.unit.suites.parsers.measurement import *  # NOQA
 from tests.unit.suites.parsers.name import *  # NOQA
 from tests.unit.suites.parsers.number import *  # NOQA
 from tests.unit.suites.parsers.phone import *  # NOQA
+from tests.unit.suites.parsers.programming.bayesian import *  # NOQA
 from tests.unit.suites.parsers.programming.lexer import *  # NOQA
 from tests.unit.suites.parsers.uri import *  # NOQA

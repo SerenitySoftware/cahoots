@@ -13,13 +13,6 @@ class ProgrammingBayesianClassifier:
     code into a specific programming language
     """
 
-    def __init__(self):
-        """
-        Creates an instance of a bayes classifer for
-        use in identifying programmng languages
-        """
-        pass
-
     @staticmethod
     def bootstrap(config):
         """
