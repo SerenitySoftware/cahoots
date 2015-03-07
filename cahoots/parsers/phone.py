@@ -14,15 +14,15 @@ class PhoneParser(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Phone", 100)
 
-    def getPhoneNumberObject(self, dataString):
-        """Takes the datastring and tries to parse a phone number out of it"""
+    def getPhoneNumberObject(self, data_string):
+        """Takes the data_string and tries to parse a phone number out of it"""
 
         try:
-            checkRegion = (dataString[0] == "+")
+            checkRegion = (data_string[0] == "+")
 
             # First pass to see if it's a valid number
             numObj = phonenumberutil.parse(
-                dataString,
+                data_string,
                 _check_region=checkRegion
             )
 
@@ -41,11 +41,11 @@ class PhoneParser(BaseParser):
         """
         if not checkRegion and not numDesc:
             prefix = None
-            if len(self.digits) == 11 and dataString[0] == "1":
+            if len(self.digits) == 11 and data_string[0] == "1":
                 prefix = "+"
             elif len(self.digits) == 10 \
-                    and (dataString[0].isdigit() or
-                         dataString[0] in string.punctuation):
+                    and (data_string[0].isdigit() or
+                         data_string[0] in string.punctuation):
                 prefix = "+1"
 
             if prefix:
@@ -54,7 +54,7 @@ class PhoneParser(BaseParser):
                     Second pass to see if we can get an actual
                     geocode out of it using a hammer
                     """
-                    secondPass = phonenumberutil.parse(prefix + dataString)
+                    secondPass = phonenumberutil.parse(prefix + data_string)
                     numDesc = geocoder.description_for_valid_number(
                         secondPass, "en"
                     ).strip()
@@ -90,20 +90,20 @@ class PhoneParser(BaseParser):
             'region': numRegion or None,
         }
 
-    def parse(self, dataString, **kwargs):
-        dataString = dataString.strip()
+    def parse(self, data_string, **kwargs):
+        data_string = data_string.strip()
 
-        self.digits = [c for c in dataString if c in string.digits]
+        self.digits = [c for c in data_string if c in string.digits]
 
-        if len(dataString) > 30 or len(self.digits) < 7:
+        if len(data_string) > 30 or len(self.digits) < 7:
             return
 
         letter_set = set()
-        self.letters = [c for c in dataString if
+        self.letters = [c for c in data_string if
                         c in string.letters and
                         c not in letter_set and
                         not letter_set.add(c)]
-        self.punctuation = [c for c in dataString if
+        self.punctuation = [c for c in data_string if
                             c in string.punctuation or
                             c in string.whitespace]
 
@@ -111,7 +111,7 @@ class PhoneParser(BaseParser):
             return
 
         # Parsing our input, looking for phone numbers
-        phoneNumberData = self.getPhoneNumberObject(dataString)
+        phoneNumberData = self.getPhoneNumberObject(data_string)
 
         if not phoneNumberData:
             return
@@ -119,17 +119,17 @@ class PhoneParser(BaseParser):
         # if this is an ip address, we take a big hit.
         if URIParser in self.Config.enabledModules:
             uriParser = URIParser(self.Config)
-            if uriParser.isIPv4Address(dataString):
+            if uriParser.isIPv4Address(data_string):
                 self.Confidence -= 25
 
         # If this is an integer, we take a big hit.
-        intDataString = None
+        int_data_string = None
         try:
-            intDataString = int(dataString)
+            int_data_string = int(data_string)
         except ValueError:
             pass
 
-        if intDataString is not None:
+        if int_data_string is not None:
             self.Confidence -= 20
 
         # Length penalties

@@ -10,20 +10,20 @@ import inspect
 class ParserThread (threading.Thread):
     """Represents a thread that will handle one parser parsing request"""
     config = None
-    dataString = None
+    data_string = None
     kwargs = None
     results = []
 
-    def __init__(self, config, module, dataString, **kwargs):
+    def __init__(self, config, module, data_string, **kwargs):
         self.config = config
-        self.threadId = module
-        self.dataString = dataString
+        self.thread_id = module
+        self.data_string = data_string
         self.kwargs = kwargs
         threading.Thread.__init__(self)
 
     def run(self):
-        parser = self.threadId(self.config)
-        self.results = parser.parse(self.dataString, **self.kwargs) or []
+        parser = self.thread_id(self.config)
+        self.results = parser.parse(self.data_string, **self.kwargs) or []
 
 
 class CahootsParser:
@@ -68,7 +68,7 @@ class CahootsParser:
 
             module.bootstrap(self.Config)
 
-    def parse(self, dataString, *args, **kwargs):
+    def parse(self, data_string, *args, **kwargs):
         """Parses input data and returns a dict of result data"""
 
         results = []
@@ -76,7 +76,7 @@ class CahootsParser:
 
         # Creating/starting a thread for each parser module
         for module in self.Config.enabledModules:
-            thread = ParserThread(self.Config, module, dataString, **kwargs)
+            thread = ParserThread(self.Config, module, data_string, **kwargs)
             thread.start()
             threads.append(thread)
 
@@ -95,7 +95,7 @@ class CahootsParser:
             reverse=True
         )
         match_count = len(matches)
-        query = dataString
+        query = data_string
 
         return {
             'query': truncateText(query),

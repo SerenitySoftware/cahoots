@@ -89,11 +89,11 @@ class EquationParserTests(unittest.TestCase):
         return set([1, 2])
 
     @mock.patch(
-        'cahoots.parsers.programming.ProgrammingParser.createDataset',
+        'cahoots.parsers.programming.ProgrammingParser.create_dataset',
         mock_ProgrammingParserSet
     )
     @mock.patch(
-        'cahoots.parsers.programming.ProgrammingParser.findCommonTokens',
+        'cahoots.parsers.programming.ProgrammingParser.find_common_tokens',
         mock_ProgrammingParserSet
     )
     def test_calculateConfidenceWithProgrammingParserLowersConfidence(self):

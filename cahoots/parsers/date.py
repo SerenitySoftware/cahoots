@@ -9,41 +9,41 @@ class DateParser(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Date", 0)
 
-    def naturalParse(self, dataString):
+    def naturalParse(self, data_string):
         """
         Parse out natural-language strings like "yesterday", "next week", etc
         """
-        dataString = dataString.lower()
+        data_string = data_string.lower()
         today = date.today()
 
-        if dataString == "yesterday":
+        if data_string == "yesterday":
             return today - timedelta(1)
 
-        if dataString == "tomorrow":
+        if data_string == "tomorrow":
             return today + timedelta(1)
 
-        if dataString == "next week":
+        if data_string == "next week":
             return today + timedelta(days=6-today.weekday())
 
-        if dataString == "last week":
+        if data_string == "last week":
             return today - timedelta(days=8+today.weekday())
 
         return False
 
-    def parse(self, dataString, **kwargs):
-        punctuation = [c for c in dataString if
+    def parse(self, data_string, **kwargs):
+        punctuation = [c for c in data_string if
                        c in string.punctuation or
                        c in string.whitespace]
-        letters = [c for c in dataString if c in string.letters]
-        digits = [c for c in dataString if c in string.digits]
+        letters = [c for c in data_string if c in string.letters]
+        digits = [c for c in data_string if c in string.digits]
 
-        dsLength = len(dataString)
+        dsLength = len(data_string)
 
         if dsLength < 4:
             return
 
         # Checking for a natural language date
-        parsedDate = self.naturalParse(dataString)
+        parsedDate = self.naturalParse(data_string)
 
         if parsedDate:
             yield self.result("Date", 100, parsedDate)
@@ -65,7 +65,7 @@ class DateParser(BaseParser):
             confidenceNormalizer *= 0.5
 
         try:
-            parsedDate = dateUtilParser.parse(dataString)
+            parsedDate = dateUtilParser.parse(data_string)
 
             if dsLength == 4:
                 self.Confidence += 10

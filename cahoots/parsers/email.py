@@ -13,9 +13,9 @@ class EmailParser(BaseParser):
             "^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data
         )
 
-    def parse(self, dataString, **kwargs):
-        if '@' not in dataString:
+    def parse(self, data_string, **kwargs):
+        if '@' not in data_string:
             return
 
-        if self.matchesEmailPattern(dataString):
+        if self.matchesEmailPattern(data_string):
             yield self.result("Email Address", self.Confidence)

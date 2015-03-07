@@ -37,7 +37,7 @@ class parserThreadTests(unittest.TestCase):
     parserThread = None
 
     def setUp(self):
-        self.parserThread = ParserThread(TestConfig, FakeModule, 'datastring')
+        self.parserThread = ParserThread(TestConfig, FakeModule, 'data_string')
 
     def test_parserThreadYieldsResultAsExpected(self):
         self.parserThread.start()
@@ -48,7 +48,7 @@ class parserThreadTests(unittest.TestCase):
             self.assertEqual('Fake', result.Type)
             self.assertEqual('Subtype', result.Subtype)
             self.assertEqual(200, result.Confidence)
-            self.assertEqual('datastring', result.ResultValue)
+            self.assertEqual('data_string', result.ResultValue)
 
 
 class FakeDate(datetime.datetime):
@@ -75,10 +75,10 @@ class CahootsParserTests(unittest.TestCase):
     def test_parserReturnsExpectedParserResult(self):
         FakeDate.now = classmethod(lambda cls: 'thetimeisnow')
         parser = CahootsParser(ParserTestConfig, False)
-        result = parser.parse('datastring')
+        result = parser.parse('data_string')
 
         self.assertEqual(4, len(result))
-        self.assertEqual('datastring', result['query'])
+        self.assertEqual('data_string', result['query'])
         self.assertEqual('thetimeisnow', result['date'])
         self.assertIsInstance(result['top'], ParseResult)
         self.assertEqual(1, result['results']['count'])

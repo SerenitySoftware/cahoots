@@ -31,7 +31,7 @@ class RedisBayesStub():
 
     Flushed = False
 
-    Datastring = None
+    data_string = None
 
     def __init__(self, redis=None, tokenizer=None, prefix=None):
         RedisBayesStub.Redis = redis
@@ -44,15 +44,15 @@ class RedisBayesStub():
     def flush(self):
         RedisBayesStub.Flushed = True
 
-    def score(self, dataString):
-        RedisBayesStub.Datastring = dataString
+    def score(self, data_string):
+        RedisBayesStub.data_string = data_string
         return 'FooBar'
 
 
 class ProgrammingBayesianClassifierTests(unittest.TestCase):
 
     def setUp(self):
-        registry.set('PPredisBayes', RedisBayesStub())
+        registry.set('PP_redis_bayes', RedisBayesStub())
 
     def tearDown(self):
         registry.flush()
@@ -65,7 +65,7 @@ class ProgrammingBayesianClassifierTests(unittest.TestCase):
         RedisBayesStub.Prefix = None
         RedisBayesStub.Languages = {}
         RedisBayesStub.Flushed = False
-        RedisBayesStub.Datastring = None
+        RedisBayesStub.data_string = None
 
     @mock.patch('redis.Redis', RedisStub)
     @mock.patch('redisbayes.RedisBayes', RedisBayesStub)
@@ -81,7 +81,7 @@ class ProgrammingBayesianClassifierTests(unittest.TestCase):
         self.assertIsInstance(RedisBayesStub.Redis, RedisStub)
         self.assertTrue(ismethod(RedisBayesStub.Tokenizer))
         self.assertEqual(':', RedisBayesStub.Prefix[-1:])
-        self.assertIsInstance(registry.get('PPredisBayes'), RedisBayesStub)
+        self.assertIsInstance(registry.get('PP_redis_bayes'), RedisBayesStub)
         self.assertTrue(RedisBayesStub.Flushed)
 
     @mock.patch('redis.Redis', RedisStub)
@@ -93,9 +93,9 @@ class ProgrammingBayesianClassifierTests(unittest.TestCase):
         classifier = ProgrammingBayesianClassifier()
         result = classifier.classify('echo "Hello World";')
 
-        self.assertEqual('echo "Hello World";', RedisBayesStub.Datastring)
+        self.assertEqual('echo "Hello World";', RedisBayesStub.data_string)
         self.assertEqual('FooBar', result)
 
     def test_tokenizerProducesExpectedList(self):
-        result = ProgrammingBayesianClassifier.bayesTokenizer('Hello World')
+        result = ProgrammingBayesianClassifier.bayes_tokenizer('Hello World')
         self.assertEqual(2, len(result))

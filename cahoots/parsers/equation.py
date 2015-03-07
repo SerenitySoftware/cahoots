@@ -178,8 +178,8 @@ class EquationParser(BaseParser):
         """
         if (ProgrammingParser in self.Config.enabledModules):
             progParser = ProgrammingParser(self.Config)
-            dataset = progParser.createDataset(data)
-            for token in set(progParser.findCommonTokens(dataset)):
+            dataset = progParser.create_dataset(data)
+            for token in set(progParser.find_common_tokens(dataset)):
                 confidence -= 5
 
         return confidence

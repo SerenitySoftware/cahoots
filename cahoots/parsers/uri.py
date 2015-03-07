@@ -43,15 +43,15 @@ class URIParser(BaseParser):
 
         return True
 
-    def parse(self, dataString, **kwargs):
-        if len(dataString) < 4:
+    def parse(self, data_string, **kwargs):
+        if len(data_string) < 4:
             return
 
-        dotCount = dataString.count(".")
-        colonCount = dataString.count(":")
+        dotCount = data_string.count(".")
+        colonCount = data_string.count(":")
 
         if dotCount >= 2 or colonCount >= 2:
-            if self.isIPv4Address(dataString):
+            if self.isIPv4Address(data_string):
                 """
                 lowering the confidence because "Technically"
                 and ipv4 address could be a phone number
@@ -59,17 +59,17 @@ class URIParser(BaseParser):
                 self.Confidence -= 5
                 yield self.result("IP Address (v4)")
 
-            elif self.isIPv6Address(dataString):
+            elif self.isIPv6Address(data_string):
                 yield self.result("IP Address (v6)")
 
-        letters = [c for c in dataString if c in string.letters]
+        letters = [c for c in data_string if c in string.letters]
 
         if dotCount > 0 and len(letters) >= 4:
-            if self.isValidUrl(dataString):
+            if self.isValidUrl(data_string):
                 yield self.result("URL")
 
-            elif '://' not in dataString:
-                if self.isValidUrl('http://' + dataString):
+            elif '://' not in data_string:
+                if self.isValidUrl('http://' + data_string):
                     # confidence hit since we had to modify the data
                     self.Confidence -= 25
-                    yield self.result("URL", data='http://'+dataString)
+                    yield self.result("URL", data='http://'+data_string)
