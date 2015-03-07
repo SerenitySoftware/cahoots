@@ -69,9 +69,6 @@ class ProgrammingParser(BaseParser):
                                 language, languageData, dataset
                             )]
 
-        if not matchedLanguages:
-            return
-
         # Step 3: Which languages match, based on a smarter lexer?
         lexer = ProgrammingLexer(matchedLanguages, data.lower())
         lexedLanguages = lexer.lex()

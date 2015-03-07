@@ -25,8 +25,9 @@ class ProgrammingLexerThread (threading.Thread):
         Lexes the data to see what lexers can tokenize it.
         Any successful lexers are considered possible matches.
         """
+        badTokens = (Token.Text, Token.Name, Token.Name.Other)
         tokens = [tok for tok, text in lex(self.dataString, self.lexer)
-                  if (tok != Token.Text and text != '')]
+                  if (tok not in badTokens and text != '')]
         tokenCount = len(tokens)
 
         # Errors mean we definitely didn't find the right language
