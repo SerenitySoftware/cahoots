@@ -1,6 +1,5 @@
 from base import BaseParser
 from uri import URIParser
-from number import NumberParser
 from phonenumbers import phonenumberutil
 from phonenumbers import geocoder
 import string
@@ -44,8 +43,7 @@ class PhoneParser(BaseParser):
             prefix = None
             if len(self.digits) == 11 and dataString[0] == "1":
                 prefix = "+"
-            elif len(self.digits) == 10\
-                    and dataString[0] != "1"\
+            elif len(self.digits) == 10 \
                     and (dataString[0].isdigit() or
                          dataString[0] in string.punctuation):
                 prefix = "+1"
@@ -124,11 +122,15 @@ class PhoneParser(BaseParser):
             if uriParser.isIPv4Address(dataString):
                 self.Confidence -= 25
 
-        # if this is an integer, we take a big hit.
-        if NumberParser in self.Config.enabledModules:
-            numParser = NumberParser(self.Config)
-            if numParser.isInteger(dataString) != (False, 0):
-                self.Confidence -= 20
+        # If this is an integer, we take a big hit.
+        intDataString = None
+        try:
+            intDataString = int(dataString)
+        except ValueError:
+            pass
+
+        if intDataString is not None:
+            self.Confidence -= 20
 
         # Length penalties
         if len(self.digits) == 10:

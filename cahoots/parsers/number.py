@@ -1,7 +1,7 @@
 from base import BaseParser
+from cahoots.parsers.phone import PhoneParser
 from equation import EquationParser
 from binascii import unhexlify
-from phonenumbers import phonenumberutil
 from pyparsing import\
     Or,\
     OneOrMore,\
@@ -297,12 +297,12 @@ class NumberParser(BaseParser):
             integer_confidence = 75
             octal_confidence = 25
 
-            try:
-                phonenumberutil.parse(data, _check_region=False)
-                # 10 point confidence penalty
-                integer_confidence -= 10
-            except:
-                pass
+            # 10 point confidence penalty if int is also a phone number
+            if PhoneParser in self.Config.enabledModules:
+                PhoneParser.bootstrap(self.Config)
+                phoneParser = PhoneParser(self.Config)
+                for result in phoneParser.parse(data):
+                    integer_confidence -= 10
 
             is_octal, octal_value = self.isOctal(data)
             if is_octal:
