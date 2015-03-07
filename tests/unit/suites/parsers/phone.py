@@ -34,10 +34,16 @@ class PhoneParserTests(unittest.TestCase):
 
         self.assertEqual(numDict, self.testDict)
 
-    def test_getPhoneNumberObject(self):
+    def test_getPhoneNumberObjectWithNonNumberReturnsFalse(self):
 
-        self.assertFalse(self.pp.getPhoneNumberObject(
-            "The rain in spain falls mainly in the plain.")
+        self.assertFalse(
+            self.pp.getPhoneNumberObject(
+                "The rain in spain falls mainly in the plain."
+            )
         )
 
-        self.assertTrue(self.pp.getPhoneNumberObject("+1-979-549-5150"))
+    def test_getPhoneNumberObjectWithRegionFlaggedPhoneReturnsDict(self):
+
+        self.assertTrue(
+            type(self.pp.getPhoneNumberObject("+1-979-549-5150")) is dict
+        )
