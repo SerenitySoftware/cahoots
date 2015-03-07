@@ -124,15 +124,15 @@ class NumberParserTests(unittest.TestCase):
 
     def test_parseWithOctalNumberYieldsProperResult(self):
         count = 0
-        for result in self.np.parse('145634524563452453453456'):
+        for result in self.np.parse('2345'):
             count += 1
             if count == 1:
                 self.assertEqual(result.Subtype, 'Integer')
-                self.assertEqual(result.ResultValue, 145634524563452453453456)
+                self.assertEqual(result.ResultValue, 2345)
                 self.assertEqual(result.Confidence, 75)
             if count == 2:
                 self.assertEqual(result.Subtype, 'Octal')
-                self.assertEqual(result.ResultValue, 938994496129750423342)
+                self.assertEqual(result.ResultValue, 1253)
                 self.assertEqual(result.Confidence, 25)
         self.assertEqual(count, 2)
 
