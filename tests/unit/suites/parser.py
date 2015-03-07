@@ -47,7 +47,7 @@ class parserThreadTests(unittest.TestCase):
             self.assertIsInstance(result, ParseResult)
             self.assertEqual('Fake', result.Type)
             self.assertEqual('Subtype', result.Subtype)
-            self.assertEqual(200, result.Confidence)
+            self.assertEqual(200, result.confidence)
             self.assertEqual('data_string', result.ResultValue)
 
 

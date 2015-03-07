@@ -14,7 +14,7 @@ class CahootsEncoder(simplejson.JSONEncoder):
             return {
                 'type': obj.Type,
                 'subtype': obj.Subtype,
-                'confidence': obj.Confidence,
+                'confidence': obj.confidence,
                 'value': obj.ResultValue,
                 'data': obj.Data
             }

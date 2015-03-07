@@ -53,7 +53,7 @@ class CharacterParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Letter')
             self.assertEqual(result.Data, {'char-code': 97})
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
     def test_parsePunctuationYieldsProperResult(self):
@@ -62,7 +62,7 @@ class CharacterParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Punctuation')
             self.assertEqual(result.Data, {'char-code': 46})
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
     def test_parseWhitespaceYieldsProperResult(self):
@@ -71,7 +71,7 @@ class CharacterParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Whitespace')
             self.assertEqual(result.Data, {'char-code': 32})
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
     def test_parseBooleanLetterYieldsLowerConfidence(self):
@@ -80,5 +80,5 @@ class CharacterParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Letter')
             self.assertEqual(result.Data, {'char-code': 116})
-            self.assertEqual(result.Confidence, 25)
+            self.assertEqual(result.confidence, 25)
         self.assertEqual(count, 1)

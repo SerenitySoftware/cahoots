@@ -83,17 +83,17 @@ class NameParser(BaseParser):
         if len(data) > 2:
             if self.isPrefix(data[0]):
                 data.pop(0)
-                self.Confidence += 20
+                self.confidence += 20
             if self.isSuffix(data[-1]):
                 data.pop()
-                self.Confidence += 20
+                self.confidence += 20
 
         """
         If we have a two - four word "name" here we boost its
         confidence since this is something of a giveaway
         """
         if len(data) in xrange(2, 4):
-            self.Confidence += (5 * len(data))
+            self.confidence += (5 * len(data))
 
         """
         Adding confidence for initials vs words,
@@ -102,21 +102,21 @@ class NameParser(BaseParser):
         if len(data) > 1:
             for word in data:
                 if self.isInitial(word):
-                    self.Confidence += 15
+                    self.confidence += 15
                     # if there's a period in this initial, we boost it.
                     if "." in word:
-                        self.Confidence += 5
+                        self.confidence += 5
                 else:
-                    self.Confidence += 10
+                    self.confidence += 10
 
         """
         If our "name" is longer than 4 words, we
         reduce the likelihood that it's a name
         """
         if len(data) > 4:
-            self.Confidence -= (7*len(data))
+            self.confidence -= (7*len(data))
 
-        if self.Confidence <= 0:
+        if self.confidence <= 0:
             return
 
-        yield self.result("Name", min(100, self.Confidence))
+        yield self.result("Name", min(100, self.confidence))

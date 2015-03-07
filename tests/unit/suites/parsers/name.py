@@ -70,7 +70,7 @@ class NameParserTests(unittest.TestCase):
     def test_parseYieldsExpectedConfidenceWithFiveWordName(self):
         count = 0
         for result in self.np.parse('Dr. Foo Q. Ben Bleh Bar Sr.'):
-            self.assertEqual(result.Confidence, 65)
+            self.assertEqual(result.confidence, 65)
             self.assertEqual(result.Subtype, 'Name')
             count += 1
         self.assertEqual(count, 1)
@@ -78,7 +78,7 @@ class NameParserTests(unittest.TestCase):
     def test_parseYieldsExpectedConfidenceWithThreeWordName(self):
         count = 0
         for result in self.np.parse('Dr. Foo Q. Ben Sr.'):
-            self.assertEqual(result.Confidence, 95)
+            self.assertEqual(result.confidence, 95)
             self.assertEqual(result.Subtype, 'Name')
             count += 1
         self.assertEqual(count, 1)

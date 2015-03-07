@@ -33,5 +33,5 @@ class EmailParserTests(unittest.TestCase):
         for result in self.ep.parse("foo@bar.com"):
             count += 1
             self.assertEqual("Email Address", result.Subtype)
-            self.assertEqual(100, result.Confidence)
+            self.assertEqual(100, result.confidence)
         self.assertEqual(1, count)

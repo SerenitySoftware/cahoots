@@ -1,8 +1,11 @@
 language: python
-sudo: false
 python:
   - "2.7"
+before_install:
+  - sudo add-apt-repository "deb http://download.logilab.org/production precise/"
+  - sudo apt-get update -qq
 install:
+  - sudo apt-get install -y pylint -qq
   - pip install -r setup/requirements.txt
   - pip install -r setup/requirements.dev.txt
 script:

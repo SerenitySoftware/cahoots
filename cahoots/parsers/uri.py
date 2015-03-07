@@ -1,36 +1,64 @@
-from base import BaseParser
+"""
+The MIT License (MIT)
+
+Copyright (c) Serenity Software, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+from cahoots.parsers.base import BaseParser
 import urlparse
 import string
-import win_inet_pton   # NOQA
+# pylint: disable=W0611
+import win_inet_pton    # NOQA
 import socket
 
 
 class URIParser(BaseParser):
+    """Determines if given data is a URI of some form"""
 
     def __init__(self, config):
         BaseParser.__init__(self, config, "URI", 100)
 
-    def isIPv6Address(self, address):
+    @classmethod
+    def is_ipv6_address(cls, address):
         """Checks if the data is an ipv6 address"""
         try:
             socket.inet_pton(socket.AF_INET6, address)
             return True
-        except:
+        except socket.error:
             pass
 
         return False
 
-    def isIPv4Address(self, address):
+    @classmethod
+    def is_ipv4_address(cls, address):
         """checks if the data is an ipv4 address"""
         try:
             socket.inet_aton(address)
             return True
-        except:
+        except socket.error:
             pass
 
         return False
 
-    def isValidUrl(self, url):
+    @classmethod
+    def is_valid_url(cls, url):
         """Tries to parse a URL to see if it's valid"""
         pieces = urlparse.urlparse(url)
 
@@ -47,29 +75,27 @@ class URIParser(BaseParser):
         if len(data_string) < 4:
             return
 
-        dotCount = data_string.count(".")
-        colonCount = data_string.count(":")
+        dot_count = data_string.count(".")
+        colon_count = data_string.count(":")
 
-        if dotCount >= 2 or colonCount >= 2:
-            if self.isIPv4Address(data_string):
-                """
-                lowering the confidence because "Technically"
-                and ipv4 address could be a phone number
-                """
-                self.Confidence -= 5
+        if dot_count >= 2 or colon_count >= 2:
+            if self.is_ipv4_address(data_string):
+                # lowering the confidence because "Technically"
+                # and ipv4 address could be a phone number
+                self.confidence -= 5
                 yield self.result("IP Address (v4)")
 
-            elif self.isIPv6Address(data_string):
+            elif self.is_ipv6_address(data_string):
                 yield self.result("IP Address (v6)")
 
         letters = [c for c in data_string if c in string.letters]
 
-        if dotCount > 0 and len(letters) >= 4:
-            if self.isValidUrl(data_string):
+        if dot_count > 0 and len(letters) >= 4:
+            if self.is_valid_url(data_string):
                 yield self.result("URL")
 
             elif '://' not in data_string:
-                if self.isValidUrl('http://' + data_string):
+                if self.is_valid_url('http://' + data_string):
                     # confidence hit since we had to modify the data
-                    self.Confidence -= 25
+                    self.confidence -= 25
                     yield self.result("URL", data='http://'+data_string)

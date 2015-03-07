@@ -91,7 +91,7 @@ class CahootsParser:
         match_types = list(set([result.Type for result in results]))
         matches = sorted(
             results,
-            key=lambda result: result.Confidence,
+            key=lambda result: result.confidence,
             reverse=True
         )
         match_count = len(matches)

@@ -61,7 +61,7 @@ class BooleanParserTests(unittest.TestCase):
         for value, confidence in valueConfidence:
             for result in self.bp.parse(value):
                 self.assertIsInstance(result, ParseResult)
-                self.assertEqual(result.Confidence, confidence)
+                self.assertEqual(result.confidence, confidence)
                 self.assertTrue(result.ResultValue)
 
     def test_parseFalseValuesYieldsExpectedConfidence(self):
@@ -75,7 +75,7 @@ class BooleanParserTests(unittest.TestCase):
         for value, confidence in valueConfidence:
             for result in self.bp.parse(value):
                 self.assertIsInstance(result, ParseResult)
-                self.assertEqual(result.Confidence, confidence)
+                self.assertEqual(result.confidence, confidence)
                 self.assertFalse(result.ResultValue)
 
     def test_parseTrueValuesYieldsNothing(self):

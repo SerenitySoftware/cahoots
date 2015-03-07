@@ -30,7 +30,7 @@ import string
 import time
 
 
-class ProgrammingBayesianClassifier:
+class ProgrammingBayesianClassifier(object):
     """
     Responsible for classifying an example of source
     code into a specific programming language

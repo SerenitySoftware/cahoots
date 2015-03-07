@@ -68,16 +68,16 @@ class DateParser(BaseParser):
             parsedDate = dateUtilParser.parse(data_string)
 
             if dsLength == 4:
-                self.Confidence += 10
+                self.confidence += 10
             elif dsLength <= 7:
-                self.Confidence += 40
+                self.confidence += 40
             else:
-                self.Confidence += 80
+                self.confidence += 80
 
-            self.Confidence = int(
-                round(float(self.Confidence)*confidenceNormalizer)
+            self.confidence = int(
+                round(float(self.confidence)*confidenceNormalizer)
             )
 
-            yield self.result("Date", self.Confidence, parsedDate)
+            yield self.result("Date", self.confidence, parsedDate)
         except:
             pass

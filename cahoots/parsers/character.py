@@ -42,7 +42,7 @@ class CharacterParser(BaseParser):
         if BooleanParser in self.Config.enabledModules:
             bp = BooleanParser(self.Config)
             if not bp.isTrue(data) and not bp.isFalse(data):
-                self.Confidence = 100
+                self.confidence = 100
 
         if self.isLetter(data):
             yield self.result("Letter", data=characterData)

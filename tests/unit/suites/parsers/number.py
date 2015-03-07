@@ -83,7 +83,7 @@ class NumberParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Fraction')
             self.assertEqual(result.ResultValue, '1/2')
-            self.assertEqual(result.Confidence, 94)
+            self.assertEqual(result.confidence, 94)
         self.assertEqual(count, 1)
 
     def mock_returnsFalse(self, param1):
@@ -99,7 +99,7 @@ class NumberParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Fraction')
             self.assertEqual(result.ResultValue, '1/2')
-            self.assertEqual(result.Confidence, 54)
+            self.assertEqual(result.confidence, 54)
         self.assertEqual(count, 1)
 
     def test_parseWithBinaryYieldsProperResult(self):
@@ -110,7 +110,7 @@ class NumberParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Binary')
             self.assertEqual(result.ResultValue, 'hello')
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
     def test_parseWithIntegerNumberYieldsProperResult(self):
@@ -119,7 +119,7 @@ class NumberParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Integer')
             self.assertEqual(result.ResultValue, 123456789)
-            self.assertEqual(result.Confidence, 65)
+            self.assertEqual(result.confidence, 65)
         self.assertEqual(count, 1)
 
     def test_parseWithOctalNumberYieldsProperResult(self):
@@ -129,11 +129,11 @@ class NumberParserTests(unittest.TestCase):
             if count == 1:
                 self.assertEqual(result.Subtype, 'Integer')
                 self.assertEqual(result.ResultValue, 2345)
-                self.assertEqual(result.Confidence, 75)
+                self.assertEqual(result.confidence, 75)
             if count == 2:
                 self.assertEqual(result.Subtype, 'Octal')
                 self.assertEqual(result.ResultValue, 1253)
-                self.assertEqual(result.Confidence, 25)
+                self.assertEqual(result.confidence, 25)
         self.assertEqual(count, 2)
 
     def test_parseWithFloatYieldsProperResult(self):
@@ -142,7 +142,7 @@ class NumberParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Decimal')
             self.assertEqual(result.ResultValue, 35.75)
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
     def test_parseWithHexYieldsProperResult(self):
@@ -151,7 +151,7 @@ class NumberParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Hexadecimal')
             self.assertEqual(result.ResultValue, 3735928559)
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
     def test_parseWithRomanNumeralYieldsProperResult(self):
@@ -160,7 +160,7 @@ class NumberParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Roman Numeral')
             self.assertEqual(result.ResultValue, 2646)
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
     def test_parseWithWordsYieldsProperResult(self):
@@ -169,5 +169,5 @@ class NumberParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Word Number')
             self.assertEqual(result.ResultValue, 5000)
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)

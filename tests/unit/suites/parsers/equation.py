@@ -119,7 +119,7 @@ class EquationParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Simple')
             self.assertEqual(result.ResultValue, 25)
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
     def test_parseTextEquationParseResult(self):
@@ -128,7 +128,7 @@ class EquationParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.Subtype, 'Text')
             self.assertEqual(result.ResultValue, 15)
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
     def test_parseNonParseableValueYieldsNothing(self):

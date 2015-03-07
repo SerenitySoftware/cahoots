@@ -156,7 +156,7 @@ class EquationParser(BaseParser):
         try:
             return eval(equation.strip())
         except:
-            self.Confidence = 0
+            self.confidence = 0
             return False
 
     def calculateConfidence(self, data):

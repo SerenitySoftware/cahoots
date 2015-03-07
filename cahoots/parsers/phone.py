@@ -64,7 +64,7 @@ class PhoneParser(BaseParser):
                         confidence hit because we had to
                         modify the data to get a result
                         """
-                        self.Confidence -= 5
+                        self.confidence -= 5
                 except:
                     pass
 
@@ -119,8 +119,8 @@ class PhoneParser(BaseParser):
         # if this is an ip address, we take a big hit.
         if URIParser in self.Config.enabledModules:
             uriParser = URIParser(self.Config)
-            if uriParser.isIPv4Address(data_string):
-                self.Confidence -= 25
+            if uriParser.is_ipv4_address(data_string):
+                self.confidence -= 25
 
         # If this is an integer, we take a big hit.
         int_data_string = None
@@ -130,32 +130,32 @@ class PhoneParser(BaseParser):
             pass
 
         if int_data_string is not None:
-            self.Confidence -= 20
+            self.confidence -= 20
 
         # Length penalties
         if len(self.digits) == 10:
             # Could be a 32bit integer
-            self.Confidence -= 5
+            self.confidence -= 5
         if len(self.digits) < 10:
-            self.Confidence -= 10
+            self.confidence -= 10
 
         # No description == not as strong
         if not phoneNumberData['description']:
-            self.Confidence -= 15
+            self.confidence -= 15
 
         # No region == not as strong
         if not phoneNumberData['region']:
-            self.Confidence -= 15
+            self.confidence -= 15
 
         """
         if there was punctuation, and we still see
         this as a phone number, we raise confidence
         """
         if len(self.punctuation) > 0:
-            self.Confidence += (5 * len(set(self.punctuation)))
+            self.confidence += (5 * len(set(self.punctuation)))
 
         yield self.result(
             "Phone Number",
-            max(0, min(100, self.Confidence)),
+            max(0, min(100, self.confidence)),
             phoneNumberData
         )

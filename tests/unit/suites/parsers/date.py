@@ -34,7 +34,7 @@ class DateParserTests(unittest.TestCase):
         for result in self.dp.parse('yesterday'):
             count += 1
             self.assertEqual(result.Subtype, 'Date')
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
     def test_parseShortSimpleDates(self):
@@ -42,21 +42,21 @@ class DateParserTests(unittest.TestCase):
         for result in self.dp.parse('1/10'):
             count += 1
             self.assertEqual(result.Subtype, 'Date')
-            self.assertEqual(result.Confidence, 6)
+            self.assertEqual(result.confidence, 6)
         self.assertEqual(count, 1)
 
         count = 0
         for result in self.dp.parse('11/10'):
             count += 1
             self.assertEqual(result.Subtype, 'Date')
-            self.assertEqual(result.Confidence, 53)
+            self.assertEqual(result.confidence, 53)
         self.assertEqual(count, 1)
 
         count = 0
         for result in self.dp.parse('08/11/2010'):
             count += 1
             self.assertEqual(result.Subtype, 'Date')
-            self.assertEqual(result.Confidence, 154)
+            self.assertEqual(result.confidence, 154)
         self.assertEqual(count, 1)
 
     def test_NonDateYieldsNothing(self):

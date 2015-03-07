@@ -3,7 +3,7 @@ class ParseResult:
 
     Type = "Unknown"
     Subtype = "Unknown"
-    Confidence = 0
+    confidence = 0
     ResultValue = None
     Data = {}
 
@@ -17,6 +17,6 @@ class ParseResult:
     ):
         self.Type = type
         self.Subtype = subtype
-        self.Confidence = confidence
+        self.confidence = confidence
         self.ResultValue = value
         self.Data = additional_data

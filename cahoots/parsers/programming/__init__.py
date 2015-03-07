@@ -145,7 +145,7 @@ class ProgrammingParser(BaseParser):
         # We reduce our confidence significantly
         # if the string provided is very short
         normalizer = (min(100, float(len(data))) / 100)
-        if (normalizer < 1):
+        if normalizer < 1:
             for lang_id in normal_scores:
                 normal_scores[lang_id] = normal_scores[lang_id] * normalizer
 

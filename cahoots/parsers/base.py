@@ -6,12 +6,12 @@ class BaseParser(object):
 
     Config = None
     Type = "Base"
-    Confidence = 10
+    confidence = 10
 
-    def __init__(self, config, Type="Base", Confidence=10, *args, **kwargs):
+    def __init__(self, config, Type="Base", confidence=10, *args, **kwargs):
         self.Config = config
         self.Type = Type
-        self.Confidence = Confidence
+        self.confidence = confidence
 
     @staticmethod
     def bootstrap(config):
@@ -24,7 +24,7 @@ class BaseParser(object):
     def result(self, subtype="Unknown", confidence=0, value=None, data={}):
         """Returns a ParseResult object detailing the results of parsing"""
         if confidence == 0:
-            confidence = self.Confidence
+            confidence = self.confidence
 
         return ParseResult(
             type=self.Type,

@@ -7,7 +7,9 @@ echo "Beginning Provisioning!"
 echo "Please ignore any 'stdin' related errors. It's an Ubuntu+Vagrant bug."
 echo " "
 
-echo "Step 1: Updating APT"
+
+echo "Step 1: Adding APT Repositories and Updating APT"
+add-apt-repository "deb http://download.logilab.org/production precise/"
 apt-get update > /dev/null
 
 echo "Step 2: Upgrading Base System Packages"

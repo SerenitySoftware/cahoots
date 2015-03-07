@@ -31,7 +31,7 @@ from pygments.token import Token
 import threading
 
 
-class ProgrammingLexerThread (threading.Thread):
+class ProgrammingLexerThread(threading.Thread):
     """Represents a thread that will handle one parser parsing request"""
     lexer = None
     data_string = None
@@ -50,7 +50,7 @@ class ProgrammingLexerThread (threading.Thread):
         """
         bad_tokens = (Token.Text, Token.Name, Token.Name.Other)
         tokens = [tok for tok, text in lex(self.data_string, self.lexer)
-                  if (tok not in bad_tokens and text != '')]
+                  if tok not in bad_tokens and text != '']
         token_count = len(tokens)
 
         # Errors mean we definitely didn't find the right language
@@ -60,7 +60,7 @@ class ProgrammingLexerThread (threading.Thread):
             self.result = token_count
 
 
-class ProgrammingLexer:
+class ProgrammingLexer(object):
     """lexes a string with multiple programming lexers and returns tokens"""
 
     lexers = {

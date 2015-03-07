@@ -18,4 +18,4 @@ class EmailParser(BaseParser):
             return
 
         if self.matchesEmailPattern(data_string):
-            yield self.result("Email Address", self.Confidence)
+            yield self.result("Email Address", self.confidence)
