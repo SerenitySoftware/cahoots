@@ -55,7 +55,7 @@ class MeasurementParserTests(unittest.TestCase):
         MeasurementParser.bootstrap(TestConfig)
         self.assertEqual(
             ['acres', 'yards', 'yard', 'acre'],
-            registry.get('MPallUnits')
+            registry.get('MP_all_units')
         )
         self.assertEqual({
             'imperial_length':
@@ -68,46 +68,46 @@ class MeasurementParserTests(unittest.TestCase):
                  'type': 'Area',
                  'system': 'Imperial',
                  'id': 'imperial_area'}
-            }, registry.get('MPsystemUnits')
+            }, registry.get('MP_system_units')
         )
 
     def test_loadUnits(self):
-        self.assertTrue(registry.test('MPallUnits'))
-        self.assertTrue(registry.test('MPsystemUnits'))
+        self.assertTrue(registry.test('MP_all_units'))
+        self.assertTrue(registry.test('MP_system_units'))
 
-    def test_basicUnitCheck(self):
-        self.assertTrue(self.mp.basicUnitCheck('parsec'))
-        self.assertFalse(self.mp.basicUnitCheck('heffalump'))
+    def test_basic_unit_check(self):
+        self.assertTrue(self.mp.basic_unit_check('parsec'))
+        self.assertFalse(self.mp.basic_unit_check('heffalump'))
 
-    def test_determineSystemUnit(self):
+    def test_determine_system_unit(self):
         self.assertEqual(
-            self.mp.determineSystemUnit('inches'),
+            self.mp.determine_system_unit('inches'),
             'imperial_length'
         )
         self.assertEqual(
-            self.mp.determineSystemUnit('parsecs'),
+            self.mp.determine_system_unit('parsecs'),
             'miscellaneous_length'
         )
-        self.assertIsNone(self.mp.determineSystemUnit('asdfasdf'))
+        self.assertIsNone(self.mp.determine_system_unit('asdfasdf'))
 
-    def test_identifyUnitsInData(self):
-        data, matches = self.mp.identifyUnitsInData('3 square feet')
+    def test_identify_units_in_data(self):
+        data, matches = self.mp.identify_units_in_data('3 square feet')
         self.assertEqual(data, '3')
         self.assertEqual(matches, ['square feet'])
 
         self.assertRaises(
             Exception,
-            self.mp.identifyUnitsInData,
+            self.mp.identify_units_in_data,
             '3 feet feet'
         )
 
-    def test_getSubType(self):
+    def test_get_sub_type(self):
         self.assertEqual(
-            self.mp.getSubType('imperial_length'),
+            self.mp.get_sub_type('imperial_length'),
             'Imperial Length'
         )
         self.assertEqual(
-            self.mp.getSubType('miscellaneous_length'),
+            self.mp.get_sub_type('miscellaneous_length'),
             'Miscellaneous Length'
         )
 
@@ -128,8 +128,8 @@ class MeasurementParserTests(unittest.TestCase):
     def test_parseBasicUnitYieldsProperResult(self):
         count = 0
         for result in self.mp.parse('inches'):
-            self.assertEqual(result.Confidence, 50)
-            self.assertEqual(result.Subtype, 'Imperial Length')
+            self.assertEqual(result.confidence, 50)
+            self.assertEqual(result.subtype, 'Imperial Length')
             count += 1
         self.assertEqual(count, 1)
 
@@ -154,24 +154,24 @@ class MeasurementParserTests(unittest.TestCase):
     def test_parseSimpleMeasurementYieldsExpectedConfidence(self):
         count = 0
         for result in self.mp.parse('4 inches'):
-            self.assertEqual(result.Confidence, 100)
-            self.assertEqual(result.Subtype, 'Imperial Length')
+            self.assertEqual(result.confidence, 100)
+            self.assertEqual(result.subtype, 'Imperial Length')
             count += 1
         self.assertEqual(count, 1)
 
     def test_parseWithUnitButNoNumberYieldsExpectedConfidence(self):
         count = 0
         for result in self.mp.parse('snarf inches'):
-            self.assertEqual(result.Confidence, 31)
-            self.assertEqual(result.Subtype, 'Imperial Length')
+            self.assertEqual(result.confidence, 31)
+            self.assertEqual(result.subtype, 'Imperial Length')
             count += 1
         self.assertEqual(count, 1)
 
     def test_parseWithMultipleUnitTypesYieldsProperSubtype(self):
         count = 0
         for result in self.mp.parse('4 inches 50 liters'):
-            self.assertEqual(result.Confidence, 34)
-            self.assertEqual(result.Subtype, 'Imperial Length, Metric Volume')
+            self.assertEqual(result.confidence, 34)
+            self.assertEqual(result.subtype, 'Imperial Length, Metric Volume')
             count += 1
         self.assertEqual(count, 1)
 

@@ -24,7 +24,6 @@ class TestConfig(BaseConfig):
         uri.URIParser,
         email.EmailParser,
         # programming.ProgrammingParser,
-        # grammar.GrammarParser,
         # location.LocationParser,
         equation.EquationParser,
         measurement.MeasurementParser,

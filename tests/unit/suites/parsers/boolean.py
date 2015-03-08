@@ -19,27 +19,27 @@ class BooleanParserTests(unittest.TestCase):
     def tearDown(self):
         self.bp = None
 
-    def test_isTrue(self):
+    def test_is_true(self):
 
         for testValue in self.trueValues:
-            self.assertTrue(self.bp.isTrue(testValue))
+            self.assertTrue(self.bp.is_true(testValue))
 
         for testValue in self.junkValues:
-            self.assertFalse(self.bp.isTrue(testValue))
+            self.assertFalse(self.bp.is_true(testValue))
 
         for testValue in self.falseValues:
-            self.assertFalse(self.bp.isTrue(testValue))
+            self.assertFalse(self.bp.is_true(testValue))
 
-    def test_isFalse(self):
+    def test_is_false(self):
 
         for testValue in self.trueValues:
-            self.assertFalse(self.bp.isFalse(testValue))
+            self.assertFalse(self.bp.is_false(testValue))
 
         for testValue in self.junkValues:
-            self.assertFalse(self.bp.isFalse(testValue))
+            self.assertFalse(self.bp.is_false(testValue))
 
         for testValue in self.falseValues:
-            self.assertTrue(self.bp.isFalse(testValue))
+            self.assertTrue(self.bp.is_false(testValue))
 
     def test_parseLongStringYieldsNothing(self):
         resultTest = None
@@ -61,8 +61,8 @@ class BooleanParserTests(unittest.TestCase):
         for value, confidence in valueConfidence:
             for result in self.bp.parse(value):
                 self.assertIsInstance(result, ParseResult)
-                self.assertEqual(result.Confidence, confidence)
-                self.assertTrue(result.ResultValue)
+                self.assertEqual(result.confidence, confidence)
+                self.assertTrue(result.result_value)
 
     def test_parseFalseValuesYieldsExpectedConfidence(self):
         valueConfidence = [("false", 100),
@@ -75,8 +75,8 @@ class BooleanParserTests(unittest.TestCase):
         for value, confidence in valueConfidence:
             for result in self.bp.parse(value):
                 self.assertIsInstance(result, ParseResult)
-                self.assertEqual(result.Confidence, confidence)
-                self.assertFalse(result.ResultValue)
+                self.assertEqual(result.confidence, confidence)
+                self.assertFalse(result.result_value)
 
     def test_parseTrueValuesYieldsNothing(self):
         resultTest = None

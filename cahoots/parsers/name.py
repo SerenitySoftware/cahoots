@@ -1,9 +1,33 @@
-from base import BaseParser
-from number import NumberParser
+"""
+The MIT License (MIT)
+
+Copyright (c) Serenity Software, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+from cahoots.parsers.base import BaseParser
+from cahoots.parsers.number import NumberParser
 import re
 
 
 class NameParser(BaseParser):
+    '''Determines if given data is a name'''
 
     prefixes = ['MS', 'MISS', 'MRS', 'MR', 'MASTER', 'REV', 'FR', 'DR',
                 'ATTY', 'PROF', 'HON', 'PRES', 'GOV', 'COACH', 'OFC', 'MSGR',
@@ -24,7 +48,8 @@ class NameParser(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Name", 0)
 
-    def basicValidation(self, data):
+    @classmethod
+    def basic_validation(cls, data):
         """
         Make sure every word in the phrase either
         starts with a Capital Letter or a Number
@@ -35,22 +60,23 @@ class NameParser(BaseParser):
              not word.isdigit()]
         )
 
-    def isPrefix(self, word):
+    def is_prefix(self, word):
         """Checks to see if the word passed in is a name prefix"""
         word = word.replace('.', '').upper()
         return word in self.prefixes
 
-    def isSuffix(self, word):
+    def is_suffix(self, word):
         """Checks to see if the word passed in is a name suffix"""
-        if NumberParser in self.Config.enabledModules:
-            np = NumberParser(self.Config)
-            if np.isRomanNumeral(word) != (False, 0):
+        if NumberParser in self.config.enabledModules:
+            nump = NumberParser(self.config)
+            if nump.is_roman_numeral(word) != (False, 0):
                 return True
 
         word = word.replace('.', '').upper()
         return word in self.suffixes
 
-    def isInitial(self, word):
+    @classmethod
+    def is_initial(cls, word):
         """Checks to see if the word passed in is an initial"""
         if len(word) > 2:
             return False
@@ -61,6 +87,31 @@ class NameParser(BaseParser):
         if len(word) == 2:
             return word[1] == '.' and word[0].isalpha()
 
+    def calculate_confidence(self, data):
+        '''Calculates confidence based on various attributes of the data'''
+
+        # If we have a two - four word "name" here we boost its
+        # confidence since this is something of a giveaway
+        if len(data) in xrange(2, 4):
+            self.confidence += (5 * len(data))
+
+        # Adding confidence for initials vs words,
+        # if we have greater than one word
+        if len(data) > 1:
+            for word in data:
+                if self.is_initial(word):
+                    self.confidence += 15
+                    # if there's a period in this initial, we boost it.
+                    if "." in word:
+                        self.confidence += 5
+                else:
+                    self.confidence += 10
+
+        # If our "name" is longer than 4 words, we
+        # reduce the likelihood that it's a name
+        if len(data) > 4:
+            self.confidence -= (7*len(data))
+
     def parse(self, data, **kwargs):
         """Determines if the data is a name or not"""
 
@@ -70,53 +121,25 @@ class NameParser(BaseParser):
 
         data = data.split()
 
-        """
-        If someone has a name longer than 10 words...they need
-        help. Making sure each word in the phrase starts with an
-        uppercase letter or a number
-        """
-        if len(data) > 10 or not self.basicValidation(data):
+        # If someone has a name longer than 10 words...they need
+        # help. Making sure each word in the phrase starts with an
+        # uppercase letter or a number
+        if len(data) > 10 or not self.basic_validation(data):
             return
 
         # Checking for things like Mr. or Jr. Big boost for these values.
         # If found, we remove them from the list of words
         if len(data) > 2:
-            if self.isPrefix(data[0]):
+            if self.is_prefix(data[0]):
                 data.pop(0)
-                self.Confidence += 20
-            if self.isSuffix(data[-1]):
+                self.confidence += 20
+            if self.is_suffix(data[-1]):
                 data.pop()
-                self.Confidence += 20
+                self.confidence += 20
 
-        """
-        If we have a two - four word "name" here we boost its
-        confidence since this is something of a giveaway
-        """
-        if len(data) in xrange(2, 4):
-            self.Confidence += (5 * len(data))
+        self.calculate_confidence(data)
 
-        """
-        Adding confidence for initials vs words,
-        if we have greater than one word
-        """
-        if len(data) > 1:
-            for word in data:
-                if self.isInitial(word):
-                    self.Confidence += 15
-                    # if there's a period in this initial, we boost it.
-                    if "." in word:
-                        self.Confidence += 5
-                else:
-                    self.Confidence += 10
-
-        """
-        If our "name" is longer than 4 words, we
-        reduce the likelihood that it's a name
-        """
-        if len(data) > 4:
-            self.Confidence -= (7*len(data))
-
-        if self.Confidence <= 0:
+        if self.confidence <= 0:
             return
 
-        yield self.result("Name", min(100, self.Confidence))
+        yield self.result("Name", min(100, self.confidence))

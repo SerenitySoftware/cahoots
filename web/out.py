@@ -12,11 +12,11 @@ class CahootsEncoder(simplejson.JSONEncoder):
             return obj.isoformat()
         elif isinstance(obj, ParseResult):
             return {
-                'type': obj.Type,
-                'subtype': obj.Subtype,
-                'confidence': obj.Confidence,
-                'value': obj.ResultValue,
-                'data': obj.Data
+                'type': obj.type,
+                'subtype': obj.subtype,
+                'confidence': obj.confidence,
+                'value': obj.result_value,
+                'data': obj.data
             }
 
         return super(CahootsEncoder, self).default(obj)

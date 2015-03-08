@@ -1,83 +1,108 @@
-from base import BaseParser
+"""
+The MIT License (MIT)
+
+Copyright (c) Serenity Software, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+from cahoots.parsers.base import BaseParser
 from datetime import date, timedelta
 import dateutil.parser as dateUtilParser
 import string
 
 
 class DateParser(BaseParser):
+    '''Determines is given data is a date'''
 
     def __init__(self, config):
         BaseParser.__init__(self, config, "Date", 0)
 
-    def naturalParse(self, dataString):
+    @classmethod
+    def natural_parse(cls, data_string):
         """
         Parse out natural-language strings like "yesterday", "next week", etc
         """
-        dataString = dataString.lower()
+        data_string = data_string.lower()
         today = date.today()
 
-        if dataString == "yesterday":
+        if data_string == "yesterday":
             return today - timedelta(1)
 
-        if dataString == "tomorrow":
+        if data_string == "tomorrow":
             return today + timedelta(1)
 
-        if dataString == "next week":
+        if data_string == "next week":
             return today + timedelta(days=6-today.weekday())
 
-        if dataString == "last week":
+        if data_string == "last week":
             return today - timedelta(days=8+today.weekday())
 
         return False
 
-    def parse(self, dataString, **kwargs):
-        punctuation = [c for c in dataString if
+    def parse(self, data_string, **kwargs):
+        punctuation = [c for c in data_string if
                        c in string.punctuation or
                        c in string.whitespace]
-        letters = [c for c in dataString if c in string.letters]
-        digits = [c for c in dataString if c in string.digits]
+        letters = [c for c in data_string if c in string.letters]
+        digits = [c for c in data_string if c in string.digits]
 
-        dsLength = len(dataString)
+        ds_length = len(data_string)
 
-        if dsLength < 4:
+        if ds_length < 4:
             return
 
         # Checking for a natural language date
-        parsedDate = self.naturalParse(dataString)
+        parsed_date = self.natural_parse(data_string)
 
-        if parsedDate:
-            yield self.result("Date", 100, parsedDate)
+        if parsed_date:
+            yield self.result("Date", 100, parsed_date)
             return
 
         # we will use this to adjust the final confidence score
-        confidenceNormalizer = 1.0
+        confidence_normalizer = 1.0
 
-        if dsLength > 4:
-            confidenceNormalizer *= 1.05
+        if ds_length > 4:
+            confidence_normalizer *= 1.05
 
         if len(punctuation) <= 1:
-            confidenceNormalizer *= 1.05
+            confidence_normalizer *= 1.05
 
         if '/' in punctuation and punctuation.count('/') < 3:
-            confidenceNormalizer *= (1.0 + (.05 * punctuation.count('/')))
+            confidence_normalizer *= (1.0 + (.05 * punctuation.count('/')))
 
         if len(letters) == 0 and len(digits) < 4:
-            confidenceNormalizer *= 0.5
+            confidence_normalizer *= 0.5
 
         try:
-            parsedDate = dateUtilParser.parse(dataString)
+            parsed_date = dateUtilParser.parse(data_string)
 
-            if dsLength == 4:
-                self.Confidence += 10
-            elif dsLength <= 7:
-                self.Confidence += 40
+            if ds_length == 4:
+                self.confidence += 10
+            elif ds_length <= 7:
+                self.confidence += 40
             else:
-                self.Confidence += 80
+                self.confidence += 80
 
-            self.Confidence = int(
-                round(float(self.Confidence)*confidenceNormalizer)
+            self.confidence = int(
+                round(float(self.confidence)*confidence_normalizer)
             )
 
-            yield self.result("Date", self.Confidence, parsedDate)
-        except:
+            yield self.result("Date", self.confidence, parsed_date)
+        except (StopIteration, ValueError):
             pass

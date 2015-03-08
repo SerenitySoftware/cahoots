@@ -37,53 +37,53 @@ class PhoneParserTests(unittest.TestCase):
         self.pp = None
         PhoneParserTests.dfvnmCallCount = 0
 
-    def test_buildPhoneNumberDict(self):
+    def test_build_phone_number_dict(self):
 
         numObj = phonenumberutil.parse("+1-979-549-5150")
 
-        numDict = self.pp.buildPhoneNumberDict(numObj, "Angleton, TX", "US")
+        numDict = self.pp.build_phone_number_dict(numObj, "Angleton, TX", "US")
 
         self.assertEqual(numDict, self.testDict)
 
-    def test_getPhoneNumberObjectWithNonNumberReturnsFalse(self):
+    def test_getphonenumberobjectWithNonNumberReturnsFalse(self):
 
         self.assertFalse(
-            self.pp.getPhoneNumberObject(
+            self.pp.get_phone_number_object(
                 "The rain in spain falls mainly in the plain."
             )
         )
 
-    def test_getPhoneNumberObjectWithRegionFlaggedPhoneReturnsDict(self):
+    def test_getphonenumberobjectWithRegionFlaggedPhoneReturnsDict(self):
 
         self.assertTrue(
-            type(self.pp.getPhoneNumberObject("+1-979-549-5150")) is dict
+            type(self.pp.get_phone_number_object("+1-979-549-5150")) is dict
         )
 
-    def test_getPhoneNumberObjectWithTenDigitNoRegionAndNoDescTriesAgain(self):
+    def test_getphonenumberobjectWithTenDigitNoRegionAndNoDescTriesAgain(self):
 
         self.pp.digits = "1234567890"
 
         self.assertTrue(
-            type(self.pp.getPhoneNumberObject("1234567890")) is dict
+            type(self.pp.get_phone_number_object("1234567890")) is dict
         )
 
-    def test_getPhoneNumberObjectWith11DigitNoRegionAndNoDescTriesAgain(self):
+    def test_getphonenumberobjectWith11DigitNoRegionAndNoDescTriesAgain(self):
 
         self.pp.digits = "11234567890"
 
         self.assertTrue(
-            type(self.pp.getPhoneNumberObject("11234567890")) is dict
+            type(self.pp.get_phone_number_object("11234567890")) is dict
         )
 
     @mock.patch(
         "phonenumbers.geocoder.description_for_valid_number",
         descriptionForValidNumberMock
     )
-    def test_getPhoneNumberObjectWhereSecondPassThrowsError(self):
+    def test_getphonenumberobjectWhereSecondPassThrowsError(self):
 
         self.pp.digits = "1234567890"
 
-        result = self.pp.getPhoneNumberObject("1234567890")
+        result = self.pp.get_phone_number_object("1234567890")
 
         self.assertEqual(2, PhoneParserTests.dfvnmCallCount)
         self.assertTrue(
@@ -110,7 +110,7 @@ class PhoneParserTests(unittest.TestCase):
         results = []
         for result in self.pp.parse("123123123123"):
             results.append(result)
-            self.assertEqual(50, result.Confidence)
+            self.assertEqual(50, result.confidence)
         self.assertEqual(1, len(results))
 
     def test_parseWithIPAddressYieldsExpectedConfidence(self):
@@ -118,7 +118,7 @@ class PhoneParserTests(unittest.TestCase):
         results = []
         for result in self.pp.parse("123.123.123.123"):
             results.append(result)
-            self.assertEqual(50, result.Confidence)
+            self.assertEqual(50, result.confidence)
         self.assertEqual(1, len(results))
 
     def test_parseWithTenDigitsYieldsExpectedConfidence(self):
@@ -126,7 +126,7 @@ class PhoneParserTests(unittest.TestCase):
         results = []
         for result in self.pp.parse("1231231231"):
             results.append(result)
-            self.assertEqual(30, result.Confidence)
+            self.assertEqual(30, result.confidence)
         self.assertEqual(1, len(results))
 
     def test_parseWithNineDigitsYieldsExpectedConfidence(self):
@@ -134,5 +134,5 @@ class PhoneParserTests(unittest.TestCase):
         results = []
         for result in self.pp.parse("123123123"):
             results.append(result)
-            self.assertEqual(15, result.Confidence)
+            self.assertEqual(15, result.confidence)
         self.assertEqual(1, len(results))

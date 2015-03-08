@@ -1,3 +1,26 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) Serenity Software, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
 from SereneRegistry import registry
 import redis
 import redisbayes
@@ -7,7 +30,7 @@ import string
 import time
 
 
-class ProgrammingBayesianClassifier:
+class ProgrammingBayesianClassifier(object):
     """
     Responsible for classifying an example of source
     code into a specific programming language
@@ -19,7 +42,7 @@ class ProgrammingBayesianClassifier:
         Trains the bayes classifier with examples
         from various programming languages
         """
-        bayesRedis = redis.Redis(
+        bayes_redis = redis.Redis(
             host=config.redis['host'],
             port=config.redis['port'],
             unix_socket_path=config.redis['unix_socket_path'],
@@ -28,9 +51,9 @@ class ProgrammingBayesianClassifier:
 
         namespace = str(time.time())+':'
 
-        rb = redisbayes.RedisBayes(
-            redis=bayesRedis,
-            tokenizer=ProgrammingBayesianClassifier.bayesTokenizer,
+        classifier = redisbayes.RedisBayes(
+            redis=bayes_redis,
+            tokenizer=ProgrammingBayesianClassifier.bayes_tokenizer,
             prefix=namespace
         )
 
@@ -39,24 +62,25 @@ class ProgrammingBayesianClassifier:
 
         trainers = {}
 
-        for filePath in glob.glob(path):
-            with open(filePath, 'r') as languageFile:
-                language = filePath.split('.').pop()
-                trainers[language] = languageFile.read()
+        for file_path in glob.glob(path):
+            with open(file_path, 'r') as language_file:
+                language = file_path.split('.').pop()
+                trainers[language] = language_file.read()
 
         for language in trainers:
-            rb.train(language, trainers[language])
+            classifier.train(language, trainers[language])
 
-        oldRb = registry.get('PPredisBayes')
+        old_rb = registry.get('PP_redis_bayes')
 
-        registry.set('PPredisBayes', rb)
+        registry.set('PP_redis_bayes', classifier)
 
         # Getting rid of the old namespaced data.
-        if oldRb:
-            oldRb.flush()
+        if old_rb:
+            old_rb.flush()
 
     @staticmethod
-    def bayesTokenizer(text):
+    def bayes_tokenizer(text):
+        """Breaks a string down into tokens for our classifier"""
         text = text.replace('->', ' -> ')
         text = text.replace('.', ' . ')
         text = text.replace('){', ') {')
@@ -66,11 +90,12 @@ class ProgrammingBayesianClassifier:
         words = text.split()
         return [w for w in words if len(w) > 0 and w not in string.whitespace]
 
-    def classify(self, dataString):
+    @classmethod
+    def classify(cls, data_string):
         """
         Takes an string and creates a dict of
         programming language match probabilities
         """
-        rb = registry.get('PPredisBayes')
+        classifier = registry.get('PP_redis_bayes')
 
-        return rb.score(dataString)
+        return classifier.score(data_string)

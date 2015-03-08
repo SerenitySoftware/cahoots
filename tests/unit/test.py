@@ -14,7 +14,6 @@ import cahoots.parsers.character  # NOQA
 import cahoots.parsers.date  # NOQA
 import cahoots.parsers.email  # NOQA
 import cahoots.parsers.equation  # NOQA
-import cahoots.parsers.grammar  # NOQA
 import cahoots.parsers.location  # NOQA
 import cahoots.parsers.measurement  # NOQA
 import cahoots.parsers.name  # NOQA
@@ -35,7 +34,6 @@ from tests.unit.suites.parsers.character import *  # NOQA
 from tests.unit.suites.parsers.date import *  # NOQA
 from tests.unit.suites.parsers.email import *  # NOQA
 from tests.unit.suites.parsers.equation import *  # NOQA
-from tests.unit.suites.parsers.grammar import *  # NOQA
 from tests.unit.suites.parsers.location import *  # NOQA
 from tests.unit.suites.parsers.measurement import *  # NOQA
 from tests.unit.suites.parsers.name import *  # NOQA

@@ -1,11 +1,36 @@
-from base import BaseParser
-from uri import URIParser
+"""
+The MIT License (MIT)
+
+Copyright (c) Serenity Software, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+from phonenumbers.phonenumberutil import NumberParseException
 from phonenumbers import phonenumberutil
 from phonenumbers import geocoder
+from cahoots.parsers.base import BaseParser
+from cahoots.parsers.uri import URIParser
 import string
 
 
 class PhoneParser(BaseParser):
+    """Determines if given data is a phone number"""
 
     punctuation = None
     letters = None
@@ -14,96 +39,89 @@ class PhoneParser(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Phone", 100)
 
-    def getPhoneNumberObject(self, dataString):
-        """Takes the datastring and tries to parse a phone number out of it"""
+    def get_phone_number_object(self, data_string):
+        """Takes the data_string and tries to parse a phone number out of it"""
 
         try:
-            checkRegion = (dataString[0] == "+")
+            check_region = (data_string[0] == "+")
 
             # First pass to see if it's a valid number
-            numObj = phonenumberutil.parse(
-                dataString,
-                _check_region=checkRegion
+            num_obj = phonenumberutil.parse(
+                data_string,
+                _check_region=check_region
             )
 
-            numDesc = geocoder.description_for_valid_number(
-                numObj, "en"
+            num_desc = geocoder.description_for_valid_number(
+                num_obj, "en"
             ).strip()
 
-        except:
+        except NumberParseException:
             # If we can't parse it out, it's not a valid number
             return False
 
-        """
-        if we weren't able to check the region, and we didn't get a
-        description we want to modify the data and give it another go
-        with a country code added
-        """
-        if not checkRegion and not numDesc:
+        # if we weren't able to check the region, and we didn't get a
+        # description we want to modify the data and give it another go
+        # with a country code added
+        if not check_region and not num_desc:
             prefix = None
-            if len(self.digits) == 11 and dataString[0] == "1":
+            if len(self.digits) == 11 and data_string[0] == "1":
                 prefix = "+"
             elif len(self.digits) == 10 \
-                    and (dataString[0].isdigit() or
-                         dataString[0] in string.punctuation):
+                    and (data_string[0].isdigit() or
+                         data_string[0] in string.punctuation):
                 prefix = "+1"
 
             if prefix:
                 try:
-                    """
-                    Second pass to see if we can get an actual
-                    geocode out of it using a hammer
-                    """
-                    secondPass = phonenumberutil.parse(prefix + dataString)
-                    numDesc = geocoder.description_for_valid_number(
-                        secondPass, "en"
+                    # Second pass to see if we can get an actual
+                    # geocode out of it using a hammer
+                    second_pass = phonenumberutil.parse(prefix + data_string)
+                    num_desc = geocoder.description_for_valid_number(
+                        second_pass, "en"
                     ).strip()
-                    if numDesc:
-                        numObj = secondPass
-                        """
-                        confidence hit because we had to
-                        modify the data to get a result
-                        """
-                        self.Confidence -= 5
-                except:
+                    if num_desc:
+                        num_obj = second_pass
+                        # confidence hit because we had to
+                        # modify the data to get a result
+                        self.confidence -= 5
+                except (NumberParseException, Exception):
                     pass
 
         # Attempting to get a valid region
-        numRegion = phonenumberutil.region_code_for_number(numObj)
+        num_region = phonenumberutil.region_code_for_number(num_obj)
 
-        """
-        This is the compiled phone number data that
-        we will use for the confidence decision
-        """
-        return self.buildPhoneNumberDict(numObj, numDesc, numRegion)
+        # This is the compiled phone number data that
+        # we will use for the confidence decision
+        return self.build_phone_number_dict(num_obj, num_desc, num_region)
 
-    def buildPhoneNumberDict(self, numObj, numDesc, numRegion):
+    @classmethod
+    def build_phone_number_dict(cls, num_obj, num_desc, num_region):
         """Erase the contents of the object"""
         return {
-            'countryCode': numObj.country_code,
-            'countryCodeSource': numObj.country_code_source,
-            'nationalNumber': numObj.national_number,
-            'extension': numObj.extension,
-            'leadingZero': numObj.italian_leading_zero,
-            'carrierCode': numObj.preferred_domestic_carrier_code,
-            'description': numDesc or None,
-            'region': numRegion or None,
+            'countryCode': num_obj.country_code,
+            'countryCodeSource': num_obj.country_code_source,
+            'nationalNumber': num_obj.national_number,
+            'extension': num_obj.extension,
+            'leadingZero': num_obj.italian_leading_zero,
+            'carrierCode': num_obj.preferred_domestic_carrier_code,
+            'description': num_desc or None,
+            'region': num_region or None,
         }
 
-    def parse(self, dataString, **kwargs):
-        dataString = dataString.strip()
+    def parse(self, data_string, **kwargs):
+        data_string = data_string.strip()
 
-        self.digits = [c for c in dataString if c in string.digits]
+        self.digits = [c for c in data_string if c in string.digits]
 
-        if len(dataString) > 30 or len(self.digits) < 7:
+        if len(data_string) > 30 or len(self.digits) < 7:
             return
 
         letter_set = set()
-        self.letters = [c for c in dataString if
+        self.letters = [c for c in data_string if
                         c in string.letters and
                         c not in letter_set and
                         not letter_set.add(c)]
-        self.punctuation = [c for c in dataString if
+        self.punctuation = [c for c in data_string if
                             c in string.punctuation or
                             c in string.whitespace]
 
@@ -111,51 +129,49 @@ class PhoneParser(BaseParser):
             return
 
         # Parsing our input, looking for phone numbers
-        phoneNumberData = self.getPhoneNumberObject(dataString)
+        phone_number_data = self.get_phone_number_object(data_string)
 
-        if not phoneNumberData:
+        if not phone_number_data:
             return
 
         # if this is an ip address, we take a big hit.
-        if URIParser in self.Config.enabledModules:
-            uriParser = URIParser(self.Config)
-            if uriParser.isIPv4Address(dataString):
-                self.Confidence -= 25
+        if URIParser in self.config.enabledModules:
+            uri_parser = URIParser(self.config)
+            if uri_parser.is_ipv4_address(data_string):
+                self.confidence -= 25
 
         # If this is an integer, we take a big hit.
-        intDataString = None
+        int_data_string = None
         try:
-            intDataString = int(dataString)
+            int_data_string = int(data_string)
         except ValueError:
             pass
 
-        if intDataString is not None:
-            self.Confidence -= 20
+        if int_data_string is not None:
+            self.confidence -= 20
 
         # Length penalties
         if len(self.digits) == 10:
             # Could be a 32bit integer
-            self.Confidence -= 5
+            self.confidence -= 5
         if len(self.digits) < 10:
-            self.Confidence -= 10
+            self.confidence -= 10
 
         # No description == not as strong
-        if not phoneNumberData['description']:
-            self.Confidence -= 15
+        if not phone_number_data['description']:
+            self.confidence -= 15
 
         # No region == not as strong
-        if not phoneNumberData['region']:
-            self.Confidence -= 15
+        if not phone_number_data['region']:
+            self.confidence -= 15
 
-        """
-        if there was punctuation, and we still see
-        this as a phone number, we raise confidence
-        """
+        # if there was punctuation, and we still see
+        # this as a phone number, we raise confidence
         if len(self.punctuation) > 0:
-            self.Confidence += (5 * len(set(self.punctuation)))
+            self.confidence += (5 * len(set(self.punctuation)))
 
         yield self.result(
             "Phone Number",
-            max(0, min(100, self.Confidence)),
-            phoneNumberData
+            max(0, min(100, self.confidence)),
+            phone_number_data
         )

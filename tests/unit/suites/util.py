@@ -1,16 +1,16 @@
-from cahoots.util import truncateText, isNumber
+from cahoots.util import truncate_text, is_number
 import unittest
 
 
-class truncateTextTests(unittest.TestCase):
+class TruncateTextTests(unittest.TestCase):
 
     testString = 'The quick brown fox jumps over the lazy dog'
 
     def test_too_short_string(self):
-        self.assertEquals(truncateText(self.testString), self.testString)
+        self.assertEquals(truncate_text(self.testString), self.testString)
 
     def test_short_limit(self):
-        self.assertEquals(truncateText(self.testString, 10), 'The qui...')
+        self.assertEquals(truncate_text(self.testString, 10), 'The qui...')
 
     def test_too_long_string(self):
         testString = 'Lorem ipsum dolor sit amet, consectetur adipiscing' \
@@ -18,14 +18,14 @@ class truncateTextTests(unittest.TestCase):
         truncatedTestString = 'Lorem ipsum dolor sit amet, consectetur' \
                               ' adipiscing elit. Suspendisse non risu...'
 
-        self.assertEquals(truncateText(testString), truncatedTestString)
+        self.assertEquals(truncate_text(testString), truncatedTestString)
 
 
-class isNumberTests(unittest.TestCase):
+class IsNumberTests(unittest.TestCase):
 
-    def test_isNumber(self):
+    def test_is_number(self):
 
-        self.assertTrue(isNumber("123.123"))
-        self.assertTrue(isNumber("123"))
+        self.assertTrue(is_number("123.123"))
+        self.assertTrue(is_number("123"))
 
-        self.assertFalse(isNumber("7 divided by 2"))
+        self.assertFalse(is_number("7 divided by 2"))

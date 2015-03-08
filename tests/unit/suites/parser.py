@@ -37,7 +37,7 @@ class parserThreadTests(unittest.TestCase):
     parserThread = None
 
     def setUp(self):
-        self.parserThread = ParserThread(TestConfig, FakeModule, 'datastring')
+        self.parserThread = ParserThread(TestConfig, FakeModule, 'data_string')
 
     def test_parserThreadYieldsResultAsExpected(self):
         self.parserThread.start()
@@ -45,10 +45,10 @@ class parserThreadTests(unittest.TestCase):
 
         for result in self.parserThread.results:
             self.assertIsInstance(result, ParseResult)
-            self.assertEqual('Fake', result.Type)
-            self.assertEqual('Subtype', result.Subtype)
-            self.assertEqual(200, result.Confidence)
-            self.assertEqual('datastring', result.ResultValue)
+            self.assertEqual('Fake', result.type)
+            self.assertEqual('Subtype', result.subtype)
+            self.assertEqual(200, result.confidence)
+            self.assertEqual('data_string', result.result_value)
 
 
 class FakeDate(datetime.datetime):
@@ -65,20 +65,20 @@ class CahootsParserTests(unittest.TestCase):
 
     def test_parserCreatesInstanceOfBaseConfig(self):
         parser = CahootsParser(bootstrap=False)
-        self.assertIsInstance(parser.Config, BaseConfig)
+        self.assertIsInstance(parser.config, BaseConfig)
 
     def test_parserInstantiatesBaseConfig(self):
         parser = CahootsParser(BaseConfig(), False)
-        self.assertIsInstance(parser.Config, BaseConfig)
+        self.assertIsInstance(parser.config, BaseConfig)
 
     @mock.patch('datetime.datetime', FakeDate)
     def test_parserReturnsExpectedParserResult(self):
         FakeDate.now = classmethod(lambda cls: 'thetimeisnow')
         parser = CahootsParser(ParserTestConfig, False)
-        result = parser.parse('datastring')
+        result = parser.parse('data_string')
 
         self.assertEqual(4, len(result))
-        self.assertEqual('datastring', result['query'])
+        self.assertEqual('data_string', result['query'])
         self.assertEqual('thetimeisnow', result['date'])
         self.assertIsInstance(result['top'], ParseResult)
         self.assertEqual(1, result['results']['count'])

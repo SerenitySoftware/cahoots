@@ -1,121 +1,155 @@
-from base import BaseParser
+"""
+The MIT License (MIT)
+
+Copyright (c) Serenity Software, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-return-statements
+# pylint: disable=too-many-locals
+# pylint: disable=unnecessary-lambda
+# pylint: disable=too-many-instance-attributes
+from cahoots.parsers.base import BaseParser
 from cahoots.parsers.phone import PhoneParser
-from equation import EquationParser
+from cahoots.parsers.equation import EquationParser
 from binascii import unhexlify
 from pyparsing import\
-    Or,\
-    OneOrMore,\
-    Optional,\
-    CaselessLiteral,\
-    StringEnd,\
-    ParseException,\
+    Or, \
+    OneOrMore, \
+    Optional, \
+    CaselessLiteral, \
+    StringEnd, \
+    ParseException, \
     replaceWith
 from operator import mul
 import re
 
 
 class NumberParser(BaseParser):
+    """determines if given data is one of many types of numbers"""
 
     def __init__(self, config):
         BaseParser.__init__(self, config, "Number", 100)
 
-        def convertToLiteral(s, val):
-            return CaselessLiteral(s)\
-                .setName(s)\
+        def convert_to_literal(tok, val):
+            """Converts a value to pyparsing caselessliteral"""
+            return CaselessLiteral(tok) \
+                .setName(tok) \
                 .setParseAction(replaceWith(val))
 
-        self.definedUnits = [
-            ("zero",       0),
-            ("oh",         0),
-            ("zip",        0),
-            ("zilch",      0),
-            ("nada",       0),
-            ("bupkis",     0),
-            ("one",        1),
-            ("two",        2),
-            ("three",      3),
-            ("four",       4),
-            ("five",       5),
-            ("six",        6),
-            ("seven",      7),
-            ("eight",      8),
-            ("nine",       9),
-            ("ten",       10),
-            ("eleven",    11),
-            ("twelve",    12),
-            ("thirteen",  13),
-            ("fourteen",  14),
-            ("fifteen",   15),
-            ("sixteen",   16),
+        self.defined_units = [
+            ("zero", 0),
+            ("oh", 0),
+            ("zip", 0),
+            ("zilch", 0),
+            ("nada", 0),
+            ("bupkis", 0),
+            ("one", 1),
+            ("two", 2),
+            ("three", 3),
+            ("four", 4),
+            ("five", 5),
+            ("six", 6),
+            ("seven", 7),
+            ("eight", 8),
+            ("nine", 9),
+            ("ten", 10),
+            ("eleven", 11),
+            ("twelve", 12),
+            ("thirteen", 13),
+            ("fourteen", 14),
+            ("fifteen", 15),
+            ("sixteen", 16),
             ("seventeen", 17),
-            ("eighteen",  18),
-            ("nineteen",  19),
+            ("eighteen", 18),
+            ("nineteen", 19),
         ]
 
-        self.definedTens = [
-            ("ten",     10),
-            ("twenty",  20),
-            ("thirty",  30),
-            ("forty",   40),
-            ("fourty",  40),
-            ("fifty",   50),
-            ("sixty",   60),
+        self.defined_tens = [
+            ("ten", 10),
+            ("twenty", 20),
+            ("thirty", 30),
+            ("forty", 40),
+            ("fourty", 40),
+            ("fifty", 50),
+            ("sixty", 60),
             ("seventy", 70),
-            ("eighty",  80),
-            ("ninety",  90),
+            ("eighty", 80),
+            ("ninety", 90),
         ]
 
-        self.definedMajors = [
-            ("thousand",          int(1e3)),
-            ("million",           int(1e6)),
-            ("billion",           int(1e9)),
-            ("trillion",          int(1e12)),
-            ("quadrillion",       int(1e15)),
-            ("quintillion",       int(1e18)),
-            ("sextillion",        int(1e21)),
-            ("septillion",        int(1e24)),
-            ("octillion",         int(1e27)),
-            ("nonillion",         int(1e30)),
-            ("decillion",         int(1e33)),
-            ("undecillion",       int(1e36)),
-            ("duodecillion",      int(1e39)),
-            ("tredicillion",      int(1e42)),
-            ("quattordecillion",  int(1e45)),
+        self.defined_majors = [
+            ("thousand", int(1e3)),
+            ("million", int(1e6)),
+            ("billion", int(1e9)),
+            ("trillion", int(1e12)),
+            ("quadrillion", int(1e15)),
+            ("quintillion", int(1e18)),
+            ("sextillion", int(1e21)),
+            ("septillion", int(1e24)),
+            ("octillion", int(1e27)),
+            ("nonillion", int(1e30)),
+            ("decillion", int(1e33)),
+            ("undecillion", int(1e36)),
+            ("duodecillion", int(1e39)),
+            ("tredicillion", int(1e42)),
+            ("quattordecillion", int(1e45)),
             ("quattuordecillion", int(1e45)),
-            ("quindecillion",     int(1e48)),
-            ("sexdecillion",      int(1e51)),
-            ("septendecillion",   int(1e54)),
-            ("octodecillion",     int(1e57)),
-            ("novemdecillion",    int(1e60)),
-            ("vigintillion",      int(1e63)),
+            ("quindecillion", int(1e48)),
+            ("sexdecillion", int(1e51)),
+            ("septendecillion", int(1e54)),
+            ("octodecillion", int(1e57)),
+            ("novemdecillion", int(1e60)),
+            ("vigintillion", int(1e63)),
         ]
 
-        self.units = Or([convertToLiteral(s, v) for s, v in self.definedUnits])
-        self.tens = Or([convertToLiteral(s, v) for s, v in self.definedTens])
-        self.hundreds = convertToLiteral("hundred", 100)
+        self.units = Or(
+            [convert_to_literal(s, v) for s, v in self.defined_units]
+        )
+        self.tens = Or(
+            [convert_to_literal(s, v) for s, v in self.defined_tens]
+        )
+        self.hundreds = convert_to_literal("hundred", 100)
         self.majors = Or(
-            [convertToLiteral(s, v) for s, v in self.definedMajors]
+            [convert_to_literal(s, v) for s, v in self.defined_majors]
         )
 
-        self.wordProduct = lambda t: reduce(mul, t)
-        self.wordSum = lambda t: sum(t)
+        self.word_product = lambda t: reduce(mul, t)
+        self.word_sum = lambda t: sum(t)
 
-        self.numberPartial = (
+        self.number_partial = (
             (
                 (
                     (
                         self.units + Optional(self.hundreds)
-                    ).setParseAction(self.wordProduct) + Optional(self.tens)
-                ).setParseAction(self.wordSum) ^ self.tens
-            ) + Optional(self.units)).setParseAction(self.wordSum)
+                    ).setParseAction(self.word_product) + Optional(self.tens)
+                ).setParseAction(self.word_sum) ^ self.tens
+            ) + Optional(self.units)).setParseAction(self.word_sum)
 
-        self.numberWords = OneOrMore(
-            (self.numberPartial +
-             Optional(self.majors)).setParseAction(self.wordProduct)
-        ).setParseAction(self.wordSum) + StringEnd()
+        self.number_words = OneOrMore(
+            (self.number_partial +
+             Optional(self.majors)).setParseAction(self.word_product)
+        ).setParseAction(self.word_sum) + StringEnd()
 
-        self.numberWords.ignore(CaselessLiteral("-"))
-        self.numberWords.ignore(CaselessLiteral("and"))
+        self.number_words.ignore(CaselessLiteral("-"))
+        self.number_words.ignore(CaselessLiteral("and"))
 
         self.roman_numerals = [
             ['M', 1000],
@@ -133,21 +167,24 @@ class NumberParser(BaseParser):
             ['I', 1]
         ]
 
-    def isFloat(self, data):
+    @classmethod
+    def is_float(cls, data):
         """Checks to see if the value is a float"""
         try:
             return True, float(data)
         except ValueError:
             return False, 0
 
-    def isInteger(self, data):
+    @classmethod
+    def is_integer(cls, data):
         """Checks to see if the value is an integer"""
         try:
             return True, int(data)
         except ValueError:
             return False, 0
 
-    def isHex(self, data):
+    @classmethod
+    def is_hex(cls, data):
         """Checks to see if the value is hexidecimal"""
         if data[0] == '#':
             data = data[1:]
@@ -157,7 +194,8 @@ class NumberParser(BaseParser):
         except ValueError:
             return False, 0
 
-    def isBinary(self, data):
+    @classmethod
+    def is_binary(cls, data):
         """Checks to see if the value looks like a binary"""
         if len(data) < 4:
             return False, 0
@@ -165,25 +203,26 @@ class NumberParser(BaseParser):
         if len(data) % 4 != 0:
             return False, 0
 
-        for c in data:
-            if c not in ["0", "1"]:
+        for char in data:
+            if char not in ["0", "1"]:
                 return False, 0
 
         try:
             value = unicode(unhexlify('%x' % int(data, 2)))
-        except:
+        except (ValueError, TypeError):
             return False, 0
 
         return True, value
 
-    def isOctal(self, data):
+    @classmethod
+    def is_octal(cls, data):
         """Checks to see if the value is octal"""
         try:
             return True, int(data, 8)
         except ValueError:
             return False, 0
 
-    def isRomanNumeral(self, data):
+    def is_roman_numeral(self, data):
         """Checks to see if the value is a roman numeral"""
         data = data.upper()
         rgx_roman = re.compile("""^
@@ -210,14 +249,15 @@ class NumberParser(BaseParser):
 
         return False, 0
 
-    def isWords(self, data):
+    def is_words(self, data):
+        """determines if the data is textual numbers"""
         try:
-            numberValue = self.numberWords.parseString(data)[0]
-            return True, numberValue
+            number_value = self.number_words.parseString(data)[0]
+            return True, number_value
         except ParseException:
             return False, 0
 
-    def isFraction(self, data):
+    def is_fraction(self, data):
         """Detects if input is a fraction"""
         if '/' not in data:
             return False, 0
@@ -232,8 +272,8 @@ class NumberParser(BaseParser):
             for whitespace_section in whitespace_split:
                 test = whitespace_section.strip()
                 if (
-                    self.isFraction(test) == (False, 0) and
-                    self.isInteger(test) == (False, 0)
+                        self.is_fraction(test) == (False, 0) and
+                        self.is_integer(test) == (False, 0)
                 ):
                     return False, 0
 
@@ -241,8 +281,8 @@ class NumberParser(BaseParser):
             for split_section in fraction_split:
                 test = split_section.strip()
                 if (
-                    len(test) == 0 or
-                    self.isInteger(split_section.strip()) == (False, 0)
+                        len(test) == 0 or
+                        self.is_integer(split_section.strip()) == (False, 0)
                 ):
                     return False, 0
 
@@ -262,49 +302,45 @@ class NumberParser(BaseParser):
         if data == '':
             return
 
-        is_fraction, value = self.isFraction(data)
+        is_fraction, value = self.is_fraction(data)
         if is_fraction:
             fraction_confidence = 100
 
-            """
-            for every character in the data other than the /, we lower
-            the confidence a bit. Fractions are USUALLY short
-            """
-            for c in data:
-                if c != "/":
+            # for every character in the data other than the /, we lower
+            # the confidence a bit. Fractions are USUALLY short
+            for char in data:
+                if char != "/":
                     fraction_confidence -= 3
 
-            """
-            if the fraction isn't solve-able, we lower the confidence
-            significantly it might "technically" be a fraction made up
-            of roman numerals, etc.
-            """
-            if EquationParser in self.Config.enabledModules:
-                ep = EquationParser(self.Config)
-                if not ep.solveEquation(ep.autoFloat(data)):
+            # if the fraction isn't solve-able, we lower the confidence
+            # significantly it might "technically" be a fraction made up
+            # of roman numerals, etc.
+            if EquationParser in self.config.enabledModules:
+                eqp = EquationParser(self.config)
+                if not eqp.solve_equation(eqp.auto_float(data)):
                     fraction_confidence -= 40
 
             yield self.result("Fraction", fraction_confidence, value)
             return
 
-        is_binary, value = self.isBinary(data)
+        is_binary, value = self.is_binary(data)
         if is_binary:
             yield self.result("Binary", 100, value)
             return
 
-        is_integer, value = self.isInteger(data)
+        is_integer, value = self.is_integer(data)
         if is_integer:
             integer_confidence = 75
             octal_confidence = 25
 
             # 10 point confidence penalty if int is also a phone number
-            if PhoneParser in self.Config.enabledModules:
-                PhoneParser.bootstrap(self.Config)
-                phoneParser = PhoneParser(self.Config)
-                for result in phoneParser.parse(data):
+            if PhoneParser in self.config.enabledModules:
+                PhoneParser.bootstrap(self.config)
+                phone_parser = PhoneParser(self.config)
+                for _ in phone_parser.parse(data):
                     integer_confidence -= 10
 
-            is_octal, octal_value = self.isOctal(data)
+            is_octal, octal_value = self.is_octal(data)
             if is_octal:
                 yield self.result("Integer", integer_confidence, value)
                 yield self.result("Octal", octal_confidence, octal_value)
@@ -315,23 +351,23 @@ class NumberParser(BaseParser):
             return
 
         if '.' in data:
-            is_float, value = self.isFloat(data)
+            is_float, value = self.is_float(data)
             if is_float:
                 yield self.result("Decimal", 100, value)
                 return
 
         if len(data) > 1:
-            is_hex, value = self.isHex(data)
+            is_hex, value = self.is_hex(data)
             if is_hex:
                 yield self.result("Hexadecimal", 100, value)
                 return
 
-        is_roman_numeral, value = self.isRomanNumeral(data)
+        is_roman_numeral, value = self.is_roman_numeral(data)
         if is_roman_numeral:
             yield self.result("Roman Numeral", 100, value)
             return
 
-        is_word, value = self.isWords(data)
+        is_word, value = self.is_words(data)
         if is_word:
             yield self.result("Word Number", 100, value)
             return

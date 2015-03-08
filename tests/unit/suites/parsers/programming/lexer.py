@@ -8,11 +8,11 @@ import unittest
 class ProgrammingLexerThreadTests(unittest.TestCase):
 
     def test_phpLexerDetectsExpectedTokens(self):
-        dataString = "echo 'Hello World';"
+        data_string = "echo 'Hello World';"
         lexer = ProgrammingLexerThread(
             'php',
             PhpLexer(startinline=True),
-            dataString
+            data_string
         )
 
         lexer.start()
@@ -21,11 +21,11 @@ class ProgrammingLexerThreadTests(unittest.TestCase):
         self.assertEqual(3, lexer.result)
 
     def test_phpLexerDetectsExpectedNoTokens(self):
-        dataString = " "
+        data_string = " "
         lexer = ProgrammingLexerThread(
             'php',
             PhpLexer(startinline=True),
-            dataString
+            data_string
         )
 
         lexer.start()
@@ -37,8 +37,8 @@ class ProgrammingLexerThreadTests(unittest.TestCase):
 class ProgrammingLexerTests(unittest.TestCase):
 
     def test_phpIsDetectedUsingProgrammingLexer(self):
-        dataString = "echo 'Hello World';"
-        lexer = ProgrammingLexer(['php'], dataString)
+        data_string = "echo 'Hello World';"
+        lexer = ProgrammingLexer(['php'], data_string)
         result = lexer.lex()
 
         self.assertEqual({'php': 3}, result)

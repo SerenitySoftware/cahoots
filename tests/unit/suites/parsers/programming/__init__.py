@@ -43,17 +43,17 @@ class ProgrammingParserTests(unittest.TestCase):
         ProgrammingParser.bootstrap(config)
         self.bootstrapMock.assert_called_with(config)
 
-        self.assertEqual(486, len(registry.get('PPallKeywords')))
-        self.assertEqual(11, len(registry.get('PPlanguageKeywords')))
+        self.assertEqual(486, len(registry.get('PP_all_keywords')))
+        self.assertEqual(11, len(registry.get('PP_language_keywords')))
 
     @mock.patch(pbcBootstrap, bootstrapMock)
-    def test_findCommonTokensFindsExpectedKeywords(self):
+    def test_find_common_tokensFindsExpectedKeywords(self):
         config = TestConfig()
         ProgrammingParser.bootstrap(config)
         self.bootstrapMock.assert_called_with(config)
 
         parser = ProgrammingParser(config)
-        result = parser.findCommonTokens(['for', 'if', 'foobar'])
+        result = parser.find_common_tokens(['for', 'if', 'foobar'])
 
         self.assertEqual(2, len(result))
 
@@ -64,9 +64,8 @@ class ProgrammingParserTests(unittest.TestCase):
         self.bootstrapMock.assert_called_with(config)
 
         parser = ProgrammingParser(config)
-        result = parser.basicLanguageHeuristic(
-            'php',
-            registry.get('PPlanguageKeywords')['php'],
+        result = parser.basic_language_heuristic(
+            registry.get('PP_language_keywords')['php'],
             ['for', 'if', 'foobar']
         )
 
@@ -78,7 +77,7 @@ class ProgrammingParserTests(unittest.TestCase):
 
         self.assertEqual(
             set(['hello', 'world']),
-            parser.createDataset('Hello World')
+            parser.create_dataset('Hello World')
         )
 
     @mock.patch(pbcBootstrap, bootstrapMock)
@@ -127,7 +126,7 @@ class ProgrammingParserTests(unittest.TestCase):
         self.assertEqual(5, len(results))
 
         for result in results:
-            self.assertIn(result.Subtype, expectedTypes)
+            self.assertIn(result.subtype, expectedTypes)
 
         self.bigSpreadClassifyMock.assert_called_once_with('with cout echo')
 
@@ -157,6 +156,6 @@ class ProgrammingParserTests(unittest.TestCase):
         self.assertEqual(5, len(results))
 
         for result in results:
-            self.assertIn(result.Subtype, expectedTypes)
+            self.assertIn(result.subtype, expectedTypes)
 
         self.smallSpreadClassifyMock.assert_called_once_with('with cout echo')

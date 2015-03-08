@@ -1,10 +1,17 @@
 language: python
-sudo: false
+cache: apt
 python:
   - "2.7"
 install:
   - pip install -r setup/requirements.txt
   - pip install -r setup/requirements.dev.txt
+  - wget https://pypi.python.org/packages/source/p/pylint/pylint-1.4.1.tar.gz
+  - tar -xvf pylint-1.4.1.tar.gz
+  - cd pylint-1.4.1
+  - python setup.py install
+  - cd ..
+
 script:
   - nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 100
   - flake8 cahoots tests web
+  - pylint cahoots

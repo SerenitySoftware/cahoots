@@ -14,14 +14,14 @@ class DateParserTests(unittest.TestCase):
     def tearDown(self):
         self.dp = None
 
-    def test_naturalParse(self):
+    def test_natural_parse(self):
 
-        self.assertTrue(self.dp.naturalParse("yesterday"))
-        self.assertTrue(self.dp.naturalParse("tomorrow"))
-        self.assertTrue(self.dp.naturalParse("next week"))
-        self.assertTrue(self.dp.naturalParse("last week"))
+        self.assertTrue(self.dp.natural_parse("yesterday"))
+        self.assertTrue(self.dp.natural_parse("tomorrow"))
+        self.assertTrue(self.dp.natural_parse("next week"))
+        self.assertTrue(self.dp.natural_parse("last week"))
 
-        self.assertFalse(self.dp.naturalParse("snuffalupagus"))
+        self.assertFalse(self.dp.natural_parse("snuffalupagus"))
 
     def test_parseWithStringTooShortYieldsNothing(self):
         count = 0
@@ -33,30 +33,30 @@ class DateParserTests(unittest.TestCase):
         count = 0
         for result in self.dp.parse('yesterday'):
             count += 1
-            self.assertEqual(result.Subtype, 'Date')
-            self.assertEqual(result.Confidence, 100)
+            self.assertEqual(result.subtype, 'Date')
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
     def test_parseShortSimpleDates(self):
         count = 0
         for result in self.dp.parse('1/10'):
             count += 1
-            self.assertEqual(result.Subtype, 'Date')
-            self.assertEqual(result.Confidence, 6)
+            self.assertEqual(result.subtype, 'Date')
+            self.assertEqual(result.confidence, 6)
         self.assertEqual(count, 1)
 
         count = 0
         for result in self.dp.parse('11/10'):
             count += 1
-            self.assertEqual(result.Subtype, 'Date')
-            self.assertEqual(result.Confidence, 53)
+            self.assertEqual(result.subtype, 'Date')
+            self.assertEqual(result.confidence, 53)
         self.assertEqual(count, 1)
 
         count = 0
         for result in self.dp.parse('08/11/2010'):
             count += 1
-            self.assertEqual(result.Subtype, 'Date')
-            self.assertEqual(result.Confidence, 154)
+            self.assertEqual(result.subtype, 'Date')
+            self.assertEqual(result.confidence, 154)
         self.assertEqual(count, 1)
 
     def test_NonDateYieldsNothing(self):
