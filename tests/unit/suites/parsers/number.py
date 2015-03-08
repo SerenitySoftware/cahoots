@@ -15,55 +15,58 @@ class NumberParserTests(unittest.TestCase):
     def tearDown(self):
         self.np = None
 
-    def test_isFloat(self):
-        self.assertEqual((True, 123.123), self.np.isFloat("123.123"))
-        self.assertEqual((False, 0), self.np.isFloat("abc"))
+    def test_is_float(self):
+        self.assertEqual((True, 123.123), self.np.is_float("123.123"))
+        self.assertEqual((False, 0), self.np.is_float("abc"))
 
-    def test_isInteger(self):
-        self.assertEqual((True, 123), self.np.isInteger("123"))
-        self.assertEqual((False, 0), self.np.isInteger("123.123"))
-        self.assertEqual((False, 0), self.np.isInteger("abc"))
+    def test_is_integer(self):
+        self.assertEqual((True, 123), self.np.is_integer("123"))
+        self.assertEqual((False, 0), self.np.is_integer("123.123"))
+        self.assertEqual((False, 0), self.np.is_integer("abc"))
 
-    def test_isHex(self):
-        self.assertEqual((True, 3735928559), self.np.isHex("0xDEADBEEF"))
-        self.assertEqual((True, 3735928559), self.np.isHex("#0xDEADBEEF"))
-        self.assertEqual((False, 0), self.np.isHex("123.123"))
+    def test_is_hex(self):
+        self.assertEqual((True, 3735928559), self.np.is_hex("0xDEADBEEF"))
+        self.assertEqual((True, 3735928559), self.np.is_hex("#0xDEADBEEF"))
+        self.assertEqual((False, 0), self.np.is_hex("123.123"))
 
-    def test_isBinary(self):
-        self.assertEqual((True, "hello"), self.np.isBinary(
+    def test_is_binary(self):
+        self.assertEqual((True, "hello"), self.np.is_binary(
             "0110100001100101011011000110110001101111"
         ))
-        self.assertEqual((False, 0), self.np.isBinary("1234"))
-        self.assertEqual((False, 0), self.np.isBinary("1001"))
-        self.assertEqual((False, 0), self.np.isBinary("10011"))
-        self.assertEqual((False, 0), self.np.isBinary("100"))
+        self.assertEqual((False, 0), self.np.is_binary("1234"))
+        self.assertEqual((False, 0), self.np.is_binary("1001"))
+        self.assertEqual((False, 0), self.np.is_binary("10011"))
+        self.assertEqual((False, 0), self.np.is_binary("100"))
 
-    def test_isOctal(self):
-        self.assertEqual((True, 2739128), self.np.isOctal("12345670"))
-        self.assertEqual((False, 0), self.np.isOctal("1234567890"))
+    def test_is_octal(self):
+        self.assertEqual((True, 2739128), self.np.is_octal("12345670"))
+        self.assertEqual((False, 0), self.np.is_octal("1234567890"))
 
-    def test_isRomanNumeral(self):
-        self.assertEqual((True, 2646), self.np.isRomanNumeral("MMDCXLVI"))
-        self.assertEqual((True, 4), self.np.isRomanNumeral("IV"))
-        self.assertEqual((False, 0), self.np.isRomanNumeral("1234"))
-        self.assertEqual((False, 0), self.np.isRomanNumeral("I Am Sparticus!"))
+    def test_is_roman_numeral(self):
+        self.assertEqual((True, 2646), self.np.is_roman_numeral("MMDCXLVI"))
+        self.assertEqual((True, 4), self.np.is_roman_numeral("IV"))
+        self.assertEqual((False, 0), self.np.is_roman_numeral("1234"))
+        self.assertEqual(
+            (False, 0),
+            self.np.is_roman_numeral("I Am Sparticus!")
+        )
 
-    def test_isFraction(self):
-        self.assertEqual((True, "1 1/2"), self.np.isFraction("1 1/2"))
-        self.assertEqual((True, "34/68"), self.np.isFraction("34/68"))
-        self.assertEqual((False, 0), self.np.isFraction("abc123"))
-        self.assertEqual((False, 0), self.np.isFraction("1 1/"))
-        self.assertEqual((False, 0), self.np.isFraction("1 1"))
-        self.assertEqual((False, 0), self.np.isFraction("1/2/4"))
+    def test_is_fraction(self):
+        self.assertEqual((True, "1 1/2"), self.np.is_fraction("1 1/2"))
+        self.assertEqual((True, "34/68"), self.np.is_fraction("34/68"))
+        self.assertEqual((False, 0), self.np.is_fraction("abc123"))
+        self.assertEqual((False, 0), self.np.is_fraction("1 1/"))
+        self.assertEqual((False, 0), self.np.is_fraction("1 1"))
+        self.assertEqual((False, 0), self.np.is_fraction("1/2/4"))
 
     def test_isWordNumber(self):
-        self.assertEqual((True, 1), self.np.isWords("One"))
-        self.assertEqual((True, 200), self.np.isWords("Two Hundred"))
-        self.assertEqual((True, 4533412), self.np.isWords(
+        self.assertEqual((True, 1), self.np.is_words("One"))
+        self.assertEqual((True, 200), self.np.is_words("Two Hundred"))
+        self.assertEqual((True, 4533412), self.np.is_words(
             "Four Million Five Hundred and Thirty " +
             "Three Thousand Four Hundred and Twelve")
         )
-        self.assertEqual((False, 0), self.np.isWords("foobar"))
+        self.assertEqual((False, 0), self.np.is_words("foobar"))
 
     def test_parseWithEmptyDataReturnsNone(self):
         count = 0

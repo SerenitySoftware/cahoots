@@ -44,7 +44,7 @@ class NameParser(BaseParser):
         """Checks to see if the word passed in is a name suffix"""
         if NumberParser in self.Config.enabledModules:
             np = NumberParser(self.Config)
-            if np.isRomanNumeral(word) != (False, 0):
+            if np.is_roman_numeral(word) != (False, 0):
                 return True
 
         word = word.replace('.', '').upper()
