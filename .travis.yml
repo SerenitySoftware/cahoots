@@ -1,5 +1,8 @@
 language: python
-cache: apt
+cache:
+  - apt
+  - pip
+sudo: false
 python:
   - "2.7"
 install:
@@ -10,7 +13,6 @@ install:
   - cd pylint-1.4.1
   - python setup.py install
   - cd ..
-
 script:
   - nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 100
   - flake8 cahoots tests web --benchmark

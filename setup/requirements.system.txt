@@ -1,3 +1,6 @@
 python-dev
 python-pip
 redis-server
+memcached
+sqlite3
+libsqlite3-dev
