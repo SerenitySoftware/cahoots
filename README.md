@@ -9,8 +9,11 @@ Status
 Pre-Alpha, Accepting Contributions
 ```
 [![Build Status](https://travis-ci.org/SerenitySoftwareLLC/cahoots.svg?branch=master)](https://travis-ci.org/SerenitySoftwareLLC/cahoots)
+
 [![Build Status](https://img.shields.io/badge/coverage-100%-brightgreen.svg?style=flat)](https://travis-ci.org/SerenitySoftwareLLC/cahoots)
+
 [![Build Status](https://img.shields.io/badge/pylint-10.00/10-brightgreen.svg?style=flat)](https://travis-ci.org/SerenitySoftwareLLC/cahoots)
+
 [![Build Status](https://img.shields.io/badge/flake8-passing-brightgreen.svg?style=flat)](https://travis-ci.org/SerenitySoftwareLLC/cahoots)
 
 Contributors
