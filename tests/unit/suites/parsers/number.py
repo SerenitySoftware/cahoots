@@ -1,3 +1,27 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) Serenity Software, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.number import NumberParser
 from tests.unit.config import TestConfig
 import mock
@@ -62,21 +86,24 @@ class NumberParserTests(unittest.TestCase):
     def test_isWordNumber(self):
         self.assertEqual((True, 1), self.np.is_words("One"))
         self.assertEqual((True, 200), self.np.is_words("Two Hundred"))
-        self.assertEqual((True, 4533412), self.np.is_words(
-            "Four Million Five Hundred and Thirty " +
-            "Three Thousand Four Hundred and Twelve")
+        self.assertEqual(
+            (True, 4533412),
+            self.np.is_words(
+                "Four Million Five Hundred and Thirty " +
+                "Three Thousand Four Hundred and Twelve"
+            )
         )
         self.assertEqual((False, 0), self.np.is_words("foobar"))
 
     def test_parseWithEmptyDataReturnsNone(self):
         count = 0
-        for result in self.np.parse(''):
+        for _ in self.np.parse(''):
             count += 1
         self.assertEqual(count, 0)
 
     def test_parseWithStrippedDataReturnsNone(self):
         count = 0
-        for result in self.np.parse('-,'):
+        for _ in self.np.parse('-,'):
             count += 1
         self.assertEqual(count, 0)
 
@@ -89,7 +116,9 @@ class NumberParserTests(unittest.TestCase):
             self.assertEqual(result.confidence, 94)
         self.assertEqual(count, 1)
 
-    def mock_returnsFalse(self, param1):
+    @classmethod
+    # pylint: disable=unused-argument
+    def mock_returnsFalse(cls, param1):
         return False
 
     @mock.patch(

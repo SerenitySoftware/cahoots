@@ -1,3 +1,27 @@
+"""
+The MIT License (MIT)
+
+Copyright (c) Serenity Software, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.programming.bayesian import \
     ProgrammingBayesianClassifier
 from SereneRegistry import registry
@@ -7,7 +31,7 @@ import mock
 import unittest
 
 
-class RedisStub():
+class RedisStub(object):
 
     Host = None
     Port = None
@@ -21,7 +45,7 @@ class RedisStub():
         RedisStub.Connection_pool = connection_pool
 
 
-class RedisBayesStub():
+class RedisBayesStub(object):
 
     Redis = None
     Tokenizer = None
@@ -38,13 +62,16 @@ class RedisBayesStub():
         RedisBayesStub.Tokenizer = tokenizer
         RedisBayesStub.Prefix = prefix
 
-    def train(self, language, sample):
+    @classmethod
+    def train(cls, language, sample):
         RedisBayesStub.Languages[language] = sample
 
-    def flush(self):
+    @classmethod
+    def flush(cls):
         RedisBayesStub.Flushed = True
 
-    def score(self, data_string):
+    @classmethod
+    def score(cls, data_string):
         RedisBayesStub.data_string = data_string
         return 'FooBar'
 
