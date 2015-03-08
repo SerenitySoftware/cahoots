@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=unused-wildcard-import
+# pylint: disable=unused-wildcard-import,wildcard-import,unused-import
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__))[:-11])

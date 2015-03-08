@@ -21,12 +21,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,missing-docstring
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.phone import PhoneParser
 from tests.unit.config import TestConfig
 from phonenumbers import phonenumberutil
 import unittest
 import mock
+
+
+# pylint: disable=unused-argument
+def descriptionForValidNumberMock(numObj, lang):
+    PhoneParserTests.dfvnmCallCount += 1
+    if PhoneParserTests.dfvnmCallCount == 1:
+        return ""
+    elif PhoneParserTests.dfvnmCallCount == 2:
+        raise Exception("foo")
 
 
 class PhoneParserTests(unittest.TestCase):
@@ -46,13 +55,6 @@ class PhoneParserTests(unittest.TestCase):
     }
 
     dfvnmCallCount = 0
-
-    def descriptionForValidNumberMock(numObj, lang):
-        PhoneParserTests.dfvnmCallCount += 1
-        if PhoneParserTests.dfvnmCallCount == 1:
-            return ""
-        elif PhoneParserTests.dfvnmCallCount == 2:
-            raise Exception("foo")
 
     def setUp(self):
         self.pp = PhoneParser(TestConfig())

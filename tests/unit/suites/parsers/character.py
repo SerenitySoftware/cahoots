@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,missing-docstring
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.character import CharacterParser
 from tests.unit.config import TestConfig
 import unittest
@@ -61,13 +61,13 @@ class CharacterParserTests(unittest.TestCase):
 
     def test_parseReturnsNothingWithStringLongerThanOneCharacter(self):
         count = 0
-        for result in self.cp.parse("asdf"):
+        for _ in self.cp.parse("asdf"):
             count += 1
         self.assertEqual(count, 0)
 
     def test_parseNonAsciiCharacterReturnNone(self):
         count = 0
-        for result in self.cp.parse(u'\u0080'):
+        for _ in self.cp.parse(u'\u0080'):
             count += 1
         self.assertEqual(count, 0)
 

@@ -21,34 +21,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,missing-docstring
-from cahoots.parsers import\
-    boolean,\
-    character,\
-    date,\
-    email,\
-    equation,\
-    measurement,\
-    name,\
-    number,\
-    phone,\
-    uri
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
+import cahoots
 from cahoots.config import BaseConfig
 
 
 class TestConfig(BaseConfig):
 
     enabledModules = [
-        name.NameParser,
-        number.NumberParser,
-        character.CharacterParser,
-        boolean.BooleanParser,
-        date.DateParser,
-        phone.PhoneParser,
-        uri.URIParser,
-        email.EmailParser,
+        cahoots.parsers.name.NameParser,
+        cahoots.parsers.number.NumberParser,
+        cahoots.parsers.character.CharacterParser,
+        cahoots.parsers.boolean.BooleanParser,
+        cahoots.parsers.date.DateParser,
+        cahoots.parsers.phone.PhoneParser,
+        cahoots.parsers.uri.URIParser,
+        cahoots.parsers.email.EmailParser,
         # programming.ProgrammingParser,
         # location.LocationParser,
-        equation.EquationParser,
-        measurement.MeasurementParser,
+        cahoots.parsers.equation.EquationParser,
+        cahoots.parsers.measurement.MeasurementParser,
     ]

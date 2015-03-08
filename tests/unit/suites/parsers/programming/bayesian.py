@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,missing-docstring
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.programming.bayesian import \
     ProgrammingBayesianClassifier
 from SereneRegistry import registry
@@ -31,7 +31,7 @@ import mock
 import unittest
 
 
-class RedisStub():
+class RedisStub(object):
 
     Host = None
     Port = None
@@ -45,7 +45,7 @@ class RedisStub():
         RedisStub.Connection_pool = connection_pool
 
 
-class RedisBayesStub():
+class RedisBayesStub(object):
 
     Redis = None
     Tokenizer = None
@@ -62,13 +62,16 @@ class RedisBayesStub():
         RedisBayesStub.Tokenizer = tokenizer
         RedisBayesStub.Prefix = prefix
 
-    def train(self, language, sample):
+    @classmethod
+    def train(cls, language, sample):
         RedisBayesStub.Languages[language] = sample
 
-    def flush(self):
+    @classmethod
+    def flush(cls):
         RedisBayesStub.Flushed = True
 
-    def score(self, data_string):
+    @classmethod
+    def score(cls, data_string):
         RedisBayesStub.data_string = data_string
         return 'FooBar'
 

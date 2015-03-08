@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,missing-docstring
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.config import BaseConfig
 from cahoots.parser import ParserThread, CahootsParser
 from cahoots.parsers.base import BaseParser

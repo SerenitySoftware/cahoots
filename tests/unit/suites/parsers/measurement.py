@@ -21,12 +21,49 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,missing-docstring
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.measurement import MeasurementParser
 from tests.unit.config import TestConfig
 from SereneRegistry import registry
 import unittest
 import mock
+
+
+# pylint: disable=unused-argument
+def mock_miscTextReturnSingleParameter(param1):
+    return 'foo'
+
+
+# pylint: disable=unused-argument
+def mock_miscTextReturnDoubleParameter(param1, param2):
+    return 'foo'
+
+
+# pylint: disable=unused-argument
+def mock_globGlob(path):
+    return ['foo', 'bar']
+
+
+# pylint: disable=unused-argument
+def mock_open(filename, mode):
+    if filename == 'foo':
+        contents = ("system: Imperial\n"
+                    "type: Area\n"
+                    "id: imperial_area\n"
+                    "keywords:\n"
+                    "- acre\n"
+                    "- acres")
+        return contents
+    elif filename == 'bar':
+        contents = ("system: Imperial\n"
+                    "type: Length\n"
+                    "id: imperial_length\n"
+                    "keywords:\n"
+                    "- yard\n"
+                    "- yards")
+        return contents
+    else:
+        raise Exception("Invalid File Names")
 
 
 class MeasurementParserTests(unittest.TestCase):
@@ -41,35 +78,6 @@ class MeasurementParserTests(unittest.TestCase):
     def tearDown(self):
         self.mp = None
 
-    def mock_miscTextReturnSingleParameter(param1):
-        return 'foo'
-
-    def mock_miscTextReturnDoubleParameter(param1, param2):
-        return 'foo'
-
-    def mock_globGlob(path):
-        return ['foo', 'bar']
-
-    def mock_open(file, mode):
-        if file == 'foo':
-            contents = ("system: Imperial\n"
-                        "type: Area\n"
-                        "id: imperial_area\n"
-                        "keywords:\n"
-                        "- acre\n"
-                        "- acres")
-            return contents
-        elif file == 'bar':
-            contents = ("system: Imperial\n"
-                        "type: Length\n"
-                        "id: imperial_length\n"
-                        "keywords:\n"
-                        "- yard\n"
-                        "- yards")
-            return contents
-        else:
-            raise Exception("Invalid File Names")
-
     @mock.patch('os.path.dirname', mock_miscTextReturnSingleParameter)
     @mock.patch('os.path.abspath', mock_miscTextReturnSingleParameter)
     @mock.patch('os.path.join', mock_miscTextReturnDoubleParameter)
@@ -81,18 +89,20 @@ class MeasurementParserTests(unittest.TestCase):
             ['acres', 'yards', 'yard', 'acre'],
             registry.get('MP_all_units')
         )
-        self.assertEqual({
-            'imperial_length':
-                {'keywords': ['yards', 'yard'],
-                 'type': 'Length',
-                 'system': 'Imperial',
-                 'id': 'imperial_length'},
-            'imperial_area':
-                {'keywords': ['acres', 'acre'],
-                 'type': 'Area',
-                 'system': 'Imperial',
-                 'id': 'imperial_area'}
-            }, registry.get('MP_system_units')
+        self.assertEqual(
+            {
+                'imperial_length':
+                    {'keywords': ['yards', 'yard'],
+                     'type': 'Length',
+                     'system': 'Imperial',
+                     'id': 'imperial_length'},
+                'imperial_area':
+                    {'keywords': ['acres', 'acre'],
+                     'type': 'Area',
+                     'system': 'Imperial',
+                     'id': 'imperial_area'}
+            },
+            registry.get('MP_system_units')
         )
 
     def test_loadUnits(self):
@@ -137,14 +147,14 @@ class MeasurementParserTests(unittest.TestCase):
 
     def test_parseZeroLengthYieldNothing(self):
         count = 0
-        for result in self.mp.parse(' '):
+        for _ in self.mp.parse(' '):
             count += 1
         self.assertEqual(count, 0)
 
     def test_parseLongStringYieldsNothing(self):
         count = 0
-        for result in self.mp.parse(
-            'hellohellohellohellohellohellohellohellohellohellohello'
+        for _ in self.mp.parse(
+                'hellohellohellohellohellohellohellohellohellohellohello'
         ):
             count += 1
         self.assertEqual(count, 0)
@@ -159,19 +169,19 @@ class MeasurementParserTests(unittest.TestCase):
 
     def test_parseNoWhitespaceOrDigitsYieldsNothing(self):
         count = 0
-        for result in self.mp.parse('scoobydoo'):
+        for _ in self.mp.parse('scoobydoo'):
             count += 1
         self.assertEqual(count, 0)
 
     def test_parseDoubleUnitYieldsNothing(self):
         count = 0
-        for result in self.mp.parse('4 inches inches'):
+        for _ in self.mp.parse('4 inches inches'):
             count += 1
         self.assertEqual(count, 0)
 
     def test_parseLooksLikeMeasurementButNoUnitsYieldsNothing(self):
         count = 0
-        for result in self.mp.parse('4 lafawndas'):
+        for _ in self.mp.parse('4 lafawndas'):
             count += 1
         self.assertEqual(count, 0)
 
@@ -201,6 +211,6 @@ class MeasurementParserTests(unittest.TestCase):
 
     def test_parseWithUnitButTooManyNonNumbersYieldsNothing(self):
         count = 0
-        for result in self.mp.parse('foo bar biz baz inches'):
+        for _ in self.mp.parse('foo bar biz baz inches'):
             count += 1
         self.assertEqual(count, 0)

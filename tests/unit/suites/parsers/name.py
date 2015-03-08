@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,missing-docstring
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.name import NameParser
 from tests.unit.config import TestConfig
 import unittest
@@ -73,13 +73,13 @@ class NameParserTests(unittest.TestCase):
 
     def test_parseWithNoUpperCaseLettersYieldsNothing(self):
         count = 0
-        for result in self.np.parse('foo'):
+        for _ in self.np.parse('foo'):
             count += 1
         self.assertEqual(count, 0)
 
     def test_parseWithGreaterThanTenWordsYieldsNothing(self):
         count = 0
-        for result in self.np.parse(
+        for _ in self.np.parse(
                 'Foo bar baz buns barf blarg bleh bler blue sner sneh snaf.'
         ):
             count += 1
@@ -87,7 +87,7 @@ class NameParserTests(unittest.TestCase):
 
     def test_parseWithNonBasicValidatedAttributesYieldsNothing(self):
         count = 0
-        for result in self.np.parse('Foo bar The Third'):
+        for _ in self.np.parse('Foo bar The Third'):
             count += 1
         self.assertEqual(count, 0)
 
@@ -109,6 +109,6 @@ class NameParserTests(unittest.TestCase):
 
     def test_parseYieldsNothingWithOneWordName(self):
         count = 0
-        for result in self.np.parse('Foo'):
+        for _ in self.np.parse('Foo'):
             count += 1
         self.assertEqual(count, 0)

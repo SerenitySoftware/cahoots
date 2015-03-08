@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,missing-docstring
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.uri import URIParser
 from tests.unit.config import TestConfig
 import unittest
@@ -57,7 +57,7 @@ class URIParserTests(unittest.TestCase):
 
     def test_parseWithLessThanFourCharactersYieldsNothing(self):
         count = 0
-        for result in self.up.parse('htt'):
+        for _ in self.up.parse('htt'):
             count += 1
         self.assertEqual(count, 0)
 

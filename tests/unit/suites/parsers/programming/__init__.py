@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,missing-docstring
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.programming import ProgrammingParser
 from SereneRegistry import registry
 from cahoots.result import ParseResult
@@ -111,8 +111,10 @@ class ProgrammingParserTests(unittest.TestCase):
         self.bootstrapMock.assert_called_with(config)
 
         parser = ProgrammingParser(config)
-        for result in parser.parse('scoobydoo'):
-            self.assertTrue(False)
+        count = 0
+        for _ in parser.parse('scoobydoo'):
+            count += 1
+        self.assertEqual(0, count)
 
     @mock.patch(pbcBootstrap, bootstrapMock)
     def test_parseWithNoLexedLanguagesReturns(self):
@@ -121,8 +123,10 @@ class ProgrammingParserTests(unittest.TestCase):
         self.bootstrapMock.assert_called_with(config)
 
         parser = ProgrammingParser(config)
-        for result in parser.parse('m foo bar'):
-            self.assertTrue(False)
+        count = 0
+        for _ in parser.parse('m foo bar'):
+            count += 1
+        self.assertEqual(0, count)
 
     @mock.patch(pbcBootstrap, bootstrapMock)
     @mock.patch(pbcClassify, bigSpreadClassifyMock)

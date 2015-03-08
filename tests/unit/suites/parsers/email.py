@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,missing-docstring
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.email import EmailParser
 from tests.unit.config import TestConfig
 import unittest
@@ -48,7 +48,7 @@ class EmailParserTests(unittest.TestCase):
 
     def test_parseWithNoAtSymbolReturnsNothing(self):
         count = 0
-        for result in self.ep.parse("Foo"):
+        for _ in self.ep.parse("Foo"):
             count += 1
         self.assertEqual(0, count)
 

@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,missing-docstring
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.date import DateParser
 from tests.unit.config import TestConfig
 import unittest
@@ -49,7 +49,7 @@ class DateParserTests(unittest.TestCase):
 
     def test_parseWithStringTooShortYieldsNothing(self):
         count = 0
-        for result in self.dp.parse('Mar'):
+        for _ in self.dp.parse('Mar'):
             count += 1
         self.assertEqual(count, 0)
 
@@ -85,6 +85,6 @@ class DateParserTests(unittest.TestCase):
 
     def test_NonDateYieldsNothing(self):
         count = 0
-        for result in self.dp.parse('asdf;lkj'):
+        for _ in self.dp.parse('asdf;lkj'):
             count += 1
         self.assertEqual(count, 0)
