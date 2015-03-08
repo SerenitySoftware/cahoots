@@ -25,7 +25,7 @@ from cahoots.parsers.base import BaseParser
 import urlparse
 import string
 # pylint: disable=W0611
-import win_inet_pton    # NOQA
+import win_inet_pton    # flake8: noqa
 import socket
 
 

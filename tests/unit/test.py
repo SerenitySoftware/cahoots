@@ -28,41 +28,41 @@ import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__))[:-11])
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
-import cahoots  # NOQA
-import cahoots.parser  # NOQA
-import cahoots.config  # NOQA
-import cahoots.parsers.base  # NOQA
-import cahoots.parsers.boolean  # NOQA
-import cahoots.parsers.character  # NOQA
-import cahoots.parsers.date  # NOQA
-import cahoots.parsers.email  # NOQA
-import cahoots.parsers.equation  # NOQA
-import cahoots.parsers.location  # NOQA
-import cahoots.parsers.measurement  # NOQA
-import cahoots.parsers.name  # NOQA
-import cahoots.parsers.number  # NOQA
-import cahoots.parsers.phone  # NOQA
-import cahoots.parsers.programming  # NOQA
-import cahoots.parsers.programming.bayesian  # NOQA
-import cahoots.parsers.programming.lexer  # NOQA
-import cahoots.parsers.uri  # NOQA
-import cahoots.result  # NOQA
-import cahoots.util  # NOQA
+import cahoots  # flake8: noqa
+import cahoots.parser  # flake8: noqa
+import cahoots.config  # flake8: noqa
+import cahoots.parsers.base  # flake8: noqa
+import cahoots.parsers.boolean  # flake8: noqa
+import cahoots.parsers.character  # flake8: noqa
+import cahoots.parsers.date  # flake8: noqa
+import cahoots.parsers.email  # flake8: noqa
+import cahoots.parsers.equation  # flake8: noqa
+import cahoots.parsers.location  # flake8: noqa
+import cahoots.parsers.measurement  # flake8: noqa
+import cahoots.parsers.name  # flake8: noqa
+import cahoots.parsers.number  # flake8: noqa
+import cahoots.parsers.phone  # flake8: noqa
+import cahoots.parsers.programming  # flake8: noqa
+import cahoots.parsers.programming.bayesian  # flake8: noqa
+import cahoots.parsers.programming.lexer  # flake8: noqa
+import cahoots.parsers.uri  # flake8: noqa
+import cahoots.result  # flake8: noqa
+import cahoots.util  # flake8: noqa
 
-from tests.unit.suites.util import *  # NOQA
-from tests.unit.suites.parser import *  # NOQA
-from tests.unit.suites.parsers.base import *  # NOQA
-from tests.unit.suites.parsers.boolean import *  # NOQA
-from tests.unit.suites.parsers.character import *  # NOQA
-from tests.unit.suites.parsers.date import *  # NOQA
-from tests.unit.suites.parsers.email import *  # NOQA
-from tests.unit.suites.parsers.equation import *  # NOQA
-from tests.unit.suites.parsers.location import *  # NOQA
-from tests.unit.suites.parsers.measurement import *  # NOQA
-from tests.unit.suites.parsers.name import *  # NOQA
-from tests.unit.suites.parsers.number import *  # NOQA
-from tests.unit.suites.parsers.phone import *  # NOQA
-from tests.unit.suites.parsers.programming import *  # NOQA
-from tests.unit.suites.parsers.programming.bayesian import *  # NOQA
-from tests.unit.suites.parsers.programming.lexer import *  # NOQA
-from tests.unit.suites.parsers.uri import *  # NOQA
+from tests.unit.suites.util import *  # flake8: noqa
+from tests.unit.suites.parser import *  # flake8: noqa
+from tests.unit.suites.parsers.base import *  # flake8: noqa
+from tests.unit.suites.parsers.boolean import *  # flake8: noqa
+from tests.unit.suites.parsers.character import *  # flake8: noqa
+from tests.unit.suites.parsers.date import *  # flake8: noqa
+from tests.unit.suites.parsers.email import *  # flake8: noqa
+from tests.unit.suites.parsers.equation import *  # flake8: noqa
+from tests.unit.suites.parsers.location import *  # flake8: noqa
+from tests.unit.suites.parsers.measurement import *  # flake8: noqa
+from tests.unit.suites.parsers.name import *  # flake8: noqa
+from tests.unit.suites.parsers.number import *  # flake8: noqa
+from tests.unit.suites.parsers.phone import *  # flake8: noqa
+from tests.unit.suites.parsers.programming import *  # flake8: noqa
+from tests.unit.suites.parsers.programming.bayesian import *  # flake8: noqa
+from tests.unit.suites.parsers.programming.lexer import *  # flake8: noqa
+from tests.unit.suites.parsers.uri import *  # flake8: noqa
