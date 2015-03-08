@@ -34,16 +34,16 @@ class CahootsTest(unittest.TestCase):
 
         top_result = self.parser.parse(data)['top']
         self.assertEqual(
-            top_result.Type,
+            top_result.type,
             expected_type,
             msg="Top result was {0} instead of expected result {1}"
-            .format(top_result.Type, expected_type)
+            .format(top_result.type, expected_type)
         )
         self.assertEqual(
-            top_result.Subtype,
+            top_result.subtype,
             expected_subtype,
             msg="Top result subtype was {0} instead of expected subtype {1}"
-            .format(top_result.Subtype, expected_subtype)
+            .format(top_result.subtype, expected_subtype)
         )
 
 

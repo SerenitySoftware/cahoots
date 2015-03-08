@@ -1,120 +1,135 @@
-from cahoots.util import isNumber
-from base import BaseParser
+"""
+The MIT License (MIT)
+
+Copyright (c) Serenity Software, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+# pylint: disable=eval-used
+# pylint: disable=unused-import
+from phonenumbers.phonenumberutil import NumberParseException
+from cahoots.parsers.programming import ProgrammingParser
+from cahoots.parsers.base import BaseParser
+from cahoots.util import is_number
 from phonenumbers import phonenumberutil
-from programming import ProgrammingParser
 import re
 import string
 import math  # NOQA
 
 
 class EquationParser(BaseParser):
-    """
-    cahoots.parsers.equation
-    parser to identify and solve some mathematical equations
-    """
+    """determines if given data is a mathematical equation"""
 
-    """
-    After we've processed the input string from the user,
-    this var will contain the assembled result
-    """
-    __parsedEquation = None
+    # After we've processed the input string from the user,
+    # this var will contain the assembled result
+    parsed_equation = None
 
     def __init__(self, config):
         BaseParser.__init__(self, config, "Equation", 100)
 
-    def isSimpleEquation(self, data):
-        """
-        Seeing if our string only has symbols found in simple math equations
-        """
+    def is_simple_equation(self, data):
+        """checking if only has symbols found in simple math equations"""
 
-        rgx = re.compile("""^
+        rgx = re.compile(r"""^
            ([()*.\-+0-9^/ ])*
            $""", re.VERBOSE)
 
         match = rgx.match(data)
 
         if match:
-            data = self.autoFloat(data)
-            self.__parsedEquation = self.autoMultiply(data)
+            data = self.auto_float(data)
+            self.parsed_equation = self.auto_multiply(data)
             return True
 
         return False
 
-    def isTextEquation(self, data):
-        """
-        Searching for specific textual markers that can
-        be converted into mathematical operators
-        """
+    def is_text_equation(self, data):
+        """Searching for specific textual markers that can be converted"""
 
         # SQUARE ROOTS
-        parsedData = re.compile(
-            'SQUARE[ ]{1,}ROOT[ ]{1,}OF[ ]{1,}\d+(\.\d+)?'
-        ).sub(self.__squareRootTextReplace, data)
+        parsed_data = re.compile(
+            r'SQUARE[ ]{1,}ROOT[ ]{1,}OF[ ]{1,}\d+(\.\d+)?'
+        ).sub(self.square_root_text_replace, data)
 
         # Simple Operators
-        parsedData = parsedData.replace('TIMES', '*')
-        parsedData = parsedData.replace('PLUS', '+')
-        parsedData = parsedData.replace('MINUS', '-')
-        parsedData = parsedData.replace('DIVIDED BY', '/')
-        parsedData = parsedData.replace('DIVIDEDBY', '/')
+        parsed_data = parsed_data.replace('TIMES', '*')
+        parsed_data = parsed_data.replace('PLUS', '+')
+        parsed_data = parsed_data.replace('MINUS', '-')
+        parsed_data = parsed_data.replace('DIVIDED BY', '/')
+        parsed_data = parsed_data.replace('DIVIDEDBY', '/')
 
         # Simple Powers
-        parsedData = re.compile(
+        parsed_data = re.compile(
             '[ ]{1,}SQUARED|[ ]{1,}CUBED'
-        ).sub(self.__simplePowerReplace, parsedData)
+        ).sub(self.simple_power_replace, parsed_data)
 
-        if parsedData != data:
-            parsedData = self.autoFloat(parsedData)
-            self.__parsedEquation = self.autoMultiply(parsedData)
+        if parsed_data != data:
+            parsed_data = self.auto_float(parsed_data)
+            self.parsed_equation = self.auto_multiply(parsed_data)
             return True
 
         return False
 
-    def __simplePowerReplace(self, match):
-        """
-        Converts "SQUARED" and "CUBED" to their proper exponent representation
-        """
+    @classmethod
+    def simple_power_replace(cls, match):
+        """Converts "SQUARED" and "CUBED" to their proper exponent form"""
 
-        myString = match.group()
+        my_string = match.group()
 
-        if (myString.find('SQUARED') != -1):
-            myString = '**2'
-        elif (myString.find('CUBED') != -1):
-            myString = '**3'
+        if my_string.find('SQUARED') != -1:
+            my_string = '**2'
+        elif my_string.find('CUBED') != -1:
+            my_string = '**3'
 
-        return myString
+        return my_string
 
-    def __squareRootTextReplace(self, match):
+    @classmethod
+    def square_root_text_replace(cls, match):
         """Replaces square root references with math.sqrt"""
 
-        myString = match.group().replace('SQUARE', '')
-        myString = myString.replace('ROOT', '')
-        myString = myString.replace('OF', '')
-        myString = myString.strip()
+        my_string = match.group().replace('SQUARE', '')
+        my_string = my_string.replace('ROOT', '')
+        my_string = my_string.replace('OF', '')
+        my_string = my_string.strip()
 
-        myString = 'math.sqrt('+myString+')'
+        my_string = 'math.sqrt('+my_string+')'
 
-        return myString
+        return my_string
 
-    def autoFloat(self, data):
-        """
-        Makes all digits/decimals into floats so we can do
-        proper math on them without auto-rounding
-        """
+    def auto_float(self, data):
+        """Makes all digits/decimals into floats to prevent auto-rounding"""
 
-        data = re.compile(r'\d+(\.\d+)?').sub(self.__floatReplace, data)
+        data = re.compile(r'\d+(\.\d+)?').sub(self.float_replace, data)
 
         return data
 
-    def __floatReplace(self, match):
+    @classmethod
+    def float_replace(cls, match):
         """
         This turns our numbers into floats before we eval the equation.
         This is because 4/5 comes out at 0, etc. Python is strongly typed...
         """
-        string = 'float('+match.group()+')'
-        return string
+        result = 'float('+match.group()+')'
+        return result
 
-    def autoMultiply(self, data):
+    @classmethod
+    def auto_multiply(cls, data):
         """
         Any back to back parens/floats can be assumed to be
         multiplication. Adding * operator between them
@@ -124,7 +139,8 @@ class EquationParser(BaseParser):
 
         return data
 
-    def checkForSafeEquationString(self, equation):
+    @classmethod
+    def check_for_safe_equation_string(cls, equation):
         """
         Checks to make sure that the equation
         doesn't contain any unexpected characters
@@ -135,31 +151,32 @@ class EquationParser(BaseParser):
         """
 
         # These are characters or strings that we can use in an equation
-        safeStrings = ['math.sqrt', 'float', '(', ')', '*', '+', '-', '/', '.']
+        safe_strings = \
+            ['math.sqrt', 'float', '(', ')', '*', '+', '-', '/', '.']
 
-        for ss in safeStrings:
-            equation = string.replace(equation, ss, '')
+        for safe_string in safe_strings:
+            equation = string.replace(equation, safe_string, '')
 
         for num in xrange(10):
             equation = string.replace(equation, str(num), '')
 
         equation = equation.strip()
 
-        return ('' == equation)
+        return '' == equation
 
-    def solveEquation(self, equation):
-        """Sanitizes and Evaulates the equation to see if it's solve-able"""
+    def solve_equation(self, equation):
+        """Sanitizes and Evaluates the equation to see if it's solve-able"""
 
-        if not self.checkForSafeEquationString(equation):
+        if not self.check_for_safe_equation_string(equation):
             return False
 
         try:
             return eval(equation.strip())
-        except:
+        except (SyntaxError, TypeError):
             self.confidence = 0
             return False
 
-    def calculateConfidence(self, data):
+    def calculate_confidence(self, data):
         """Calculates a confidence rating for this (possible) equation"""
         confidence = 100
 
@@ -167,19 +184,17 @@ class EquationParser(BaseParser):
         try:
             if len(data) <= 30 and len(data) >= 7:
                 phonenumberutil.parse(data, _check_region=False)
-                for char in [c for c in data if c in string.punctuation]:
+                for _ in [c for c in data if c in string.punctuation]:
                     confidence -= 10
-        except:
+        except NumberParseException:
             pass
 
-        """
-        We remove confidence for every token
-        shared with a programming language.
-        """
-        if (ProgrammingParser in self.Config.enabledModules):
-            progParser = ProgrammingParser(self.Config)
-            dataset = progParser.create_dataset(data)
-            for token in set(progParser.find_common_tokens(dataset)):
+        # We remove confidence for every token
+        # shared with a programming language.
+        if ProgrammingParser in self.config.enabledModules:
+            prog_parser = ProgrammingParser(self.config)
+            dataset = prog_parser.create_dataset(data)
+            for _ in set(prog_parser.find_common_tokens(dataset)):
                 confidence -= 5
 
         return confidence
@@ -191,37 +206,33 @@ class EquationParser(BaseParser):
         """
 
         # if we just have a number, we know this isn't an equation
-        if isNumber(data):
+        if is_number(data):
             return
 
         # Doing some initial data cleanup
-        cleanData = string.replace(data.upper(), 'X', '*')
-        cleanData = string.replace(cleanData, '^', '**')
-        cleanData = string.replace(cleanData, 'THE', '')
-        cleanData = cleanData.strip()
+        clean_data = string.replace(data.upper(), 'X', '*')
+        clean_data = string.replace(clean_data, '^', '**')
+        clean_data = string.replace(clean_data, 'THE', '')
+        clean_data = clean_data.strip()
 
-        if len(cleanData) == 0:
+        if len(clean_data) == 0:
             return
 
-        """
-        We start with 100% confidence, and
-        then lower our confidence if needed.
-        """
-        if self.isSimpleEquation(cleanData):
-            resultType = "Simple"
-        elif self.isTextEquation(cleanData):
-            resultType = "Text"
+        # We start with 100% confidence, and
+        # then lower our confidence if needed.
+        if self.is_simple_equation(clean_data):
+            result_type = "Simple"
+        elif self.is_text_equation(clean_data):
+            result_type = "Text"
         else:
             return
 
-        """
-        If the equation proves to be solveable, we
-        calculate a confidence and report success
-        """
-        calculated = self.solveEquation(self.__parsedEquation)
+        # If the equation proves to be solveable, we
+        # calculate a confidence and report success
+        calculated = self.solve_equation(self.parsed_equation)
         if calculated:
             yield self.result(
-                resultType,
-                self.calculateConfidence(data),
+                result_type,
+                self.calculate_confidence(data),
                 calculated
             )

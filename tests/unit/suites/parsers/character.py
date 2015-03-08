@@ -14,26 +14,26 @@ class CharacterParserTests(unittest.TestCase):
     def tearDown(self):
         self.cp = None
 
-    def test_isLetter(self):
-        self.assertTrue(self.cp.isLetter("a"))
-        self.assertFalse(self.cp.isLetter("1"))
-        self.assertFalse(self.cp.isLetter("."))
-        self.assertFalse(self.cp.isLetter(" "))
-        self.assertFalse(self.cp.isLetter("asdf"))
+    def test_is_letter(self):
+        self.assertTrue(self.cp.is_letter("a"))
+        self.assertFalse(self.cp.is_letter("1"))
+        self.assertFalse(self.cp.is_letter("."))
+        self.assertFalse(self.cp.is_letter(" "))
+        self.assertFalse(self.cp.is_letter("asdf"))
 
-    def test_isPunctuation(self):
-        self.assertTrue(self.cp.isPunctuation("."))
-        self.assertFalse(self.cp.isPunctuation("1"))
-        self.assertFalse(self.cp.isPunctuation("a"))
-        self.assertFalse(self.cp.isPunctuation(" "))
-        self.assertFalse(self.cp.isPunctuation("asdf"))
+    def test_is_punctuation(self):
+        self.assertTrue(self.cp.is_punctuation("."))
+        self.assertFalse(self.cp.is_punctuation("1"))
+        self.assertFalse(self.cp.is_punctuation("a"))
+        self.assertFalse(self.cp.is_punctuation(" "))
+        self.assertFalse(self.cp.is_punctuation("asdf"))
 
-    def test_isWhitespace(self):
-        self.assertTrue(self.cp.isWhitespace(" "))
-        self.assertFalse(self.cp.isWhitespace("1"))
-        self.assertFalse(self.cp.isWhitespace("a"))
-        self.assertFalse(self.cp.isWhitespace("."))
-        self.assertFalse(self.cp.isWhitespace("asdf"))
+    def test_is_whitespace(self):
+        self.assertTrue(self.cp.is_whitespace(" "))
+        self.assertFalse(self.cp.is_whitespace("1"))
+        self.assertFalse(self.cp.is_whitespace("a"))
+        self.assertFalse(self.cp.is_whitespace("."))
+        self.assertFalse(self.cp.is_whitespace("asdf"))
 
     def test_parseReturnsNothingWithStringLongerThanOneCharacter(self):
         count = 0
@@ -51,8 +51,8 @@ class CharacterParserTests(unittest.TestCase):
         count = 0
         for result in self.cp.parse('a'):
             count += 1
-            self.assertEqual(result.Subtype, 'Letter')
-            self.assertEqual(result.Data, {'char-code': 97})
+            self.assertEqual(result.subtype, 'Letter')
+            self.assertEqual(result.data, {'char-code': 97})
             self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
@@ -60,8 +60,8 @@ class CharacterParserTests(unittest.TestCase):
         count = 0
         for result in self.cp.parse('.'):
             count += 1
-            self.assertEqual(result.Subtype, 'Punctuation')
-            self.assertEqual(result.Data, {'char-code': 46})
+            self.assertEqual(result.subtype, 'Punctuation')
+            self.assertEqual(result.data, {'char-code': 46})
             self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
@@ -69,8 +69,8 @@ class CharacterParserTests(unittest.TestCase):
         count = 0
         for result in self.cp.parse(' '):
             count += 1
-            self.assertEqual(result.Subtype, 'Whitespace')
-            self.assertEqual(result.Data, {'char-code': 32})
+            self.assertEqual(result.subtype, 'Whitespace')
+            self.assertEqual(result.data, {'char-code': 32})
             self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
@@ -78,7 +78,7 @@ class CharacterParserTests(unittest.TestCase):
         count = 0
         for result in self.cp.parse('t'):
             count += 1
-            self.assertEqual(result.Subtype, 'Letter')
-            self.assertEqual(result.Data, {'char-code': 116})
+            self.assertEqual(result.subtype, 'Letter')
+            self.assertEqual(result.data, {'char-code': 116})
             self.assertEqual(result.confidence, 25)
         self.assertEqual(count, 1)

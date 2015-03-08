@@ -41,7 +41,7 @@ class URIParserTests(unittest.TestCase):
         count = 0
         for result in self.up.parse('192.168.0.1'):
             self.assertEqual(result.confidence, 95)
-            self.assertEqual(result.Subtype, 'IP Address (v4)')
+            self.assertEqual(result.subtype, 'IP Address (v4)')
             count += 1
         self.assertEqual(count, 1)
 
@@ -49,7 +49,7 @@ class URIParserTests(unittest.TestCase):
         count = 0
         for result in self.up.parse('2607:f0d0:1002:51::4'):
             self.assertEqual(result.confidence, 100)
-            self.assertEqual(result.Subtype, 'IP Address (v6)')
+            self.assertEqual(result.subtype, 'IP Address (v6)')
             count += 1
         self.assertEqual(count, 1)
 
@@ -57,7 +57,7 @@ class URIParserTests(unittest.TestCase):
         count = 0
         for result in self.up.parse('http://www.google.com/'):
             self.assertEqual(result.confidence, 100)
-            self.assertEqual(result.Subtype, 'URL')
+            self.assertEqual(result.subtype, 'URL')
             count += 1
         self.assertEqual(count, 1)
 
@@ -65,6 +65,6 @@ class URIParserTests(unittest.TestCase):
         count = 0
         for result in self.up.parse('www.google.com/'):
             self.assertEqual(result.confidence, 75)
-            self.assertEqual(result.Subtype, 'URL')
+            self.assertEqual(result.subtype, 'URL')
             count += 1
         self.assertEqual(count, 1)

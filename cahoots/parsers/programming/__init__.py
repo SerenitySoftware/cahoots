@@ -188,6 +188,6 @@ class ProgrammingParser(BaseParser):
         scores = self.normalize_scores(data, lex_languages, bayes_languages)
 
         for lang_id, confidence in scores.items():
-            yield ParseResult(self.Type,
+            yield ParseResult(self.type,
                               self.language_keywords[lang_id]['name'],
                               confidence)

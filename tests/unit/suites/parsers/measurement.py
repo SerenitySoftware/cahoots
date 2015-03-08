@@ -129,7 +129,7 @@ class MeasurementParserTests(unittest.TestCase):
         count = 0
         for result in self.mp.parse('inches'):
             self.assertEqual(result.confidence, 50)
-            self.assertEqual(result.Subtype, 'Imperial Length')
+            self.assertEqual(result.subtype, 'Imperial Length')
             count += 1
         self.assertEqual(count, 1)
 
@@ -155,7 +155,7 @@ class MeasurementParserTests(unittest.TestCase):
         count = 0
         for result in self.mp.parse('4 inches'):
             self.assertEqual(result.confidence, 100)
-            self.assertEqual(result.Subtype, 'Imperial Length')
+            self.assertEqual(result.subtype, 'Imperial Length')
             count += 1
         self.assertEqual(count, 1)
 
@@ -163,7 +163,7 @@ class MeasurementParserTests(unittest.TestCase):
         count = 0
         for result in self.mp.parse('snarf inches'):
             self.assertEqual(result.confidence, 31)
-            self.assertEqual(result.Subtype, 'Imperial Length')
+            self.assertEqual(result.subtype, 'Imperial Length')
             count += 1
         self.assertEqual(count, 1)
 
@@ -171,7 +171,7 @@ class MeasurementParserTests(unittest.TestCase):
         count = 0
         for result in self.mp.parse('4 inches 50 liters'):
             self.assertEqual(result.confidence, 34)
-            self.assertEqual(result.Subtype, 'Imperial Length, Metric Volume')
+            self.assertEqual(result.subtype, 'Imperial Length, Metric Volume')
             count += 1
         self.assertEqual(count, 1)
 

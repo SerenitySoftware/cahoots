@@ -84,8 +84,8 @@ class NumberParserTests(unittest.TestCase):
         count = 0
         for result in self.np.parse('1/2'):
             count += 1
-            self.assertEqual(result.Subtype, 'Fraction')
-            self.assertEqual(result.ResultValue, '1/2')
+            self.assertEqual(result.subtype, 'Fraction')
+            self.assertEqual(result.result_value, '1/2')
             self.assertEqual(result.confidence, 94)
         self.assertEqual(count, 1)
 
@@ -93,15 +93,15 @@ class NumberParserTests(unittest.TestCase):
         return False
 
     @mock.patch(
-        'cahoots.parsers.equation.EquationParser.solveEquation',
+        'cahoots.parsers.equation.EquationParser.solve_equation',
         mock_returnsFalse
     )
     def test_parseWithNonSolveableFractionYieldsProperResult(self):
         count = 0
         for result in self.np.parse('1/2'):
             count += 1
-            self.assertEqual(result.Subtype, 'Fraction')
-            self.assertEqual(result.ResultValue, '1/2')
+            self.assertEqual(result.subtype, 'Fraction')
+            self.assertEqual(result.result_value, '1/2')
             self.assertEqual(result.confidence, 54)
         self.assertEqual(count, 1)
 
@@ -111,8 +111,8 @@ class NumberParserTests(unittest.TestCase):
                 '0110100001100101011011000110110001101111'
         ):
             count += 1
-            self.assertEqual(result.Subtype, 'Binary')
-            self.assertEqual(result.ResultValue, 'hello')
+            self.assertEqual(result.subtype, 'Binary')
+            self.assertEqual(result.result_value, 'hello')
             self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
@@ -120,8 +120,8 @@ class NumberParserTests(unittest.TestCase):
         count = 0
         for result in self.np.parse('123456789'):
             count += 1
-            self.assertEqual(result.Subtype, 'Integer')
-            self.assertEqual(result.ResultValue, 123456789)
+            self.assertEqual(result.subtype, 'Integer')
+            self.assertEqual(result.result_value, 123456789)
             self.assertEqual(result.confidence, 65)
         self.assertEqual(count, 1)
 
@@ -130,12 +130,12 @@ class NumberParserTests(unittest.TestCase):
         for result in self.np.parse('2345'):
             count += 1
             if count == 1:
-                self.assertEqual(result.Subtype, 'Integer')
-                self.assertEqual(result.ResultValue, 2345)
+                self.assertEqual(result.subtype, 'Integer')
+                self.assertEqual(result.result_value, 2345)
                 self.assertEqual(result.confidence, 75)
             if count == 2:
-                self.assertEqual(result.Subtype, 'Octal')
-                self.assertEqual(result.ResultValue, 1253)
+                self.assertEqual(result.subtype, 'Octal')
+                self.assertEqual(result.result_value, 1253)
                 self.assertEqual(result.confidence, 25)
         self.assertEqual(count, 2)
 
@@ -143,8 +143,8 @@ class NumberParserTests(unittest.TestCase):
         count = 0
         for result in self.np.parse('35.75'):
             count += 1
-            self.assertEqual(result.Subtype, 'Decimal')
-            self.assertEqual(result.ResultValue, 35.75)
+            self.assertEqual(result.subtype, 'Decimal')
+            self.assertEqual(result.result_value, 35.75)
             self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
@@ -152,8 +152,8 @@ class NumberParserTests(unittest.TestCase):
         count = 0
         for result in self.np.parse('0xDEADBEEF'):
             count += 1
-            self.assertEqual(result.Subtype, 'Hexadecimal')
-            self.assertEqual(result.ResultValue, 3735928559)
+            self.assertEqual(result.subtype, 'Hexadecimal')
+            self.assertEqual(result.result_value, 3735928559)
             self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
@@ -161,8 +161,8 @@ class NumberParserTests(unittest.TestCase):
         count = 0
         for result in self.np.parse('MMDCXLVI'):
             count += 1
-            self.assertEqual(result.Subtype, 'Roman Numeral')
-            self.assertEqual(result.ResultValue, 2646)
+            self.assertEqual(result.subtype, 'Roman Numeral')
+            self.assertEqual(result.result_value, 2646)
             self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
@@ -170,7 +170,7 @@ class NumberParserTests(unittest.TestCase):
         count = 0
         for result in self.np.parse('Five Thousand'):
             count += 1
-            self.assertEqual(result.Subtype, 'Word Number')
-            self.assertEqual(result.ResultValue, 5000)
+            self.assertEqual(result.subtype, 'Word Number')
+            self.assertEqual(result.result_value, 5000)
             self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)

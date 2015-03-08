@@ -24,8 +24,8 @@ class CahootsWSGI(object):
 
     def configure_templating(self):
         self.templateLookup = TemplateLookup(
-            directories=self.parser.Config.template['lookups'],
-            module_directory=self.parser.Config.template['modules']
+            directories=self.parser.config.template['lookups'],
+            module_directory=self.parser.config.template['modules']
         )
 
     def render(self, template, **context):
@@ -90,5 +90,5 @@ if __name__ == "__main__":
     app.run(
         host="0.0.0.0",
         port=int(os.environ.get('PORT', 8000)),
-        debug=parser.Config.debug
+        debug=parser.config.debug
     )

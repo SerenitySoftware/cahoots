@@ -272,8 +272,8 @@ class NumberParser(BaseParser):
             for whitespace_section in whitespace_split:
                 test = whitespace_section.strip()
                 if (
-                    self.is_fraction(test) == (False, 0) and
-                    self.is_integer(test) == (False, 0)
+                        self.is_fraction(test) == (False, 0) and
+                        self.is_integer(test) == (False, 0)
                 ):
                     return False, 0
 
@@ -281,8 +281,8 @@ class NumberParser(BaseParser):
             for split_section in fraction_split:
                 test = split_section.strip()
                 if (
-                    len(test) == 0 or
-                    self.is_integer(split_section.strip()) == (False, 0)
+                        len(test) == 0 or
+                        self.is_integer(split_section.strip()) == (False, 0)
                 ):
                     return False, 0
 
@@ -315,9 +315,9 @@ class NumberParser(BaseParser):
             # if the fraction isn't solve-able, we lower the confidence
             # significantly it might "technically" be a fraction made up
             # of roman numerals, etc.
-            if EquationParser in self.Config.enabledModules:
-                eqp = EquationParser(self.Config)
-                if not eqp.solveEquation(eqp.autoFloat(data)):
+            if EquationParser in self.config.enabledModules:
+                eqp = EquationParser(self.config)
+                if not eqp.solve_equation(eqp.auto_float(data)):
                     fraction_confidence -= 40
 
             yield self.result("Fraction", fraction_confidence, value)
@@ -334,9 +334,9 @@ class NumberParser(BaseParser):
             octal_confidence = 25
 
             # 10 point confidence penalty if int is also a phone number
-            if PhoneParser in self.Config.enabledModules:
-                PhoneParser.bootstrap(self.Config)
-                phone_parser = PhoneParser(self.Config)
+            if PhoneParser in self.config.enabledModules:
+                PhoneParser.bootstrap(self.config)
+                phone_parser = PhoneParser(self.config)
                 for _ in phone_parser.parse(data):
                     integer_confidence -= 10
 

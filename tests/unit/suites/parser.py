@@ -45,10 +45,10 @@ class parserThreadTests(unittest.TestCase):
 
         for result in self.parserThread.results:
             self.assertIsInstance(result, ParseResult)
-            self.assertEqual('Fake', result.Type)
-            self.assertEqual('Subtype', result.Subtype)
+            self.assertEqual('Fake', result.type)
+            self.assertEqual('Subtype', result.subtype)
             self.assertEqual(200, result.confidence)
-            self.assertEqual('data_string', result.ResultValue)
+            self.assertEqual('data_string', result.result_value)
 
 
 class FakeDate(datetime.datetime):
@@ -65,11 +65,11 @@ class CahootsParserTests(unittest.TestCase):
 
     def test_parserCreatesInstanceOfBaseConfig(self):
         parser = CahootsParser(bootstrap=False)
-        self.assertIsInstance(parser.Config, BaseConfig)
+        self.assertIsInstance(parser.config, BaseConfig)
 
     def test_parserInstantiatesBaseConfig(self):
         parser = CahootsParser(BaseConfig(), False)
-        self.assertIsInstance(parser.Config, BaseConfig)
+        self.assertIsInstance(parser.config, BaseConfig)
 
     @mock.patch('datetime.datetime', FakeDate)
     def test_parserReturnsExpectedParserResult(self):

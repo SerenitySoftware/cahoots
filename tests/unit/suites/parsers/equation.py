@@ -16,72 +16,72 @@ class EquationParserTests(unittest.TestCase):
     def tearDown(self):
         self.ep = None
 
-    def test_isSimpleEquation(self):
+    def test_is_simple_equation(self):
 
-        self.assertTrue(self.ep.isSimpleEquation("5 * 5"))
-        self.assertTrue(self.ep.isSimpleEquation("5(2**5"))
-        self.assertTrue(self.ep.isSimpleEquation("5/4"))
+        self.assertTrue(self.ep.is_simple_equation("5 * 5"))
+        self.assertTrue(self.ep.is_simple_equation("5(2**5"))
+        self.assertTrue(self.ep.is_simple_equation("5/4"))
 
-        self.assertFalse(self.ep.isSimpleEquation("5 x 5"))
-        self.assertFalse(self.ep.isSimpleEquation("3 DIVIDED BY 7"))
-        self.assertFalse(self.ep.isSimpleEquation("3 TIMES 7"))
+        self.assertFalse(self.ep.is_simple_equation("5 x 5"))
+        self.assertFalse(self.ep.is_simple_equation("3 DIVIDED BY 7"))
+        self.assertFalse(self.ep.is_simple_equation("3 TIMES 7"))
 
-    def test_isTextEquation(self):
+    def test_is_text_equation(self):
 
-        self.assertTrue(self.ep.isTextEquation("3 TIMES 7"))
-        self.assertTrue(self.ep.isTextEquation("3 DIVIDED BY 7"))
-        self.assertTrue(self.ep.isTextEquation("3 DIVIDEDBY 7"))
-        self.assertTrue(self.ep.isTextEquation("3 PLUS 7"))
-        self.assertTrue(self.ep.isTextEquation("3 MINUS 7"))
-        self.assertTrue(self.ep.isTextEquation("3 SQUARED"))
-        self.assertTrue(self.ep.isTextEquation("3 CUBED"))
-        self.assertTrue(self.ep.isTextEquation("SQUARE ROOT OF 3"))
+        self.assertTrue(self.ep.is_text_equation("3 TIMES 7"))
+        self.assertTrue(self.ep.is_text_equation("3 DIVIDED BY 7"))
+        self.assertTrue(self.ep.is_text_equation("3 DIVIDEDBY 7"))
+        self.assertTrue(self.ep.is_text_equation("3 PLUS 7"))
+        self.assertTrue(self.ep.is_text_equation("3 MINUS 7"))
+        self.assertTrue(self.ep.is_text_equation("3 SQUARED"))
+        self.assertTrue(self.ep.is_text_equation("3 CUBED"))
+        self.assertTrue(self.ep.is_text_equation("SQUARE ROOT OF 3"))
 
-        self.assertFalse(self.ep.isTextEquation("3 quadrided 7"))
-        self.assertFalse(self.ep.isTextEquation("yo momma"))
-        self.assertFalse(self.ep.isTextEquation("5 X 7"))
+        self.assertFalse(self.ep.is_text_equation("3 quadrided 7"))
+        self.assertFalse(self.ep.is_text_equation("yo momma"))
+        self.assertFalse(self.ep.is_text_equation("5 X 7"))
 
-    def test_autoFloat(self):
+    def test_auto_float(self):
 
-        self.assertEqual(self.ep.autoFloat("123.123"), "float(123.123)")
-        self.assertEqual(self.ep.autoFloat("123"), "float(123)")
+        self.assertEqual(self.ep.auto_float("123.123"), "float(123.123)")
+        self.assertEqual(self.ep.auto_float("123"), "float(123)")
 
-    def test_autoMultiply(self):
+    def test_auto_multiply(self):
 
         self.assertEqual(
-            self.ep.autoMultiply("float(123.123)float(123.123)"),
+            self.ep.auto_multiply("float(123.123)float(123.123)"),
             "float(123.123)*float(123.123)"
         )
         self.assertEqual(
-            self.ep.autoMultiply("float(123.123)(float(47))"),
+            self.ep.auto_multiply("float(123.123)(float(47))"),
             "float(123.123)*(float(47))"
         )
 
-    def test_checkForSafeEquationString(self):
+    def test_check_for_safe_equation_string(self):
 
-        self.assertTrue(self.ep.checkForSafeEquationString(
+        self.assertTrue(self.ep.check_for_safe_equation_string(
             " math.sqrt float ( ) * + - / . 1 2 3 4 5 6 7 8 9 0 "
         ))
 
-        self.assertFalse(self.ep.checkForSafeEquationString(
+        self.assertFalse(self.ep.check_for_safe_equation_string(
             " foo math.sqrt float ( ) * + - / . 1 2 3 4 5 6 7 8 9 0 "
         ))
 
-    def test_solveEquation(self):
+    def test_solve_equation(self):
 
-        self.assertEqual(self.ep.solveEquation("float(5) * float(5)"), 25.0)
-        self.assertFalse(self.ep.solveEquation("asdf * float(5)"))
-        self.assertFalse(self.ep.solveEquation("math.sqrt * float(5)"))
+        self.assertEqual(self.ep.solve_equation("float(5) * float(5)"), 25.0)
+        self.assertFalse(self.ep.solve_equation("asdf * float(5)"))
+        self.assertFalse(self.ep.solve_equation("math.sqrt * float(5)"))
 
-    def test_calculateConfidence(self):
-        self.assertEqual(self.ep.calculateConfidence("979-549-5150"), 80)
-        self.assertEqual(self.ep.calculateConfidence("1-979-549-5150"), 70)
+    def test_calculate_confidence(self):
+        self.assertEqual(self.ep.calculate_confidence("979-549-5150"), 80)
+        self.assertEqual(self.ep.calculate_confidence("1-979-549-5150"), 70)
         self.assertEqual(
-            self.ep.calculateConfidence("the square root of 1234"),
+            self.ep.calculate_confidence("the square root of 1234"),
             100
         )
         self.assertEqual(
-            self.ep.calculateConfidence("Rain in spain is plain."),
+            self.ep.calculate_confidence("Rain in spain is plain."),
             100
         )
 
@@ -96,9 +96,9 @@ class EquationParserTests(unittest.TestCase):
         'cahoots.parsers.programming.ProgrammingParser.find_common_tokens',
         mock_ProgrammingParserSet
     )
-    def test_calculateConfidenceWithProgrammingParserLowersConfidence(self):
+    def test_calculate_confidenceWithProgrammingParserLowersConfidence(self):
         TestConfig.enabledModules.append(ProgrammingParser)
-        self.assertEqual(self.ep.calculateConfidence("979-549-5150"), 70)
+        self.assertEqual(self.ep.calculate_confidence("979-549-5150"), 70)
         TestConfig.enabledModules.remove(ProgrammingParser)
 
     def test_parseSimpleNumberYieldsNothing(self):
@@ -117,8 +117,8 @@ class EquationParserTests(unittest.TestCase):
         count = 0
         for result in self.ep.parse('5 * 5'):
             count += 1
-            self.assertEqual(result.Subtype, 'Simple')
-            self.assertEqual(result.ResultValue, 25)
+            self.assertEqual(result.subtype, 'Simple')
+            self.assertEqual(result.result_value, 25)
             self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
@@ -126,8 +126,8 @@ class EquationParserTests(unittest.TestCase):
         count = 0
         for result in self.ep.parse('3 TIMES 5'):
             count += 1
-            self.assertEqual(result.Subtype, 'Text')
-            self.assertEqual(result.ResultValue, 15)
+            self.assertEqual(result.subtype, 'Text')
+            self.assertEqual(result.result_value, 15)
             self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 

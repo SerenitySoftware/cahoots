@@ -1,7 +1,31 @@
-from base import BaseParser
+"""
+The MIT License (MIT)
+
+Copyright (c) Serenity Software, LLC
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+from cahoots.parsers.base import BaseParser
 
 
 class BooleanParser(BaseParser):
+    '''Determines if given data is a boolean value'''
 
     strongTrue = ["true", "yes"]
     mediumTrue = ["yep", "yup"]
@@ -14,7 +38,7 @@ class BooleanParser(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Boolean")
 
-    def isTrue(self, data):
+    def is_true(self, data):
         """Checks if a value is true"""
         if data in self.strongTrue:
             return 100
@@ -24,7 +48,7 @@ class BooleanParser(BaseParser):
             return 50
         return 0
 
-    def isFalse(self, data):
+    def is_false(self, data):
         """Checks if a value is false"""
         if data in self.strongFalse:
             return 100
@@ -42,11 +66,11 @@ class BooleanParser(BaseParser):
             return
 
         # Testing for true
-        confidence = self.isTrue(data)
+        confidence = self.is_true(data)
         if confidence:
             yield self.result("True", confidence, True)
 
         # Testing for false
-        confidence = self.isFalse(data)
+        confidence = self.is_false(data)
         if confidence:
             yield self.result("False", confidence, False)

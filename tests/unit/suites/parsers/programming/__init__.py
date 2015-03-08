@@ -126,7 +126,7 @@ class ProgrammingParserTests(unittest.TestCase):
         self.assertEqual(5, len(results))
 
         for result in results:
-            self.assertIn(result.Subtype, expectedTypes)
+            self.assertIn(result.subtype, expectedTypes)
 
         self.bigSpreadClassifyMock.assert_called_once_with('with cout echo')
 
@@ -156,6 +156,6 @@ class ProgrammingParserTests(unittest.TestCase):
         self.assertEqual(5, len(results))
 
         for result in results:
-            self.assertIn(result.Subtype, expectedTypes)
+            self.assertIn(result.subtype, expectedTypes)
 
         self.smallSpreadClassifyMock.assert_called_once_with('with cout echo')

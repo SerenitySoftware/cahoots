@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from cahoots.parsers.base import BaseParser
-from cahoots.util import isNumber
+from cahoots.util import is_number
 from SereneRegistry import registry
 import os
 import glob
@@ -137,7 +137,7 @@ class MeasurementParser(BaseParser):
                 self.confidence = self.confidence * 0.75
 
         # if all we have left is a number, it helps our case a lot.
-        if isNumber(data):
+        if is_number(data):
             self.confidence += 50
         else:
             # our penalty for extra words is 25% of
@@ -149,7 +149,7 @@ class MeasurementParser(BaseParser):
             data = data.split()
             for i in data:
                 # if we found a number, we dont penalize for that
-                if not isNumber(i) and i not in string.punctuation:
+                if not is_number(i) and i not in string.punctuation:
                     self.confidence -= extra_word_penalty
 
                 # if we hit less than 2% confidence, we just fail.
