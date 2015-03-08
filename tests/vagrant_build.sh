@@ -23,6 +23,6 @@ echo "Exit Code:" $?
 echo
 echo "Step 4: Executing pylint Tests"
 echo
-pylint cahoots
+pylint cahoots tests web
 echo "Exit Code:" $?
 echo
