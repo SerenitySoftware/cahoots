@@ -1,15 +1,18 @@
 language: python
+cache: apt
 python:
   - "2.7"
-before_install:
-  - wget http://download.logilab.org/production/logilab-dists-key.asc
-  - sudo apt-key add logilab-dists-key.asc
-  - sudo add-apt-repository "deb http://download.logilab.org/production precise/"
-  - sudo apt-get update
 install:
-  - sudo apt-get install -y --force-yes pylint
   - pip install -r setup/requirements.txt
   - pip install -r setup/requirements.dev.txt
+  - wget https://pypi.python.org/packages/source/p/pylint/pylint-1.4.1.tar.gz
+  - tar -xvf pylint-1.4.1.tar.gz
+  - cd pylint-1.4.1
+  - sudo python setup.py install
+  - cd ..
+  - sudo rm -rf pylint-1.4.1
+  - rm -f pylint-1.4.1.tar.gz
+
 script:
   - nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 100
   - flake8 cahoots tests web

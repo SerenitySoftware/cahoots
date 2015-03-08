@@ -9,10 +9,6 @@ echo " "
 
 
 echo "Step 1: Adding APT Repositories and Updating APT"
-wget http://download.logilab.org/production/logilab-dists-key.asc
-apt-key add logilab-dists-key.asc
-rm logilab-dists-key.asc
-add-apt-repository "deb http://download.logilab.org/production precise/"
 apt-get update > /dev/null
 
 echo "Step 2: Upgrading Base System Packages"
@@ -26,6 +22,13 @@ pip install -r setup/requirements.txt > /dev/null
 
 echo "Step 5: Installing Development Python Packages"
 pip install -r setup/requirements.dev.txt > /dev/null
+wget https://pypi.python.org/packages/source/p/pylint/pylint-1.4.1.tar.gz
+tar -xvf pylint-1.4.1.tar.gz
+cd pylint-1.4.1
+python setup.py install
+cd ..
+rm -rf pylint-1.4.1
+rm -f pylint-1.4.1.tar.gz
 
 echo "Step 6: Moving files around"
 echo 'cd /vagrant' >> /home/vagrant/.bashrc
