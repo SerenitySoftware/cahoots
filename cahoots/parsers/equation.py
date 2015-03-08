@@ -30,7 +30,7 @@ from cahoots.util import is_number
 from phonenumbers import phonenumberutil
 import re
 import string
-import math  # NOQA
+import math  # flake8: noqa
 
 
 class EquationParser(BaseParser):

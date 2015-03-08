@@ -13,5 +13,5 @@ install:
 
 script:
   - nosetests tests/unit/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 100
-  - flake8 cahoots tests web
+  - flake8 cahoots tests web --benchmark
   - pylint cahoots tests web
