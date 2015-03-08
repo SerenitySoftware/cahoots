@@ -9,6 +9,9 @@ echo " "
 
 
 echo "Step 1: Adding APT Repositories and Updating APT"
+wget http://download.logilab.org/production/logilab-dists-key.asc
+apt-key add logilab-dists-key.asc
+rm logilab-dists-key.asc
 add-apt-repository "deb http://download.logilab.org/production precise/"
 apt-get update > /dev/null
 

@@ -2,6 +2,8 @@ language: python
 python:
   - "2.7"
 before_install:
+  - wget http://download.logilab.org/production/logilab-dists-key.asc
+  - apt-key add logilab-dists-key.asc
   - sudo add-apt-repository "deb http://download.logilab.org/production precise/"
   - sudo apt-get update
 install:
