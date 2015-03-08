@@ -3,6 +3,8 @@ cache: apt
 python:
   - "2.7"
 install:
+  - sudo pip install -r setup/requirements.txt
+  - sudo pip install -r setup/requirements.dev.txt
   - pip install -r setup/requirements.txt
   - pip install -r setup/requirements.dev.txt
   - wget https://pypi.python.org/packages/source/p/pylint/pylint-1.4.1.tar.gz
