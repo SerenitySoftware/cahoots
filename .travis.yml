@@ -16,3 +16,4 @@ script:
   - flake8 cahoots tests web
   - pylint --version
   - pylint cahoots
+  - pwd
