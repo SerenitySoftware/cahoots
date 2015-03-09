@@ -17,7 +17,7 @@ echo
 echo
 echo " [Cahoots] Step 3: Executing pep8 and pyflakes Tests (flake8)."
 echo
-flake8 cahoots tests web --benchmark
+flake8 cahoots tests web
 echo "Exit Code:" $?
 
 echo

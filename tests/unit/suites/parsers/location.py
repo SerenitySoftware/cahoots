@@ -24,7 +24,26 @@ SOFTWARE.
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.location import LocationParser
 from tests.unit.config import TestConfig
+from SereneRegistry import registry
 import unittest
+import mock
+
+
+class ZipCodeDatabaseMock(object):
+
+    def __getitem__(self, data):
+        result = registry.get('LPTest')
+
+        if isinstance(result, IndexError):
+            raise result
+
+        return result
+
+
+class ZipCodeStub(object):
+
+    def __init__(self, loc):
+        self.loc = loc
 
 
 class LocationParserTests(unittest.TestCase):
@@ -32,13 +51,48 @@ class LocationParserTests(unittest.TestCase):
 
     lp = None
 
+    @mock.patch('pyzipcode.ZipCodeDatabase', ZipCodeDatabaseMock)
     def setUp(self):
         LocationParser.bootstrap(TestConfig())
         self.lp = LocationParser(TestConfig())
 
     def tearDown(self):
+        registry.flush()
         self.lp = None
 
-    def test_parseYieldsNothing(self):
-        result = self.lp.parse('')
-        self.assertIsNone(result)
+    def test_parseWithNonZipYieldsNothing(self):
+        result = self.lp.parse('abc123')
+        count = 0
+        for _ in result:
+            count += 1
+        self.assertEqual(0, count)
+
+    def test_parseWith5DigitNonZipYieldsNothing(self):
+        registry.set('LPTest', IndexError())
+        result = self.lp.parse('00000')
+        count = 0
+        for _ in result:
+            count += 1
+        self.assertEqual(0, count)
+
+    def test_parseWith5DigitZipYieldsExpectedResult(self):
+        registry.set('LPTest', ZipCodeStub('beverlyhills'))
+        results = self.lp.parse('90210')
+        count = 0
+        for result in results:
+            count += 1
+            self.assertEqual(result.subtype, 'Zip Code')
+            self.assertEqual(result.result_value, {'loc': 'beverlyhills'})
+            self.assertEqual(result.confidence, 100)
+        self.assertEqual(1, count)
+
+    def test_parseWith10DigitZipYieldsExpectedResult(self):
+        registry.set('LPTest', ZipCodeStub('beverlyhills'))
+        results = self.lp.parse('90210-1210')
+        count = 0
+        for result in results:
+            count += 1
+            self.assertEqual(result.subtype, 'Zip Code')
+            self.assertEqual(result.result_value, {'loc': 'beverlyhills'})
+            self.assertEqual(result.confidence, 90)
+        self.assertEqual(1, count)

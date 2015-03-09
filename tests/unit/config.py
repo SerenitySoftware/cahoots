@@ -23,10 +23,9 @@ SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 import cahoots
-from cahoots.config import BaseConfig
 
 
-class TestConfig(BaseConfig):
+class TestConfig(cahoots.config.BaseConfig):
 
     enabledModules = [
         cahoots.parsers.name.NameParser,
@@ -38,7 +37,7 @@ class TestConfig(BaseConfig):
         cahoots.parsers.uri.URIParser,
         cahoots.parsers.email.EmailParser,
         # programming.ProgrammingParser,
-        # location.LocationParser,
+        cahoots.parsers.location.LocationParser,
         cahoots.parsers.equation.EquationParser,
         cahoots.parsers.measurement.MeasurementParser,
     ]

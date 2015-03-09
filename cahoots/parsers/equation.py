@@ -24,10 +24,12 @@ SOFTWARE.
 # pylint: disable=eval-used
 # pylint: disable=unused-import
 from phonenumbers.phonenumberutil import NumberParseException
+from cahoots.parsers.location import LocationParser
 from cahoots.parsers.programming import ProgrammingParser
 from cahoots.parsers.base import BaseParser
 from cahoots.util import is_number
 from phonenumbers import phonenumberutil
+from SereneRegistry import registry
 import re
 import string
 import math  # flake8: noqa
@@ -50,9 +52,7 @@ class EquationParser(BaseParser):
            ([()*.\-+0-9^/ ])*
            $""", re.VERBOSE)
 
-        match = rgx.match(data)
-
-        if match:
+        if rgx.match(data):
             data = self.auto_float(data)
             self.parsed_equation = self.auto_multiply(data)
             return True
@@ -196,6 +196,14 @@ class EquationParser(BaseParser):
             dataset = prog_parser.create_dataset(data)
             for _ in set(prog_parser.find_common_tokens(dataset)):
                 confidence -= 5
+
+        # if this is a valid zip code, we remove a bunch of con
+        if len(data) == 10 and LocationParser in self.config.enabledModules:
+            rgx = registry.get('MP_zip_code_regex')
+            if rgx.match(data):
+                loc_parser = LocationParser(self.config)
+                if loc_parser.get_zip_code_data(data) is not None:
+                    confidence -= 15
 
         return confidence
 
