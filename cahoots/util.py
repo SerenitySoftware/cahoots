@@ -40,3 +40,8 @@ def is_number(text):
         return False
 
     return True
+
+
+def strings_intersect(s_one, s_two):
+    """Checks if two strings have any intersections"""
+    return not set(s_one).isdisjoint(s_two)

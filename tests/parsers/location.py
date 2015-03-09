@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 The MIT License (MIT)
 
@@ -95,4 +96,56 @@ class LocationParserTests(unittest.TestCase):
             self.assertEqual(result.subtype, 'Zip Code')
             self.assertEqual(result.result_value, {'loc': 'beverlyhills'})
             self.assertEqual(result.confidence, 90)
+        self.assertEqual(1, count)
+
+    def test_parseWithStandardCoordsYieldsExpectedResult(self):
+        results = self.lp.parse('-23.5234, 56.7286')
+        count = 0
+        for result in results:
+            count += 1
+            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(
+                result.result_value,
+                ('-23.5234', '56.7286')
+            )
+            self.assertEqual(result.confidence, 80)
+        self.assertEqual(1, count)
+
+    def test_parseWithDegCoordsYieldsExpectedResult(self):
+        results = self.lp.parse(u'40.244° N 79.123° W')
+        count = 0
+        for result in results:
+            count += 1
+            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(
+                result.result_value,
+                ('40.244', '-79.123')
+            )
+            self.assertEqual(result.confidence, 100)
+        self.assertEqual(1, count)
+
+    def test_parseWithDegMinCoordsYieldsExpectedResult(self):
+        results = self.lp.parse(u'13° 34.425\' N 45° 37.983\' W')
+        count = 0
+        for result in results:
+            count += 1
+            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(
+                result.result_value,
+                ('13.57375', '-45.63305')
+            )
+            self.assertEqual(result.confidence, 100)
+        self.assertEqual(1, count)
+
+    def test_parseWithDegMinSecCoordsYieldsExpectedResult(self):
+        results = self.lp.parse(u'40° 26\' 46.56" N 79° 58\' 56.88" W')
+        count = 0
+        for result in results:
+            count += 1
+            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(
+                result.result_value,
+                ('40.4462666667', '-79.9824666667')
+            )
+            self.assertEqual(result.confidence, 100)
         self.assertEqual(1, count)

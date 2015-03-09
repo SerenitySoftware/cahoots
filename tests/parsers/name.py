@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 The MIT License (MIT)
 
@@ -93,8 +94,8 @@ class NameParserTests(unittest.TestCase):
 
     def test_parseYieldsExpectedConfidenceWithFiveWordName(self):
         count = 0
-        for result in self.np.parse('Dr. Foo Q. Ben Bleh Bar Sr.'):
-            self.assertEqual(result.confidence, 65)
+        for result in self.np.parse('Dr. Foo Bar Bleh Bar Sr.'):
+            self.assertEqual(result.confidence, 52)
             self.assertEqual(result.subtype, 'Name')
             count += 1
         self.assertEqual(count, 1)
@@ -110,5 +111,11 @@ class NameParserTests(unittest.TestCase):
     def test_parseYieldsNothingWithOneWordName(self):
         count = 0
         for _ in self.np.parse('Foo'):
+            count += 1
+        self.assertEqual(count, 0)
+
+    def test_parseYieldsNothingWithNonPrintableCharacters(self):
+        count = 0
+        for _ in self.np.parse(u'40.244° N 79.123° W'):
             count += 1
         self.assertEqual(count, 0)

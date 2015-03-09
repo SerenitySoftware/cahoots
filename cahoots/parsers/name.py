@@ -24,6 +24,7 @@ SOFTWARE.
 from cahoots.parsers.base import BaseParser
 from cahoots.parsers.number import NumberParser
 import re
+import string
 
 
 class NameParser(BaseParser):
@@ -48,8 +49,7 @@ class NameParser(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Name", 0)
 
-    @classmethod
-    def basic_validation(cls, data):
+    def basic_validation(self, data):
         """
         Make sure every word in the phrase either
         starts with a Capital Letter or a Number
@@ -57,8 +57,16 @@ class NameParser(BaseParser):
         return len(data) == len(
             [word for word in data if
              (word[0].isupper() or (len(data) > 1 and word[0].isdigit())) and
-             not word.isdigit()]
+             not word.isdigit() and not self.has_bad_characters(word)]
         )
+
+    @classmethod
+    def has_bad_characters(cls, word):
+        """not all characters are allowed in names"""
+        for char in word:
+            if char not in string.printable:
+                return True
+        return False
 
     def is_prefix(self, word):
         """Checks to see if the word passed in is a name prefix"""
@@ -109,7 +117,7 @@ class NameParser(BaseParser):
 
         # If our "name" is longer than 4 words, we
         # reduce the likelihood that it's a name
-        if len(data) > 4:
+        if len(data) > 3:
             self.confidence -= (7*len(data))
 
     def parse(self, data, **kwargs):
@@ -121,10 +129,10 @@ class NameParser(BaseParser):
 
         data = data.split()
 
-        # If someone has a name longer than 10 words...they need
+        # If someone has a name longer than 7 words...they need
         # help. Making sure each word in the phrase starts with an
         # uppercase letter or a number
-        if len(data) > 10 or not self.basic_validation(data):
+        if len(data) >= 7 or not self.basic_validation(data):
             return
 
         # Checking for things like Mr. or Jr. Big boost for these values.

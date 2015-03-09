@@ -92,3 +92,11 @@ class URIParserTests(unittest.TestCase):
             self.assertEqual(result.subtype, 'URL')
             count += 1
         self.assertEqual(count, 1)
+
+    def test_parseWithStrangePossibilityReturnsExpectedConfidence(self):
+        count = 0
+        for result in self.up.parse('23.5234 -56.7286'):
+            self.assertEqual(result.confidence, 45)
+            self.assertEqual(result.subtype, 'IP Address (v4)')
+            count += 1
+        self.assertEqual(count, 1)

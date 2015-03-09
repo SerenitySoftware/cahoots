@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from cahoots.parsers.base import BaseParser
+from cahoots.util import strings_intersect
 import urlparse
 import string
 # pylint: disable=W0611
@@ -41,7 +42,7 @@ class URIParser(BaseParser):
         try:
             socket.inet_pton(socket.AF_INET6, address)
             return True
-        except socket.error:
+        except (socket.error, UnicodeEncodeError):
             pass
 
         return False
@@ -52,7 +53,7 @@ class URIParser(BaseParser):
         try:
             socket.inet_aton(address)
             return True
-        except socket.error:
+        except (socket.error, UnicodeEncodeError):
             pass
 
         return False
@@ -83,6 +84,9 @@ class URIParser(BaseParser):
                 # lowering the confidence because "Technically"
                 # and ipv4 address could be a phone number
                 self.confidence -= 5
+                # if there's whitespace in the ip address, lower confidence
+                if strings_intersect(string.whitespace, data_string):
+                    self.confidence -= 50
                 yield self.result("IP Address (v4)")
 
             elif self.is_ipv6_address(data_string):
