@@ -23,7 +23,7 @@ SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.uri import URIParser
-from tests.unit.config import TestConfig
+from tests.config import TestConfig
 import unittest
 
 

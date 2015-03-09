@@ -24,7 +24,7 @@ SOFTWARE.
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.boolean import BooleanParser
 from cahoots.result import ParseResult
-from tests.unit.config import TestConfig
+from tests.config import TestConfig
 import unittest
 
 

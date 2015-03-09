@@ -49,20 +49,20 @@ import cahoots.parsers.uri  # flake8: noqa
 import cahoots.result  # flake8: noqa
 import cahoots.util  # flake8: noqa
 
-from tests.unit.suites.util import *  # flake8: noqa
-from tests.unit.suites.parser import *  # flake8: noqa
-from tests.unit.suites.parsers.base import *  # flake8: noqa
-from tests.unit.suites.parsers.boolean import *  # flake8: noqa
-from tests.unit.suites.parsers.character import *  # flake8: noqa
-from tests.unit.suites.parsers.date import *  # flake8: noqa
-from tests.unit.suites.parsers.email import *  # flake8: noqa
-from tests.unit.suites.parsers.equation import *  # flake8: noqa
-from tests.unit.suites.parsers.location import *  # flake8: noqa
-from tests.unit.suites.parsers.measurement import *  # flake8: noqa
-from tests.unit.suites.parsers.name import *  # flake8: noqa
-from tests.unit.suites.parsers.number import *  # flake8: noqa
-from tests.unit.suites.parsers.phone import *  # flake8: noqa
-from tests.unit.suites.parsers.programming import *  # flake8: noqa
-from tests.unit.suites.parsers.programming.bayesian import *  # flake8: noqa
-from tests.unit.suites.parsers.programming.lexer import *  # flake8: noqa
-from tests.unit.suites.parsers.uri import *  # flake8: noqa
+from tests.suites.util import *  # flake8: noqa
+from tests.suites.parser import *  # flake8: noqa
+from tests.suites.parsers.base import *  # flake8: noqa
+from tests.suites.parsers.boolean import *  # flake8: noqa
+from tests.suites.parsers.character import *  # flake8: noqa
+from tests.suites.parsers.date import *  # flake8: noqa
+from tests.suites.parsers.email import *  # flake8: noqa
+from tests.suites.parsers.equation import *  # flake8: noqa
+from tests.suites.parsers.location import *  # flake8: noqa
+from tests.suites.parsers.measurement import *  # flake8: noqa
+from tests.suites.parsers.name import *  # flake8: noqa
+from tests.suites.parsers.number import *  # flake8: noqa
+from tests.suites.parsers.phone import *  # flake8: noqa
+from tests.suites.parsers.programming import *  # flake8: noqa
+from tests.suites.parsers.programming.bayesian import *  # flake8: noqa
+from tests.suites.parsers.programming.lexer import *  # flake8: noqa
+from tests.suites.parsers.uri import *  # flake8: noqa
