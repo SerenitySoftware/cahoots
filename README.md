@@ -6,7 +6,7 @@ A Text Comprehension Engine in Python
 Status
 ------
 ```
-Pre-Alpha, Accepting Contributions
+Alpha, Accepting Contributions
 ```
 [![Build Status](https://travis-ci.org/SerenitySoftwareLLC/cahoots.svg?branch=master)](https://travis-ci.org/SerenitySoftwareLLC/cahoots)
 [![Build Status](https://img.shields.io/badge/coverage-100%-brightgreen.svg?style=flat)](https://travis-ci.org/SerenitySoftwareLLC/cahoots)
@@ -18,64 +18,54 @@ Contributors
 1. [Jordan Ambra] (https://github.com/jordanambra)
 2. [Ryan Vennell] (https://github.com/hickeroar)
 
-Requirements
-------------
+Software Requirements
+---------------------
 1. python-dev
 2. python-pip
 3. redis-server
-4. Python Packages:
+4. memcached
+5. sqlite3
+6. libsqlite3-dev
 
-    ```
-    flask
-    mako
-    dateutils
-    pyyaml
-    pygments
-    pyparsing
-    redisbayes
-    phonenumbers
-    simplejson
-    SereneRegistry
-    win_inet_pton
-    hiredis (recommended)
-    ```
+Python Package Requirements
+---------------------------
+1. flask
+2. mako
+3. dateutils
+4. pyyaml
+5. pygments
+6. pyparsing
+7. redisbayes
+8. phonenumbers
+9. simplejson
+10. SereneRegistry
+11. win_inet_pton
+12. hiredis
+13. locationExtractor
+14. pyzipcode
+15. LatLon
 
 Contributor Dev Requirements
 ----------------------------
-1. [VirtualBox] (https://www.virtualbox.org/wiki/Downloads) (Alternative: [VMWare](http://www.vmware.com/) and [Vagrant VMware provider](http://www.vagrantup.com/vmware))
-2. [Vagrant 1.6+](http://www.vagrantup.com)
+1. [VirtualBox] (https://www.virtualbox.org/wiki/Downloads) or ([VMWare](http://www.vmware.com/) and [Vagrant VMware Provider](http://www.vagrantup.com/vmware))
+2. [Vagrant 1.7+](http://www.vagrantup.com)
 3. [Git] (http://git-scm.com/)
 
 Setup
 -----
 1. Clone this repository and `cd` into the clone's directory.
-2. Run the command `git submodule init`.
-3. Run the command `git submodule update`.
-4. Run the command `vagrant up` or `vagrant up --provider vmware_workstation` in the clone's root.
+2. Run the command `git submodule update --init`.
+3. Run the command `vagrant up` or `vagrant up --provider vmware_workstation` in the clone's root.
+4. Wait for provisioning to complete (will take several minutes).
 
-    ```
-    $ vagrant up --provider vmware_workstation
-    Bringing machine 'default' up with 'vmware_workstation' provider...
-    ==> default: Cloning VMware VM: 'hashicorp/precise64'. This can take some time...
-    ==> default: Checking if box 'hashicorp/precise64' is up to date...
-    ==> default: Verifying vmnet devices are healthy...
-    ==> default: Preparing network adapters...
-    ==> default: Starting the VMware VM...
-    ==> default: Waiting for the VM to finish booting...
-    ==> default: The machine is booted and ready!
-    ==> default: Forwarding ports...
-        default: -- 8000 => 8000
-        default: -- 22 => 2222
-    ==> default: Configuring network adapters within the VM...
-    ==> default: Waiting for HGFS kernel module to load...
-    ==> default: Enabling and configuring shared folders...
-        default: -- X:/Documents/cahoots: /vagrant
-    ==> default: Running provisioner: shell...
-        default: Running: C:/Users/FooBar/AppData/Local/Temp/vagrant-shell20140715-6492-12sh4x2.sh
-    
-    NOTE: Provisioning will continue here and output updates to the screen
-    ```
+Unit/Flake8/Pylint Test Execution
+---------------------------------
+1. Run the command `vagrant ssh` to connect to your VM. (Alternative: Use PuTTY with host `127.0.0.1`, port `2222` and username/password `vagrant`.)
+2. Run the command `./tests/vagrant_build.sh` to run unit/flake8/pylint tests.
 
-5. Run the command `vagrant ssh` to connect to your VM. (Alternative: Use PuTTY with host `127.0.0.1`, port `2222` and username/password `vagrant`.)
-6. Run the command `./web/wsgi.py` in your VM  to start Cahoots.
-7. Visit `http://localhost:8000` to view the web interface.
+Web Interface Usage
+-------------------
+1. Run the command `vagrant ssh` to connect to your VM. (Alternative: Use PuTTY with host `127.0.0.1`, port `2222` and username/password `vagrant`.)
+2. Run the command `./web/wsgi.py` in your VM  to start Cahoots.
+3. Visit `http://localhost:8000` to use the web interface.
+4. POST or GET against `http://localhost:8000/api/` using the `q` parameter to retrieve JSON API responses.
