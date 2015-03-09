@@ -24,7 +24,10 @@ SOFTWARE.
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.equation import EquationParser
 from cahoots.parsers.programming import ProgrammingParser
+from cahoots.parsers.location import LocationParser
+from tests.unit.suites.parsers.location import ZipCodeDatabaseMock, ZipCodeStub
 from tests.unit.config import TestConfig
+from SereneRegistry import registry
 import unittest
 import mock
 
@@ -38,6 +41,7 @@ class EquationParserTests(unittest.TestCase):
         self.ep = EquationParser(TestConfig)
 
     def tearDown(self):
+        registry.flush()
         self.ep = None
 
     def test_is_simple_equation(self):
@@ -162,3 +166,15 @@ class EquationParserTests(unittest.TestCase):
         for _ in self.ep.parse('This is not a text equation'):
             count += 1
         self.assertEqual(count, 0)
+
+    @mock.patch('pyzipcode.ZipCodeDatabase', ZipCodeDatabaseMock)
+    def test_parse_zip_code_yields_result_with_lower_confidence(self):
+        LocationParser.bootstrap(TestConfig())
+        registry.set('LPTest', ZipCodeStub('beverlyhills'))
+        count = 0
+        for result in self.ep.parse('90210-1210'):
+            count += 1
+            self.assertEqual(result.subtype, 'Simple')
+            self.assertEqual(result.result_value, 89000)
+            self.assertEqual(result.confidence, 75)
+        self.assertEqual(count, 1)

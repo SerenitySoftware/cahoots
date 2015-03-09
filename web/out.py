@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+# pylint: disable=method-hidden
 from datetime import date, datetime
 from cahoots.result import ParseResult
 import simplejson
@@ -29,7 +30,6 @@ import simplejson
 class CahootsEncoder(simplejson.JSONEncoder):
     """Handles the encoding of various special types related to cahoots"""
 
-    @property
     def default(self, obj):
         """encodes cahoots special types"""
         if isinstance(obj, datetime):
