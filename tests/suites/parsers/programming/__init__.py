@@ -25,7 +25,7 @@ SOFTWARE.
 from cahoots.parsers.programming import ProgrammingParser
 from SereneRegistry import registry
 from cahoots.result import ParseResult
-from tests.unit.config import TestConfig
+from tests.config import TestConfig
 import unittest
 import mock
 

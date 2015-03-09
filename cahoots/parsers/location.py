@@ -67,8 +67,7 @@ class LocationParser(BaseParser):
         if rgx.match(data):
             zip_data = self.get_zip_code_data(data)
             if zip_data is not None:
-                if len(data) == 10:
-                    # we can't validate the extension so we hit confidence
-                    self.confidence -= 10
+                # we can't really be fully certain this is a zipcode
+                self.confidence -= len(data)
                 yield self.result("Zip Code", self.confidence, vars(zip_data))
                 return

@@ -25,8 +25,8 @@ SOFTWARE.
 from cahoots.parsers.equation import EquationParser
 from cahoots.parsers.programming import ProgrammingParser
 from cahoots.parsers.location import LocationParser
-from tests.unit.suites.parsers.location import ZipCodeDatabaseMock, ZipCodeStub
-from tests.unit.config import TestConfig
+from tests.suites.parsers.location import ZipCodeDatabaseMock, ZipCodeStub
+from tests.config import TestConfig
 from SereneRegistry import registry
 import unittest
 import mock

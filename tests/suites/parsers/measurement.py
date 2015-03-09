@@ -23,7 +23,7 @@ SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.measurement import MeasurementParser
-from tests.unit.config import TestConfig
+from tests.config import TestConfig
 from SereneRegistry import registry
 import unittest
 import mock

@@ -25,7 +25,7 @@ SOFTWARE.
 from cahoots.parsers.programming.bayesian import \
     ProgrammingBayesianClassifier
 from SereneRegistry import registry
-from tests.unit.config import TestConfig
+from tests.config import TestConfig
 from inspect import ismethod
 import mock
 import unittest

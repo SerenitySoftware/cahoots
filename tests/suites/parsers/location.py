@@ -23,7 +23,7 @@ SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.location import LocationParser
-from tests.unit.config import TestConfig
+from tests.config import TestConfig
 from SereneRegistry import registry
 import unittest
 import mock
@@ -83,7 +83,7 @@ class LocationParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.subtype, 'Zip Code')
             self.assertEqual(result.result_value, {'loc': 'beverlyhills'})
-            self.assertEqual(result.confidence, 100)
+            self.assertEqual(result.confidence, 95)
         self.assertEqual(1, count)
 
     def test_parseWith10DigitZipYieldsExpectedResult(self):

@@ -23,7 +23,7 @@ SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.phone import PhoneParser
-from tests.unit.config import TestConfig
+from tests.config import TestConfig
 from phonenumbers import phonenumberutil
 import unittest
 import mock
