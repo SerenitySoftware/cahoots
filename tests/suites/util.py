@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
-from cahoots.util import truncate_text, is_number
+from cahoots.util import truncate_text, is_number, strings_intersect
 import unittest
 
 
@@ -53,3 +53,12 @@ class IsNumberTests(unittest.TestCase):
         self.assertTrue(is_number("123"))
 
         self.assertFalse(is_number("7 divided by 2"))
+
+
+class StringsIntersectTests(unittest.TestCase):
+
+    def test_strings_intersect(self):
+
+        self.assertFalse(strings_intersect("abc", "def"))
+
+        self.assertTrue(strings_intersect("abc", "cde"))

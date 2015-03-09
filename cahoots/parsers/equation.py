@@ -199,7 +199,7 @@ class EquationParser(BaseParser):
 
         # if this is a valid zip code, we remove a bunch of con
         if len(data) == 10 and LocationParser in self.config.enabledModules:
-            rgx = registry.get('MP_zip_code_regex')
+            rgx = registry.get('LP_zip_code_regex')
             if rgx.match(data):
                 loc_parser = LocationParser(self.config)
                 if loc_parser.get_zip_code_data(data) is not None:
