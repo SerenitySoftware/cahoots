@@ -49,20 +49,20 @@ import cahoots.parsers.uri  # flake8: noqa
 import cahoots.result  # flake8: noqa
 import cahoots.util  # flake8: noqa
 
-from tests.suites.util import *  # flake8: noqa
-from tests.suites.parser import *  # flake8: noqa
-from tests.suites.parsers.base import *  # flake8: noqa
-from tests.suites.parsers.boolean import *  # flake8: noqa
-from tests.suites.parsers.character import *  # flake8: noqa
-from tests.suites.parsers.date import *  # flake8: noqa
-from tests.suites.parsers.email import *  # flake8: noqa
-from tests.suites.parsers.equation import *  # flake8: noqa
-from tests.suites.parsers.location import *  # flake8: noqa
-from tests.suites.parsers.measurement import *  # flake8: noqa
-from tests.suites.parsers.name import *  # flake8: noqa
-from tests.suites.parsers.number import *  # flake8: noqa
-from tests.suites.parsers.phone import *  # flake8: noqa
-from tests.suites.parsers.programming import *  # flake8: noqa
-from tests.suites.parsers.programming.bayesian import *  # flake8: noqa
-from tests.suites.parsers.programming.lexer import *  # flake8: noqa
-from tests.suites.parsers.uri import *  # flake8: noqa
+from tests.util import *  # flake8: noqa
+from tests.parser import *  # flake8: noqa
+from tests.parsers.base import *  # flake8: noqa
+from tests.parsers.boolean import *  # flake8: noqa
+from tests.parsers.character import *  # flake8: noqa
+from tests.parsers.date import *  # flake8: noqa
+from tests.parsers.email import *  # flake8: noqa
+from tests.parsers.equation import *  # flake8: noqa
+from tests.parsers.location import *  # flake8: noqa
+from tests.parsers.measurement import *  # flake8: noqa
+from tests.parsers.name import *  # flake8: noqa
+from tests.parsers.number import *  # flake8: noqa
+from tests.parsers.phone import *  # flake8: noqa
+from tests.parsers.programming import *  # flake8: noqa
+from tests.parsers.programming.bayesian import *  # flake8: noqa
+from tests.parsers.programming.lexer import *  # flake8: noqa
+from tests.parsers.uri import *  # flake8: noqa
