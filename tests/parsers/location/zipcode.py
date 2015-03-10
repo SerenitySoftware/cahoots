@@ -82,7 +82,7 @@ class ZipCodeParserTests(unittest.TestCase):
         count = 0
         for result in results:
             count += 1
-            self.assertEqual(result.subtype, 'Zip Code')
+            self.assertEqual(result.subtype, 'Standard')
             self.assertEqual(result.result_value, {'loc': 'beverlyhills'})
             self.assertEqual(result.confidence, 95)
         self.assertEqual(1, count)
@@ -93,7 +93,7 @@ class ZipCodeParserTests(unittest.TestCase):
         count = 0
         for result in results:
             count += 1
-            self.assertEqual(result.subtype, 'Zip Code')
+            self.assertEqual(result.subtype, 'Plus Four')
             self.assertEqual(result.result_value, {'loc': 'beverlyhills'})
             self.assertEqual(result.confidence, 90)
         self.assertEqual(1, count)

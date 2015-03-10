@@ -68,6 +68,11 @@ class ZipCodeParser(BaseParser):
             zip_data = self.get_zip_code_data(data)
             if zip_data is not None:
                 # we can't really be fully certain this is a zipcode
-                self.confidence -= len(data)
-                yield self.result("Zip Code", self.confidence, vars(zip_data))
+                if len(data) == 5:
+                    self.confidence -= 5
+                    sub_type = 'Standard'
+                else:
+                    self.confidence -= 10
+                    sub_type = 'Plus Four'
+                yield self.result(sub_type, self.confidence, vars(zip_data))
                 return

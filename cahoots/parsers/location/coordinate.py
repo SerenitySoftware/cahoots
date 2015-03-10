@@ -108,26 +108,26 @@ class CoordinateParser(BaseParser):
         match = registry.get('CP_coord_regex').match(data)
         if match:
             res = self.get_standard_coord_data(match)
-            yield self.result("Coordinates", 80, res.to_string())
+            yield self.result("Standard", 80, res.to_string())
             return
 
         # Degree coordinate match
         match = registry.get('CP_deg_regex').match(data)
         if match:
             res = self.get_degree_based_coord_data(match, 'd% %H')
-            yield self.result("Coordinates", 100, res.to_string())
+            yield self.result("Degree", 100, res.to_string())
             return
 
         # Degree/minute coordinate match
         match = registry.get('CP_deg_min_regex').match(data)
         if match:
             res = self.get_degree_based_coord_data(match, 'd% %m% %H')
-            yield self.result("Coordinates", 100, res.to_string())
+            yield self.result("Degree/Minute", 100, res.to_string())
             return
 
         # Degree/minutes/second coordinate match
         match = registry.get('CP_deg_min_sec_regex').match(data)
         if match:
             res = self.get_degree_based_coord_data(match, 'd% %m% %S% %H')
-            yield self.result("Coordinates", 100, res.to_string())
+            yield self.result("Degree/Minute/Second", 100, res.to_string())
             return

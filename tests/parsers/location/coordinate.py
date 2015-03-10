@@ -47,7 +47,7 @@ class CoordinateParserTests(unittest.TestCase):
         count = 0
         for result in results:
             count += 1
-            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(result.subtype, 'Standard')
             self.assertEqual(
                 result.result_value,
                 ('-23.5234', '56.7286')
@@ -60,7 +60,7 @@ class CoordinateParserTests(unittest.TestCase):
         count = 0
         for result in results:
             count += 1
-            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(result.subtype, 'Degree')
             self.assertEqual(
                 result.result_value,
                 ('40.244', '-79.123')
@@ -73,7 +73,7 @@ class CoordinateParserTests(unittest.TestCase):
         count = 0
         for result in results:
             count += 1
-            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(result.subtype, 'Degree/Minute')
             self.assertEqual(
                 result.result_value,
                 ('13.57375', '-45.63305')
@@ -86,7 +86,7 @@ class CoordinateParserTests(unittest.TestCase):
         count = 0
         for result in results:
             count += 1
-            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(result.subtype, 'Degree/Minute/Second')
             self.assertEqual(
                 result.result_value,
                 ('40.4462666667', '-79.9824666667')
