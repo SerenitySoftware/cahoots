@@ -10,6 +10,5 @@ simplejson
 SereneRegistry
 win_inet_pton
 hiredis
-locationExtractor
 pyzipcode
 LatLon
