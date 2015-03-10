@@ -38,6 +38,7 @@ python setup.py install
 cd ..
 rm -rf pylint-1.4.1
 rm -f pylint-1.4.1.tar.gz
+cd /vagrant
 
 echo " "
 echo " [Cahoots] Step 6: Importing Location Database"
