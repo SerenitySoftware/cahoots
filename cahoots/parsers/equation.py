@@ -24,7 +24,7 @@ SOFTWARE.
 # pylint: disable=eval-used
 # pylint: disable=unused-import
 from phonenumbers.phonenumberutil import NumberParseException
-from cahoots.parsers.location import LocationParser
+from cahoots.parsers.location.zipcode import ZipCodeParser
 from cahoots.parsers.programming import ProgrammingParser
 from cahoots.parsers.base import BaseParser
 from cahoots.util import is_number
@@ -198,11 +198,11 @@ class EquationParser(BaseParser):
                 confidence -= 5
 
         # if this is a valid zip code, we remove a bunch of con
-        if len(data) == 10 and LocationParser in self.config.enabledModules:
-            rgx = registry.get('LP_zip_code_regex')
+        if len(data) == 10 and ZipCodeParser in self.config.enabledModules:
+            rgx = registry.get('ZCP_zip_code_regex')
             if rgx.match(data):
-                loc_parser = LocationParser(self.config)
-                if loc_parser.get_zip_code_data(data) is not None:
+                zip_parser = ZipCodeParser(self.config)
+                if zip_parser.get_zip_code_data(data) is not None:
                     confidence -= 15
 
         return confidence
