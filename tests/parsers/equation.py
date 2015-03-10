@@ -24,8 +24,8 @@ SOFTWARE.
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.equation import EquationParser
 from cahoots.parsers.programming import ProgrammingParser
-from cahoots.parsers.location import LocationParser
-from tests.parsers.location import ZipCodeDatabaseMock, ZipCodeStub
+from cahoots.parsers.location.zipcode import ZipCodeParser
+from tests.parsers.location.zipcode import ZipCodeDatabaseMock, ZipCodeStub
 from tests.config import TestConfig
 from SereneRegistry import registry
 import unittest
@@ -169,8 +169,8 @@ class EquationParserTests(unittest.TestCase):
 
     @mock.patch('pyzipcode.ZipCodeDatabase', ZipCodeDatabaseMock)
     def test_parse_zip_code_yields_result_with_lower_confidence(self):
-        LocationParser.bootstrap(TestConfig())
-        registry.set('LPTest', ZipCodeStub('beverlyhills'))
+        ZipCodeParser.bootstrap(TestConfig())
+        registry.set('ZCPTest', ZipCodeStub('beverlyhills'))
         count = 0
         for result in self.ep.parse('90210-1210'):
             count += 1

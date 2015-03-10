@@ -23,87 +23,31 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
-from cahoots.parsers.location import LocationParser
+from cahoots.parsers.location.coordinate import CoordinateParser
 from tests.config import TestConfig
 from SereneRegistry import registry
 import unittest
-import mock
 
 
-class ZipCodeDatabaseMock(object):
+class CoordinateParserTests(unittest.TestCase):
+    """Unit testing of the coordinate parser"""
 
-    def __getitem__(self, data):
-        result = registry.get('LPTest')
+    cp = None
 
-        if isinstance(result, IndexError):
-            raise result
-
-        return result
-
-
-class ZipCodeStub(object):
-
-    def __init__(self, loc):
-        self.loc = loc
-
-
-class LocationParserTests(unittest.TestCase):
-    """Unit testing of the location parser"""
-
-    lp = None
-
-    @mock.patch('pyzipcode.ZipCodeDatabase', ZipCodeDatabaseMock)
     def setUp(self):
-        LocationParser.bootstrap(TestConfig())
-        self.lp = LocationParser(TestConfig())
+        CoordinateParser.bootstrap(TestConfig())
+        self.cp = CoordinateParser(TestConfig())
 
     def tearDown(self):
         registry.flush()
-        self.lp = None
-
-    def test_parseWithNonZipYieldsNothing(self):
-        result = self.lp.parse('abc123')
-        count = 0
-        for _ in result:
-            count += 1
-        self.assertEqual(0, count)
-
-    def test_parseWith5DigitNonZipYieldsNothing(self):
-        registry.set('LPTest', IndexError())
-        result = self.lp.parse('00000')
-        count = 0
-        for _ in result:
-            count += 1
-        self.assertEqual(0, count)
-
-    def test_parseWith5DigitZipYieldsExpectedResult(self):
-        registry.set('LPTest', ZipCodeStub('beverlyhills'))
-        results = self.lp.parse('90210')
-        count = 0
-        for result in results:
-            count += 1
-            self.assertEqual(result.subtype, 'Zip Code')
-            self.assertEqual(result.result_value, {'loc': 'beverlyhills'})
-            self.assertEqual(result.confidence, 95)
-        self.assertEqual(1, count)
-
-    def test_parseWith10DigitZipYieldsExpectedResult(self):
-        registry.set('LPTest', ZipCodeStub('beverlyhills'))
-        results = self.lp.parse('90210-1210')
-        count = 0
-        for result in results:
-            count += 1
-            self.assertEqual(result.subtype, 'Zip Code')
-            self.assertEqual(result.result_value, {'loc': 'beverlyhills'})
-            self.assertEqual(result.confidence, 90)
-        self.assertEqual(1, count)
+        self.cp = None
 
     def test_parseWithStandardCoordsYieldsExpectedResult(self):
-        results = self.lp.parse('-23.5234, 56.7286')
+        results = self.cp.parse('-23.5234, 56.7286')
         count = 0
         for result in results:
             count += 1
-            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(result.subtype, 'Standard')
             self.assertEqual(
                 result.result_value,
                 ('-23.5234', '56.7286')
@@ -112,11 +56,11 @@ class LocationParserTests(unittest.TestCase):
         self.assertEqual(1, count)
 
     def test_parseWithDegCoordsYieldsExpectedResult(self):
-        results = self.lp.parse(u'40.244° N 79.123° W')
+        results = self.cp.parse(u'40.244° N 79.123° W')
         count = 0
         for result in results:
             count += 1
-            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(result.subtype, 'Degree')
             self.assertEqual(
                 result.result_value,
                 ('40.244', '-79.123')
@@ -125,11 +69,11 @@ class LocationParserTests(unittest.TestCase):
         self.assertEqual(1, count)
 
     def test_parseWithDegMinCoordsYieldsExpectedResult(self):
-        results = self.lp.parse(u'13° 34.425\' N 45° 37.983\' W')
+        results = self.cp.parse(u'13° 34.425\' N 45° 37.983\' W')
         count = 0
         for result in results:
             count += 1
-            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(result.subtype, 'Degree/Minute')
             self.assertEqual(
                 result.result_value,
                 ('13.57375', '-45.63305')
@@ -138,11 +82,11 @@ class LocationParserTests(unittest.TestCase):
         self.assertEqual(1, count)
 
     def test_parseWithDegMinSecCoordsYieldsExpectedResult(self):
-        results = self.lp.parse(u'40° 26\' 46.56" N 79° 58\' 56.88" W')
+        results = self.cp.parse(u'40° 26\' 46.56" N 79° 58\' 56.88" W')
         count = 0
         for result in results:
             count += 1
-            self.assertEqual(result.subtype, 'Coordinates')
+            self.assertEqual(result.subtype, 'Degree/Minute/Second')
             self.assertEqual(
                 result.result_value,
                 ('40.4462666667', '-79.9824666667')
