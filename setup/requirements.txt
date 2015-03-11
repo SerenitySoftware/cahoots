@@ -11,4 +11,3 @@ SereneRegistry
 win_inet_pton
 hiredis
 LatLon
-pyzipcode

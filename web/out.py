@@ -50,4 +50,10 @@ class CahootsEncoder(simplejson.JSONEncoder):
 
 def encode(data):
     """calls simplejson's encoding stuff with our needs"""
-    return simplejson.dumps(data, indent=4, cls=CahootsEncoder)
+    return simplejson.dumps(
+        data,
+        cls=CahootsEncoder,
+        ensure_ascii=False,
+        encoding='utf8',
+        indent=4
+    )

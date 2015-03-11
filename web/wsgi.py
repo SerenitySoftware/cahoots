@@ -29,6 +29,7 @@ from web.config import WSGIConfig
 from web import out
 import os
 
+
 APP = Flask(__name__, static_folder='static')
 
 CFG = WSGIConfig()

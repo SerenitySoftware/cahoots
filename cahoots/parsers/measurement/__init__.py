@@ -94,6 +94,14 @@ class MeasurementParser(BaseParser):
         for unit in self.all_units:
             unit_start = data.find(unit)
             if unit_start != -1:
+
+                # if this was found in the middle of a word, it's not a unit
+                if (data[unit_start-1] >= 0 and
+                        data[unit_start-1] in string.letters) or \
+                    (data[unit_start-1] <= len(data) and
+                     data[unit_start+len(unit)] in string.letters):
+                    raise StandardError("Invalid Measurement Data")
+
                 # replacing the located unit with a space
                 data = data[:unit_start] + ' ' + data[(unit_start+len(unit)):]
 

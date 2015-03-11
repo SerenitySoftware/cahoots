@@ -24,27 +24,11 @@ SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.location.zipcode import ZipCodeParser
+from tests.parsers.location import SQLite3Mock
 from tests.config import TestConfig
 from SereneRegistry import registry
 import unittest
 import mock
-
-
-class ZipCodeDatabaseMock(object):
-
-    def __getitem__(self, data):
-        result = registry.get('ZCPTest')
-
-        if isinstance(result, IndexError):
-            raise result
-
-        return result
-
-
-class ZipCodeStub(object):
-
-    def __init__(self, loc):
-        self.loc = loc
 
 
 class ZipCodeParserTests(unittest.TestCase):
@@ -52,12 +36,12 @@ class ZipCodeParserTests(unittest.TestCase):
 
     zcp = None
 
-    @mock.patch('pyzipcode.ZipCodeDatabase', ZipCodeDatabaseMock)
     def setUp(self):
         ZipCodeParser.bootstrap(TestConfig())
         self.zcp = ZipCodeParser(TestConfig())
 
     def tearDown(self):
+        SQLite3Mock.reset()
         registry.flush()
         self.zcp = None
 
@@ -68,32 +52,130 @@ class ZipCodeParserTests(unittest.TestCase):
             count += 1
         self.assertEqual(0, count)
 
-    def test_parseWith5DigitNonZipYieldsNothing(self):
-        registry.set('ZCPTest', IndexError())
-        result = self.zcp.parse('00000')
+    def test_parseWithTooLongNonZipYieldsNothing(self):
+        result = self.zcp.parse('abc123abc123abc123abc123abc123')
         count = 0
         for _ in result:
             count += 1
         self.assertEqual(0, count)
 
+    @mock.patch('sqlite3.connect', SQLite3Mock.connect)
+    def test_parseWith5DigitNonZipYieldsNothing(self):
+        SQLite3Mock.fetchall_returns = [[]]
+        result = self.zcp.parse('00000')
+        count = 0
+        for _ in result:
+            count += 1
+
+        self.assertEqual(0, count)
+        self.assertEqual(
+            SQLite3Mock.execute_calls,
+            [
+                ('PRAGMA temp_store = 2', None),
+                ('SELECT * FROM city WHERE postal_code = ?', ('00000',))
+            ]
+        )
+
+    @mock.patch('sqlite3.connect', SQLite3Mock.connect)
     def test_parseWith5DigitZipYieldsExpectedResult(self):
-        registry.set('ZCPTest', ZipCodeStub('beverlyhills'))
+        SQLite3Mock.fetchall_returns = [
+            [('us', 'united states')],
+            [('us', 'united states')],
+            [
+                ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'),
+                ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'),
+            ]
+        ]
         results = self.zcp.parse('90210')
         count = 0
         for result in results:
             count += 1
             self.assertEqual(result.subtype, 'Standard')
-            self.assertEqual(result.result_value, {'loc': 'beverlyhills'})
-            self.assertEqual(result.confidence, 95)
+            self.assertEqual(result.result_value, [
+                {
+                    "province1": "f",
+                    "city": "c",
+                    "province2": "g",
+                    "country": {
+                        "abbreviation": "US",
+                        "name": "United States"
+                    },
+                    "community2": "i",
+                    "community1": "h",
+                    "state2": "e",
+                    "state1": "d",
+                    "coord_accuracy": "l",
+                    "postal_code": "b",
+                    "longitude": "k",
+                    "latitude": "j"
+                },
+                {
+                    "province1": "f",
+                    "city": "c",
+                    "province2": "g",
+                    "country": {
+                        "abbreviation": "US",
+                        "name": "United States"
+                    },
+                    "community2": "i",
+                    "community1": "h",
+                    "state2": "e",
+                    "state1": "d",
+                    "coord_accuracy": "l",
+                    "postal_code": "b",
+                    "longitude": "k",
+                    "latitude": "j"
+                }
+            ])
+            self.assertEqual(result.confidence, 79)
         self.assertEqual(1, count)
+        self.assertEqual(
+            SQLite3Mock.execute_calls,
+            [
+                ('PRAGMA temp_store = 2', None),
+                ('SELECT * FROM city WHERE postal_code = ?', ('90210',)),
+                ('SELECT * FROM country WHERE abbreviation = ?', ('a',)),
+                ('SELECT * FROM country WHERE abbreviation = ?', ('a',))
+            ]
+        )
 
+    @mock.patch('sqlite3.connect', SQLite3Mock.connect)
     def test_parseWith10DigitZipYieldsExpectedResult(self):
-        registry.set('ZCPTest', ZipCodeStub('beverlyhills'))
+        SQLite3Mock.fetchall_returns = [
+            [('us', 'united states')],
+            [('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')]
+        ]
         results = self.zcp.parse('90210-1210')
         count = 0
         for result in results:
             count += 1
             self.assertEqual(result.subtype, 'Plus Four')
-            self.assertEqual(result.result_value, {'loc': 'beverlyhills'})
+            self.assertEqual(result.result_value, [
+                {
+                    "province1": "f",
+                    "city": "c",
+                    "province2": "g",
+                    "country": {
+                        "abbreviation": "US",
+                        "name": "United States"
+                    },
+                    "community2": "i",
+                    "community1": "h",
+                    "state2": "e",
+                    "state1": "d",
+                    "coord_accuracy": "l",
+                    "postal_code": "b",
+                    "longitude": "k",
+                    "latitude": "j"
+                }
+            ])
             self.assertEqual(result.confidence, 90)
         self.assertEqual(1, count)
+        self.assertEqual(
+            SQLite3Mock.execute_calls,
+            [
+                ('PRAGMA temp_store = 2', None),
+                ('SELECT * FROM city WHERE postal_code = ?', ('90210',)),
+                ('SELECT * FROM country WHERE abbreviation = ?', ('a',))
+            ]
+        )

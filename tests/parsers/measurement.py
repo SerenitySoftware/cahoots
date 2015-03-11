@@ -128,11 +128,15 @@ class MeasurementParserTests(unittest.TestCase):
         data, matches = self.mp.identify_units_in_data('3 square feet')
         self.assertEqual(data, '3')
         self.assertEqual(matches, ['square feet'])
-
         self.assertRaises(
-            Exception,
+            StandardError,
             self.mp.identify_units_in_data,
             '3 feet feet'
+        )
+        self.assertRaises(
+            StandardError,
+            self.mp.identify_units_in_data,
+            'Mount Rushmore'
         )
 
     def test_get_sub_type(self):

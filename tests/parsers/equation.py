@@ -1,3 +1,6 @@
+# pylint: disable=duplicate-code
+# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
+
 """
 The MIT License (MIT)
 
@@ -21,11 +24,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.equation import EquationParser
 from cahoots.parsers.programming import ProgrammingParser
+from tests.parsers.location import SQLite3Mock
 from cahoots.parsers.location.zipcode import ZipCodeParser
-from tests.parsers.location.zipcode import ZipCodeDatabaseMock, ZipCodeStub
 from tests.config import TestConfig
 from SereneRegistry import registry
 import unittest
@@ -41,6 +43,7 @@ class EquationParserTests(unittest.TestCase):
         self.ep = EquationParser(TestConfig)
 
     def tearDown(self):
+        SQLite3Mock.reset()
         registry.flush()
         self.ep = None
 
@@ -167,14 +170,36 @@ class EquationParserTests(unittest.TestCase):
             count += 1
         self.assertEqual(count, 0)
 
-    @mock.patch('pyzipcode.ZipCodeDatabase', ZipCodeDatabaseMock)
+    @mock.patch('sqlite3.connect', SQLite3Mock.connect)
     def test_parse_zip_code_yields_result_with_lower_confidence(self):
         ZipCodeParser.bootstrap(TestConfig())
-        registry.set('ZCPTest', ZipCodeStub('beverlyhills'))
+        SQLite3Mock.fetchall_returns = [
+            [('us', 'united states')],
+            [
+                ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
+            ]
+        ]
         count = 0
         for result in self.ep.parse('90210-1210'):
             count += 1
             self.assertEqual(result.subtype, 'Simple')
             self.assertEqual(result.result_value, 89000)
             self.assertEqual(result.confidence, 75)
-        self.assertEqual(count, 1)
+        self.assertEqual(1, count)
+        self.assertEqual(
+            SQLite3Mock.execute_calls,
+            [
+                (
+                    'PRAGMA temp_store = 2',
+                    None
+                ),
+                (
+                    'SELECT * FROM city WHERE postal_code = ?',
+                    ('90210',)
+                ),
+                (
+                    'SELECT * FROM country WHERE abbreviation = ?',
+                    ('a',)
+                )
+            ]
+        )

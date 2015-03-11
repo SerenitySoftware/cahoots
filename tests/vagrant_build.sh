@@ -11,9 +11,8 @@ echo
 echo " [Cahoots] Step 2: Executing Unit Tests"
 echo
 nosetests tests/test.py --with-coverage --cover-package=cahoots --cover-min-percentage 100
-echo "Exit Code:" $?
+echo -e "\nExit Code:" $?
 
-echo
 echo
 echo " [Cahoots] Step 3: Executing pep8 and pyflakes Tests (flake8)."
 echo
