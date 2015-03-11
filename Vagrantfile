@@ -37,4 +37,14 @@ Vagrant.configure("2") do |config|
         virtualbox.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
         virtualbox.customize ["modifyvm", :id, "--memory", 2048]
     end
+
+    config.vm.provider "vmware_fusion" do |v|
+        v.vmx["memsize"] = "2048"
+    end
+    config.vm.provider "vmware_desktop" do |v|
+        v.vmx["memsize"] = "2048"
+    end
+    config.vm.provider "vmware_workstation" do |v|
+        v.vmx["memsize"] = "2048"
+    end
 end

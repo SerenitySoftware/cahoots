@@ -38,9 +38,21 @@ python setup.py install
 cd ..
 rm -rf pylint-1.4.1
 rm -f pylint-1.4.1.tar.gz
+cd /vagrant
 
 echo " "
-echo " [Cahoots] Step 6: Moving files around"
+echo " [Cahoots] Step 6: Importing Location Database"
+echo " "
+cp cahoots/parsers/location/data/location.sqlite.dist cahoots/parsers/location/data/location.sqlite
+bzip2 -d -k cahoots/parsers/location/data/city.txt.bz2
+cat cahoots/parsers/location/data/city.sql | sqlite3 cahoots/parsers/location/data/location.sqlite
+rm cahoots/parsers/location/data/city.txt
+bzip2 -d -k cahoots/parsers/location/data/country.csv.bz2
+cat cahoots/parsers/location/data/country.sql | sqlite3 cahoots/parsers/location/data/location.sqlite
+rm cahoots/parsers/location/data/country.csv
+
+echo " "
+echo " [Cahoots] Step 7: Moving files around"
 echo 'cd /vagrant' >> /home/vagrant/.bashrc
 echo 'export PYTHONPATH=$PYTHONPATH:/vagrant' >> /home/vagrant/.bashrc
 

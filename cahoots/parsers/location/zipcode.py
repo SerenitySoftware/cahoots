@@ -23,7 +23,8 @@ SOFTWARE.
 """
 from cahoots.parsers.base import BaseParser
 from SereneRegistry import registry
-import pyzipcode
+from cahoots.parsers.location import \
+    LocationDatabase, CityEntity, CountryEntity
 import re
 
 
@@ -36,43 +37,76 @@ class ZipCodeParser(BaseParser):
     @staticmethod
     def bootstrap(config):
         """Bootstraps the location parser"""
-        zcdb = pyzipcode.ZipCodeDatabase()
-        registry.set('ZCP_zip_code_database', zcdb)
-
         # Will test if something matches 5 or 9 digit zipcode pattern
         zip_regex = re.compile(r'^\d{5}(-\d{4})?$', re.VERBOSE)
         registry.set('ZCP_zip_code_regex', zip_regex)
 
-    @classmethod
-    def get_zip_code_data(cls, data):
+    def get_zip_code_data(self, data):
         """If this looks like a zip code, we try to get its info"""
         if len(data) == 5:
             zip_code = data
         else:
             zip_code = data[:5]
 
-        zcdb = registry.get('ZCP_zip_code_database')
+        ldb = LocationDatabase()
+        entities = ldb.select(
+            'SELECT * FROM city WHERE postal_code = ?',
+            (zip_code,),
+            CityEntity
+        )
 
-        try:
-            zip_data = zcdb[zip_code]
-            return zip_data
-        except IndexError:
-            return None
+        if entities is not None:
+            entities = self.prepare_zip_code_data(entities)
+
+        return entities
+
+    @classmethod
+    def prepare_zip_code_data(cls, entities):
+        """Preps our CityEntity objects with country data and converts dicts"""
+        ldb = LocationDatabase()
+        cities = []
+
+        for city in entities:
+            entities = ldb.select(
+                'SELECT * FROM country WHERE abbreviation = ?',
+                (city.country,),
+                CountryEntity
+            )
+
+            if len(entities) > 0:
+                entity = entities[0]
+                entity.name = entity.name.title()
+                entity.abbreviation = entity.abbreviation.upper()
+                city.country = vars(entity)
+
+            cities.append(vars(city))
+
+        return cities
+
+    def calculate_confidence(self, data, results):
+        """calculates the confidence that this is a zip code"""
+
+        # The longer the data string, the higher the confidence
+        self.confidence -= (20-len(data))
+
+        if len(results) > 1:
+            self.confidence -= (3 * len(results))
 
     def parse(self, data, **kwargs):
         """parses data to determine if this is a location"""
         data = data.strip()
 
+        if len(data) >= 20:
+            return
+
         zip_regex = registry.get('ZCP_zip_code_regex')
         if zip_regex.match(data):
-            zip_data = self.get_zip_code_data(data)
-            if zip_data is not None:
-                # we can't really be fully certain this is a zipcode
+            results = self.get_zip_code_data(data)
+            if results is not None:
+                self.calculate_confidence(data, results)
                 if len(data) == 5:
-                    self.confidence -= 5
                     sub_type = 'Standard'
                 else:
-                    self.confidence -= 10
                     sub_type = 'Plus Four'
-                yield self.result(sub_type, self.confidence, vars(zip_data))
+                yield self.result(sub_type, self.confidence, results)
                 return
