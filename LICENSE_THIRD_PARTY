@@ -10,9 +10,9 @@ This readme describes the GeoNames Postal Code dataset.
 The main GeoNames gazetteer data extract is here: http://download.geonames.org/export/dump/
 
 
-For many countries lat/lng are determined with an algorithm that searches the place names in the main geonames database 
-using administrative divisions and numerical vicinity of the postal codes as factors in the disambiguation of place names. 
-For postal codes and place name for which no corresponding toponym in the main geonames database could be found an average 
+For many countries lat/lng are determined with an algorithm that searches the place names in the main geonames database
+using administrative divisions and numerical vicinity of the postal codes as factors in the disambiguation of place names.
+For postal codes and place name for which no corresponding toponym in the main geonames database could be found an average
 lat/lng of 'neighbouring' postal codes is calculated.
 Please let us know if you find any errors in the data set. Thanks
 
