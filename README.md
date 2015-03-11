@@ -23,9 +23,7 @@ Software Requirements
 1. python-dev
 2. python-pip
 3. redis-server
-4. memcached
-5. sqlite3
-6. libsqlite3-dev
+4. sqlite3
 
 Python Package Requirements
 ---------------------------
@@ -41,8 +39,6 @@ Python Package Requirements
 10. SereneRegistry
 11. win_inet_pton
 12. hiredis
-13. locationExtractor
-14. pyzipcode
 15. LatLon
 
 Contributor Dev Requirements
