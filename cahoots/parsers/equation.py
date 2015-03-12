@@ -24,7 +24,7 @@ SOFTWARE.
 # pylint: disable=eval-used
 # pylint: disable=unused-import
 from phonenumbers.phonenumberutil import NumberParseException
-from cahoots.parsers.location.zipcode import ZipCodeParser
+from cahoots.parsers.location.postalcode import PostalCodeParser
 from cahoots.parsers.programming import ProgrammingParser
 from cahoots.parsers.base import BaseParser
 from cahoots.util import is_number
@@ -197,12 +197,12 @@ class EquationParser(BaseParser):
             for _ in set(prog_parser.find_common_tokens(dataset)):
                 confidence -= 5
 
-        # if this is a valid zip code, we remove a bunch of con
-        if len(data) == 10 and ZipCodeParser in self.config.enabledModules:
-            rgx = registry.get('ZCP_zip_code_regex')
+        # if this is a valid postal code, we remove a bunch of con
+        if len(data) == 10 and PostalCodeParser in self.config.enabledModules:
+            rgx = registry.get('ZCP_postal_code_regex')
             if rgx.match(data):
-                zip_parser = ZipCodeParser(self.config)
-                if zip_parser.get_zip_code_data(data) is not None:
+                postal_parser = PostalCodeParser(self.config)
+                if postal_parser.get_postal_code_data(data) is not None:
                     confidence -= 15
 
         return confidence

@@ -28,40 +28,77 @@ from cahoots.parsers.location import \
 import re
 
 
-class ZipCodeParser(BaseParser):
+class PostalCodeParser(BaseParser):
     """Detects if the data provided is a location"""
 
     def __init__(self, config):
-        BaseParser.__init__(self, config, "Zip Code", 100)
+        BaseParser.__init__(self, config, "Postal Code", 100)
 
     @staticmethod
     def bootstrap(config):
         """Bootstraps the location parser"""
-        # Will test if something matches 5 or 9 digit zipcode pattern
-        zip_regex = re.compile(r'^\d{5}(-\d{4})?$', re.VERBOSE)
-        registry.set('ZCP_zip_code_regex', zip_regex)
+        # Will test if something matches 5 or 9 digit postalcode pattern
+        postal_regex = re.compile(
+            r'^' +
+            r'(\d{2,7}(-\d{2,4})?)|' +
+            r'([a-zA-Z]\d{3})|' +
+            r'([a-zA-Z]{2}\s\d{2})|' +
+            r'([a-zA-Z]{2}-\d{2})|' +
+            r'(AD\d{3})|' +
+            r'(\d{3}\s\d{2})|' +
+            r'([a-zA-Z]{2}\d{4})|' +
+            r'(\d{4}\sW3)|' +
+            r'(\d{4}\s[a-zA-Z]{2})|' +
+            r'([a-zA-Z]\d[a-zA-Z]\s\d[a-zA-Z]\d)|' +
+            r'(AZ\s\d{4})|' +
+            r'(BB\d{1,5})|' +
+            r'([a-zA-Z]{2}\d{1,2}\s\d[a-zA-Z]{2})|' +
+            r'(JMA[a-zA-Z]{2}\d{2})|' +
+            r'(AZ-\d{4})|' +
+            r'([a-zA-Z]\d{4}[a-zA-Z]{3})|' +
+            r'([a-zA-Z]{2}\d{2}\s\d[a-zA-Z]{2})|' +
+            r'([a-zA-Z]{3}\s\d{4})|' +
+            r'([a-zA-Z]{4}\s1ZZ)|' +
+            r'([a-zA-Z]{2}\d{1,2}(-\d{4})?)|' +
+            r'(\d{5}\sCEDEX(\s\d{1,2})?)' +
+            r'$'
+        )
+        registry.set('ZCP_postal_code_regex', postal_regex)
 
-    def get_zip_code_data(self, data):
-        """If this looks like a zip code, we try to get its info"""
-        if len(data) == 5:
-            zip_code = data
-        else:
-            zip_code = data[:5]
+    def get_postal_code_data(self, data):
+        """If this looks like a postal code, we try to get its info"""
+        plus_postal_code = '-' in data
+
+        if plus_postal_code:
+            prefix = data.split('-')[0]
 
         ldb = LocationDatabase()
+
         entities = ldb.select(
             'SELECT * FROM city WHERE postal_code = ?',
-            (zip_code,),
+            (data,),
             CityEntity
         )
+        entities = entities or []
 
-        if entities is not None:
-            entities = self.prepare_zip_code_data(entities)
+        if plus_postal_code:
+            prefix_entities = ldb.select(
+                'SELECT * FROM city WHERE postal_code = ?',
+                (prefix,),
+                CityEntity
+            )
+            prefix_entities = prefix_entities or []
+            entities.extend(prefix_entities)
+
+        if not entities:
+            return None
+
+        entities = self.prepare_postal_code_data(entities)
 
         return entities
 
     @classmethod
-    def prepare_zip_code_data(cls, entities):
+    def prepare_postal_code_data(cls, entities):
         """Preps our CityEntity objects with country data and converts dicts"""
         ldb = LocationDatabase()
         cities = []
@@ -84,7 +121,7 @@ class ZipCodeParser(BaseParser):
         return cities
 
     def calculate_confidence(self, data, results):
-        """calculates the confidence that this is a zip code"""
+        """calculates the confidence that this is a postal code"""
 
         # The longer the data string, the higher the confidence
         self.confidence -= (20-len(data))
@@ -99,14 +136,10 @@ class ZipCodeParser(BaseParser):
         if len(data) >= 20:
             return
 
-        zip_regex = registry.get('ZCP_zip_code_regex')
-        if zip_regex.match(data):
-            results = self.get_zip_code_data(data)
+        postal_regex = registry.get('ZCP_postal_code_regex')
+        if postal_regex.match(data):
+            results = self.get_postal_code_data(data)
             if results is not None:
                 self.calculate_confidence(data, results)
-                if len(data) == 5:
-                    sub_type = 'Standard'
-                else:
-                    sub_type = 'Plus Four'
-                yield self.result(sub_type, self.confidence, results)
+                yield self.result(None, self.confidence, results)
                 return
