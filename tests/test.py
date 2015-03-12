@@ -39,7 +39,7 @@ import cahoots.parsers.email  # flake8: noqa
 import cahoots.parsers.equation  # flake8: noqa
 import cahoots.parsers.location  # flake8: noqa
 import cahoots.parsers.location.coordinate  # flake8: noqa
-import cahoots.parsers.location.zipcode  # flake8: noqa
+import cahoots.parsers.location.postalcode  # flake8: noqa
 import cahoots.parsers.measurement  # flake8: noqa
 import cahoots.parsers.name  # flake8: noqa
 import cahoots.parsers.number  # flake8: noqa
@@ -61,7 +61,7 @@ from tests.parsers.email import *  # flake8: noqa
 from tests.parsers.equation import *  # flake8: noqa
 from tests.parsers.location import *  # flake8: noqa
 from tests.parsers.location.coordinate import *  # flake8: noqa
-from tests.parsers.location.zipcode import *  # flake8: noqa
+from tests.parsers.location.postalcode import *  # flake8: noqa
 from tests.parsers.measurement import *  # flake8: noqa
 from tests.parsers.name import *  # flake8: noqa
 from tests.parsers.number import *  # flake8: noqa

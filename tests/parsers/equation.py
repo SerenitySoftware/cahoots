@@ -27,7 +27,7 @@ SOFTWARE.
 from cahoots.parsers.equation import EquationParser
 from cahoots.parsers.programming import ProgrammingParser
 from tests.parsers.location import SQLite3Mock
-from cahoots.parsers.location.zipcode import ZipCodeParser
+from cahoots.parsers.location.postalcode import PostalCodeParser
 from tests.config import TestConfig
 from SereneRegistry import registry
 import unittest
@@ -171,10 +171,11 @@ class EquationParserTests(unittest.TestCase):
         self.assertEqual(count, 0)
 
     @mock.patch('sqlite3.connect', SQLite3Mock.connect)
-    def test_parse_zip_code_yields_result_with_lower_confidence(self):
-        ZipCodeParser.bootstrap(TestConfig())
+    def test_parse_postal_code_yields_result_with_lower_confidence(self):
+        PostalCodeParser.bootstrap(TestConfig())
         SQLite3Mock.fetchall_returns = [
             [('us', 'united states')],
+            [],
             [
                 ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
             ]
@@ -182,7 +183,6 @@ class EquationParserTests(unittest.TestCase):
         count = 0
         for result in self.ep.parse('90210-1210'):
             count += 1
-            self.assertEqual(result.subtype, 'Simple')
             self.assertEqual(result.result_value, 89000)
             self.assertEqual(result.confidence, 75)
         self.assertEqual(1, count)
@@ -192,6 +192,10 @@ class EquationParserTests(unittest.TestCase):
                 (
                     'PRAGMA temp_store = 2',
                     None
+                ),
+                (
+                    'SELECT * FROM city WHERE postal_code = ?',
+                    ('90210-1210',)
                 ),
                 (
                     'SELECT * FROM city WHERE postal_code = ?',

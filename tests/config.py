@@ -37,7 +37,7 @@ class TestConfig(cahoots.config.BaseConfig):
         cahoots.parsers.uri.URIParser,
         cahoots.parsers.email.EmailParser,
         # programming.ProgrammingParser,
-        cahoots.parsers.location.zipcode.ZipCodeParser,
+        cahoots.parsers.location.postalcode.PostalCodeParser,
         cahoots.parsers.location.coordinate.CoordinateParser,
         cahoots.parsers.equation.EquationParser,
         cahoots.parsers.measurement.MeasurementParser,

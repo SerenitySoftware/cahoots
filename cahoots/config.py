@@ -35,7 +35,7 @@ from cahoots.parsers import\
     uri
 from cahoots.parsers.location import\
     coordinate,\
-    zipcode
+    postalcode
 
 
 class BaseConfig(object):
@@ -65,7 +65,7 @@ class BaseConfig(object):
         email.EmailParser,
         programming.ProgrammingParser,
         coordinate.CoordinateParser,
-        zipcode.ZipCodeParser,
+        postalcode.PostalCodeParser,
         equation.EquationParser,
         measurement.MeasurementParser,
     ]

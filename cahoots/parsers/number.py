@@ -57,7 +57,7 @@ class NumberParser(BaseParser):
         self.defined_units = [
             ("zero", 0),
             ("oh", 0),
-            ("zip", 0),
+            ("  postal", 0),
             ("zilch", 0),
             ("nada", 0),
             ("bupkis", 0),
