@@ -22,16 +22,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from cahoots.parsers.base import BaseParser
+from SereneRegistry import registry
+import re
 
 
 class AddressParser(BaseParser):
+    """Determines if given data is an address"""
 
     def __init__(self, config):
         BaseParser.__init__(self, config, "Address", 100)
 
     @staticmethod
     def bootstrap(config):
-        pass
+        """preps the address parser"""
+        split_regex = re.compile("[ `'?.;,-/]")
+        registry.set('AP_split_regex', split_regex)
 
     def parse(self, data):
-        pass
+        """parses for address"""
+        split_regex = registry.get('AP_split_regex')
+        working_data = split_regex.split(data.lower())
+
+        # Going through the data backwards looking for a street suffix
+        for bit in reversed(working_data):
+            pass
