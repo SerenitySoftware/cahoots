@@ -101,7 +101,7 @@ class CahootsParserTests(unittest.TestCase):
         parser = CahootsParser(ParserTestConfig, False)
         result = parser.parse('data_string')
 
-        self.assertEqual(4, len(result))
+        self.assertEqual(5, len(result))
         self.assertEqual('data_string', result['query'])
         self.assertEqual('thetimeisnow', result['date'])
         self.assertIsInstance(result['top'], ParseResult)
