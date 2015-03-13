@@ -39,7 +39,7 @@ class FakeModule(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Fake")
 
-    def parse(self, data, **kwargs):
+    def parse(self, data):
         yield self.result("Subtype", 200, data)
 
     @staticmethod
@@ -76,8 +76,8 @@ class parserThreadTests(unittest.TestCase):
 
 
 class FakeDate(datetime.datetime):
-    def __new__(cls, *args, **kwargs):
-        return datetime.datetime.__new__(datetime.datetime, *args, **kwargs)
+    def __new__(cls):
+        return datetime.datetime.__new__(datetime.datetime)
 
 
 class CahootsParserTests(unittest.TestCase):
@@ -101,7 +101,7 @@ class CahootsParserTests(unittest.TestCase):
         parser = CahootsParser(ParserTestConfig, False)
         result = parser.parse('data_string')
 
-        self.assertEqual(4, len(result))
+        self.assertEqual(5, len(result))
         self.assertEqual('data_string', result['query'])
         self.assertEqual('thetimeisnow', result['date'])
         self.assertIsInstance(result['top'], ParseResult)

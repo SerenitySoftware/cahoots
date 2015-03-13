@@ -87,6 +87,7 @@ class CahootsParser(object):
     def parse(self, data_string):
         """Parses input data and returns a dict of result data"""
 
+        start_time = time.time()
         results = []
         threads = []
 
@@ -116,6 +117,7 @@ class CahootsParser(object):
         return {
             'query': truncate_text(query),
             'date': datetime.datetime.now(),
+            'execution_seconds': time.time() - start_time,
             'top': matches[0] if len(matches) > 0 else None,
             'results': {
                 'count': match_count,

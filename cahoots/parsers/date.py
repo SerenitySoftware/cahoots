@@ -55,7 +55,7 @@ class DateParser(BaseParser):
 
         return False
 
-    def parse(self, data_string, **kwargs):
+    def parse(self, data_string):
         punctuation = [c for c in data_string if
                        c in string.punctuation or
                        c in string.whitespace]

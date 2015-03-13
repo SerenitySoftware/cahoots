@@ -100,7 +100,7 @@ class CoordinateParser(BaseParser):
         )
         return lat_lon
 
-    def parse(self, data, **kwargs):
+    def parse(self, data):
         """parses data to determine if this is a location"""
         data = data.strip()
 

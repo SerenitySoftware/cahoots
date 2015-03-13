@@ -58,7 +58,7 @@ class BooleanParser(BaseParser):
             return 50
         return 0
 
-    def parse(self, data, **kwargs):
+    def parse(self, data):
         data = data.lower()
 
         # The largest boolean "value" we have is 5 characters long.

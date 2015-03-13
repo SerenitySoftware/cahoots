@@ -56,7 +56,7 @@ class CharacterParser(BaseParser):
 
         return False
 
-    def parse(self, data, **kwargs):
+    def parse(self, data):
         if len(data) != 1:
             return
 

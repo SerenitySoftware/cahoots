@@ -41,7 +41,7 @@ class BaseParser(object):
         '''This method can be statically called to bootstrap a parser'''
         pass
 
-    def parse(self, data, *args, **kwargs):
+    def parse(self, data):
         """Base parse method"""
         raise NotImplementedError("Class must override the parse() method")
 

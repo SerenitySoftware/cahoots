@@ -50,6 +50,9 @@ rm cahoots/parsers/location/data/city.txt
 bzip2 -d -k cahoots/parsers/location/data/country.csv.bz2
 cat cahoots/parsers/location/data/country.sql | sqlite3 cahoots/parsers/location/data/location.sqlite
 rm cahoots/parsers/location/data/country.csv
+bzip2 -d -k cahoots/parsers/location/data/street_suffix.csv.bz2
+cat cahoots/parsers/location/data/street_suffix.sql | sqlite3 cahoots/parsers/location/data/location.sqlite
+rm cahoots/parsers/location/data/street_suffix.csv
 
 echo " "
 echo " [Cahoots] Step 7: Moving files around"
