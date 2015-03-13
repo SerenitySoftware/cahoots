@@ -38,7 +38,7 @@ class EmailParser(BaseParser):
             r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data
         )
 
-    def parse(self, data_string, **kwargs):
+    def parse(self, data_string):
         if '@' not in data_string:
             return
 

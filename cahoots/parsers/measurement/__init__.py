@@ -173,7 +173,7 @@ class MeasurementParser(BaseParser):
 
         return system_ids
 
-    def parse(self, data, **kwargs):
+    def parse(self, data):
 
         data = data.strip().lower()
 

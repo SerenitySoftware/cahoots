@@ -120,7 +120,7 @@ class NameParser(BaseParser):
         if len(data) > 3:
             self.confidence -= (7*len(data))
 
-    def parse(self, data, **kwargs):
+    def parse(self, data):
         """Determines if the data is a name or not"""
 
         # Making sure there are at least SOME uppercase letters in the phrase

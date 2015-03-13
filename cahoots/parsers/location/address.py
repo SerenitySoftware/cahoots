@@ -33,5 +33,5 @@ class AddressParser(BaseParser):
     def bootstrap(config):
         pass
 
-    def parse(self, data, **kwargs):
+    def parse(self, data):
         pass

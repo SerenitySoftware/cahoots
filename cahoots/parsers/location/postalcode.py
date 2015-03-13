@@ -129,7 +129,7 @@ class PostalCodeParser(BaseParser):
         if len(results) > 1:
             self.confidence -= (3 * len(results))
 
-    def parse(self, data, **kwargs):
+    def parse(self, data):
         """parses data to determine if this is a location"""
         data = data.strip()
 
