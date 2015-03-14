@@ -26,6 +26,7 @@ from SereneRegistry import registry
 from cahoots.parsers.location import \
     LocationDatabase, CityEntity, CountryEntity
 import re
+import sqlite3
 
 
 class PostalCodeParser(BaseParser):
@@ -72,45 +73,57 @@ class PostalCodeParser(BaseParser):
         if plus_postal_code:
             prefix = data.split('-')[0]
 
-        ldb = LocationDatabase()
+        database = LocationDatabase.get_database()
+        cursor = database.cursor()
 
-        entities = ldb.select(
-            'SELECT * FROM city WHERE postal_code = ?',
-            (data,),
-            CityEntity
-        )
-        entities = entities or []
-
-        if plus_postal_code:
-            prefix_entities = ldb.select(
+        try:
+            rows = cursor.execute(
                 'SELECT * FROM city WHERE postal_code = ?',
-                (prefix,),
-                CityEntity
-            )
-            prefix_entities = prefix_entities or []
-            entities.extend(prefix_entities)
-
-        if not entities:
+                (data,)
+            ).fetchall()
+            entities = ldb.hydrate(rows, CityEntity)
+        except sqlite3.Error:
+            database.close()
             return None
 
-        entities = self.prepare_postal_code_data(entities)
+        if plus_postal_code:
+            try:
+                rows = cursor.execute(
+                    'SELECT * FROM city WHERE postal_code = ?',
+                    (prefix,)
+                ).fetchall()
+                prefix_entities = ldb.hydrate(rows, CityEntity)
+                entities.extend(prefix_entities)
+            except sqlite3.Error:
+                database.close()
+                return None
 
+        if not entities:
+            database.close()
+            return None
+
+        entities = self.prepare_postal_code_data(entities, cursor)
+
+        database.close()
         return entities
 
     @classmethod
-    def prepare_postal_code_data(cls, entities):
+    def prepare_postal_code_data(cls, entities, cursor):
         """Preps our CityEntity objects with country data and converts dicts"""
         ldb = LocationDatabase()
         cities = []
 
         for city in entities:
-            entities = ldb.select(
-                'SELECT * FROM country WHERE abbreviation = ?',
-                (city.country,),
-                CountryEntity
-            )
+            try:
+                rows = cursor.execute(
+                    'SELECT * FROM country WHERE abbreviation = ?',
+                    (city.country,)
+                ).fetchall()
+            except sqlite3.Error:
+                pass
 
-            if len(entities) > 0:
+            if len(rows) > 0:
+                entities = ldb.hydrate(rows, CountryEntity)
                 entity = entities[0]
                 entity.name = entity.name.title()
                 entity.abbreviation = entity.abbreviation.upper()

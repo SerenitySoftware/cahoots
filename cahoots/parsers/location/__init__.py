@@ -30,36 +30,43 @@ class LocationDatabase(object):
     """Handles the database for location parsing in various submodules"""
 
     @classmethod
-    def get_database_cursor(cls):
-        """Gets a sqlite database cursor for the location database"""
+    def get_database(cls):
+        """Gets a sqlite database connection to the location database"""
+        data_dir = os.path.dirname(os.path.realpath(__file__))
+        database = sqlite3.connect(data_dir + '/data/location.sqlite')
+        database.cursor().execute('PRAGMA temp_store = 2')
+        return database
 
-        if not registry.test('L_database'):
-            data_dir = os.path.dirname(os.path.realpath(__file__))
-            database = sqlite3.connect(data_dir + '/data/location.sqlite')
-            database.cursor().execute('PRAGMA temp_store = 2')
-            registry.set('L_database', database)
-        else:
-            database = registry.get('L_database')
-
-        return database.cursor()
-
-    def select(self, sql, params, entity):
+    def single_select(self, sql, params, prototype):
         """Executes a statement (assumed to be a select) against the db"""
         if not isinstance(params, tuple):
             raise TypeError(
                 'LocationDatabase.select requires params to be a tuple.'
             )
 
-        cursor = self.get_database_cursor()
-        rows = cursor.execute(sql, params).fetchall()
+        database = self.get_database()
+        cursor = database.cursor()
+
+        try:
+            rows = cursor.execute(sql, params).fetchall()
+        except sqlite3.Error:
+            database.close()
+            return None
+
+        database.close()
 
         if len(rows) > 0:
-            entities = []
-            for row in rows:
-                entities.append(entity(row))
-            return entities
+            return self.hydrate(rows, prototype)
         else:
             return None
+
+    @classmethod
+    def hydrate(cls, rows, prototype):
+        """hydrates a set of entities"""
+        entities = []
+        for row in rows:
+            entities.append(prototype(row))
+        return entities
 
 
 # pylint: disable=too-many-instance-attributes
@@ -87,3 +94,9 @@ class CountryEntity(object):
     def __init__(self, data):
         self.abbreviation,\
             self.name = data
+
+class StreetSuffixEntity(object):
+    """Represents a stree suffix entity"""
+
+    def __init__(self, data):
+        self.suffix_name = data[0]

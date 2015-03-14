@@ -22,8 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from cahoots.parsers.base import BaseParser
+from cahoots.parsers.location import LocationDatabase, StreetSuffixEntity
 from SereneRegistry import registry
 import re
+import sqlite3
 
 
 class AddressParser(BaseParser):
@@ -35,14 +37,53 @@ class AddressParser(BaseParser):
     @staticmethod
     def bootstrap(config):
         """preps the address parser"""
-        split_regex = re.compile("[ `'?.;,-/]")
+        split_regex = re.compile("[\s`'?.;,-/]")
         registry.set('AP_split_regex', split_regex)
+
+    @classmethod
+    def get_street_suffix(cls, working_data):
+
+        ldb = LocationDatabase()
+
+        sqlItems = []
+
+        for _ in working_data:
+            sqlItems.append('suffix_name = ?')
+
+        database = LocationDatabase.get_database()
+        cursor = database.cursor()
+
+        try:
+            rows = cursor.execute(
+                'SELECT * FROM street_suffix WHERE ' + " or ".join(sqlItems),
+                tuple(working_data)
+            ).fetchone()
+            entities = LocationDatabase.hydrate([rows], StreetSuffixEntity)
+        except sqlite3.Error:
+            pass
+
+        return entities or None
 
     def parse(self, data):
         """parses for address"""
+
+        if len(data) > 75:
+            return
+
         split_regex = registry.get('AP_split_regex')
-        working_data = split_regex.split(data.lower())
+        # splitting the data string and removing empty values
+        working_data = [x for x in split_regex.split(data) if x]
+
+        if len(working_data) <= 3:
+            return
+
+        suffix = self.get_street_suffix(working_data)
+        if not suffix:
+            return
+
+        for suf in suffix:
+            print vars(suf)
 
         # Going through the data backwards looking for a street suffix
-        for bit in reversed(working_data):
-            pass
+        #for bit in reversed(working_data):
+        #    pass

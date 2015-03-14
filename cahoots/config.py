@@ -34,8 +34,10 @@ from cahoots.parsers import\
     programming,\
     uri
 from cahoots.parsers.location import\
+    address,\
     coordinate,\
-    postalcode
+    postalcode,\
+    LocationDatabase
 
 
 class BaseConfig(object):
@@ -66,8 +68,13 @@ class BaseConfig(object):
         programming.ProgrammingParser,
         coordinate.CoordinateParser,
         postalcode.PostalCodeParser,
+        address.AddressParser,
         equation.EquationParser,
         measurement.MeasurementParser,
+    ]
+
+    enabledUtilityModules = [
+        LocationDatabase
     ]
 
     """
