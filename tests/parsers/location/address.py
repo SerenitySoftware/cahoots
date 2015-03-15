@@ -127,16 +127,29 @@ class AddressParserTests(unittest.TestCase):
 
         working_data = ['str1', 'str2']
 
-        result = self.ap.find_address_tokens(working_data, [])
+        result = self.ap.find_address_tokens(
+            working_data,
+            {
+                'street_suffix': None,
+                'addressed_to': None,
+                'address_tokens': []
+            }
+        )
 
         self.assertEqual(
             result,
             (
                 1,
-                [{
-                    'query': 'str2',
-                    'match_count': 20
-                }]
+                {
+                    'street_suffix': None,
+                    'addressed_to': None,
+                    'address_tokens': [
+                        {
+                            'token': 'str2',
+                            'matches': 20
+                        }
+                    ]
+                }
             )
         )
 
@@ -351,15 +364,16 @@ class AddressParserTests(unittest.TestCase):
             self.assertEqual(res.confidence, 40)
             self.assertEqual(
                 res.result_value,
-                [
-                    {
-                        'suffix_name': 'street'
-                    },
-                    {
-                        'match_count': 1,
-                        'query': 'dolor'
-                    }
-                ]
+                {
+                    'street_suffix': 'street',
+                    'addressed_to': 'Lorem Ipsum',
+                    'address_tokens': [
+                        {
+                            'token': 'dolor',
+                            'matches': 1
+                        }
+                    ]
+                }
             )
             count += 1
 

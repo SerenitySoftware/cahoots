@@ -142,9 +142,9 @@ class AddressParser(BaseParser):
 
             if row:
                 entity = {}
-                entity['query'] = test
-                entity['match_count'] = row
-                results.append(entity)
+                entity['token'] = test
+                entity['matches'] = row
+                results['address_tokens'].append(entity)
                 tokens += 1
                 self.confidence += 20
 
@@ -172,7 +172,11 @@ class AddressParser(BaseParser):
         if not [x for x in working_data if x[:1].isdigit()]:
             return
 
-        results = []
+        results = {
+            'street_suffix': None,
+            'addressed_to': None,
+            'address_tokens': []
+        }
 
         # With no street suffix, we don't consider this an address
         suffix = self.get_street_suffix(working_data)
@@ -188,12 +192,14 @@ class AddressParser(BaseParser):
             # if for some reason we found an invalid suffix, we probably cry
             return
 
-        results.append(vars(suffix))
+        results['street_suffix'] = suffix.suffix_name
 
         # Looking to see if this address starts with a name, since no digit
         if not data[0].isdigit():
             working_data, suspected_name = \
                 self.separate_suspected_name(working_data)
+
+            results['addressed_to'] = suspected_name
 
             if NameParser in self.config.enabledModules:
                 if not self.is_address_name(suspected_name):
