@@ -24,3 +24,8 @@ CREATE TABLE `country` (
 );
 CREATE INDEX idx_abbreviation on country (abbreviation collate nocase);
 CREATE INDEX idx_name on country (name collate nocase);
+
+CREATE TABLE `street_suffix` (
+        `suffix_name`  TEXT collate nocase
+);
+CREATE INDEX idx_suffix_name on street_suffix (suffix_name collate nocase);

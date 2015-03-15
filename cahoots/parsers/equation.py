@@ -207,7 +207,7 @@ class EquationParser(BaseParser):
 
         return confidence
 
-    def parse(self, data, **kwargs):
+    def parse(self, data):
         """
         Standard parse function for checking if
         entered string is a mathematical equation

@@ -108,7 +108,7 @@ class PhoneParser(BaseParser):
             'region': num_region or None,
         }
 
-    def parse(self, data_string, **kwargs):
+    def parse(self, data_string):
         data_string = data_string.strip()
 
         self.digits = [c for c in data_string if c in string.digits]

@@ -288,7 +288,7 @@ class NumberParser(BaseParser):
 
         return True, data
 
-    def parse(self, data, **kwargs):
+    def parse(self, data):
         data = data.strip()
 
         if data == "":

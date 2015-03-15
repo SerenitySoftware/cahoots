@@ -72,7 +72,7 @@ class URIParser(BaseParser):
 
         return True
 
-    def parse(self, data_string, **kwargs):
+    def parse(self, data_string):
         if len(data_string) < 4:
             return
 

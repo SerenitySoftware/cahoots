@@ -22,8 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
+import sqlite3
 from cahoots.parsers.location import \
-    LocationDatabase, CityEntity, CountryEntity
+    LocationDatabase, CityEntity, CountryEntity, StreetSuffixEntity
 from SereneRegistry import registry
 import unittest
 import mock
@@ -46,7 +47,15 @@ class SQLite3Mock(object):
 
     @staticmethod
     def fetchall():
-        return SQLite3Mock.fetchall_returns.pop()
+        value = SQLite3Mock.fetchall_returns.pop()
+        if isinstance(value, BaseException):
+            raise value
+        else:
+            return value
+
+    @staticmethod
+    def fetchone():
+        return SQLite3Mock.fetchall()
 
     @staticmethod
     # pylint: disable=unused-argument
@@ -55,6 +64,10 @@ class SQLite3Mock(object):
 
     @staticmethod
     def cursor():
+        return SQLite3Mock
+
+    @staticmethod
+    def close():
         return SQLite3Mock
 
 
@@ -71,11 +84,12 @@ class LocationDatabaseTests(unittest.TestCase):
     def test_select(self):
         ldb = LocationDatabase()
         with self.assertRaises(TypeError):
-            ldb.select('sql', 'burp', CityEntity)
+            ldb.single_select('sql', 'burp', CityEntity)
 
     @mock.patch('sqlite3.connect', SQLite3Mock.connect)
     def test_select_returns_expected_data(self):
         SQLite3Mock.fetchall_returns = [
+            sqlite3.Error('Error'),
             [],
             [('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')],
             [('us', 'united states')]
@@ -84,7 +98,7 @@ class LocationDatabaseTests(unittest.TestCase):
         ldb = LocationDatabase()
 
         # Country Result
-        result = ldb.select('sql1', ('tuple1',), CountryEntity)
+        result = ldb.single_select('sql1', ('tuple1',), CountryEntity)
         self.assertIsInstance(result, list)
         self.assertEqual(1, len(result))
         self.assertIsInstance(result[0], CountryEntity)
@@ -92,7 +106,7 @@ class LocationDatabaseTests(unittest.TestCase):
         self.assertEqual(result[0].name, 'united states')
 
         # City Result
-        result = ldb.select('sql2', ('tuple2',), CityEntity)
+        result = ldb.single_select('sql2', ('tuple2',), CityEntity)
         self.assertIsInstance(result, list)
         self.assertEqual(1, len(result))
         self.assertIsInstance(result[0], CityEntity)
@@ -110,7 +124,11 @@ class LocationDatabaseTests(unittest.TestCase):
         self.assertEqual(result[0].coord_accuracy, 'l')
 
         # No results
-        result = ldb.select('sql3', ('tuple3',), CityEntity)
+        result = ldb.single_select('sql3', ('tuple3',), CityEntity)
+        self.assertIsNone(result)
+
+        # Error while fetching
+        result = ldb.single_select('sql4', ('tuple4',), CountryEntity)
         self.assertIsNone(result)
 
         self.assertEqual(
@@ -118,7 +136,19 @@ class LocationDatabaseTests(unittest.TestCase):
             [
                 ('PRAGMA temp_store = 2', None),
                 ('sql1', ('tuple1',)),
+                ('PRAGMA temp_store = 2', None),
                 ('sql2', ('tuple2',)),
+                ('PRAGMA temp_store = 2', None),
                 ('sql3', ('tuple3',)),
+                ('PRAGMA temp_store = 2', None),
+                ('sql4', ('tuple4',)),
             ]
         )
+
+    def test_hydrate_with_non_lists(self):
+        data = ('US',)
+        result = LocationDatabase.hydrate(data, StreetSuffixEntity)
+        self.assertIsInstance(result, StreetSuffixEntity)
+
+        with self.assertRaises(TypeError):
+            LocationDatabase.hydrate('foo', StreetSuffixEntity)
