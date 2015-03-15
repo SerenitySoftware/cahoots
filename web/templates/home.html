@@ -3,7 +3,7 @@
 
 <%def name="primary()">
 	<h2>Type Anything</h2>
-	
+
 	<form id="input" method="post" class="container">
 		<textarea id="q" name="q">${ q }</textarea>
 		<input type="submit" id="go" value="Submit" />
@@ -14,17 +14,17 @@
 <%def name="secondary()">
 	% if results:
 	<div id="result">
-	
+
 		<div id="api-result">
 			<h3>Structured Response</h3>
 			<pre>${ json_results | h }</pre>
 		</div>
-		
+
 	</div>
 	% endif
 	<div id="examples">
 		<h2>&#8681; Try These &#8681;</h2>
-		
+
 		<div class="container">
 			<div class="example names">
 				<h3>Names</h3>
@@ -35,7 +35,7 @@
 					<li><a href="#">Pres Barack Q. Obama</a></li>
 				</ul>
 			</div>
-			
+
 			<div class="example dates">
 				<h3>Dates</h3>
 				<ul>
@@ -45,7 +45,7 @@
 					<li><a href="#">Next week</a></li>
 				</ul>
 			</div>
-			
+
 			<div class="example equations">
 				<h3>Math Equations</h3>
 				<ul>
@@ -56,7 +56,7 @@
 				</ul>
 			</div>
 		</div>
-		
+
 		<div class="container">
 			<div class="example urls">
 				<h3>URLs and Emails</h3>
@@ -67,7 +67,7 @@
 					<li><a href="#">192.168.1.1</a></li>
 				</ul>
 			</div>
-			
+
 			<div class="example phone">
 				<h3>Phone Numbers</h3>
 				<ul>
@@ -77,7 +77,7 @@
 					<li><a href="#">713-439-7086</a></li>
 				</ul>
 			</div>
-			
+
 			<div class="example numbers">
 				<h3>Other Numbers</h3>
 				<ul>
@@ -110,7 +110,7 @@
 					<li><a href="#">400 gallons of gas</a></li>
 				</ul>
 			</div>
-			
+
 			<div class="example programming">
 				<h3>Programming/Code</h3>
 				<ul>
@@ -144,7 +144,7 @@
 			</div>
 
 			<div class="example addresses">
-				<h3>Addresses (Not Yet Implemented)</h3>
+				<h3>Addresses</h3>
 				<ul>
 					<li><a href="#">1600 Pennsylvania Avenue, Washington, DC</a></li>
 					<li><a href="#">1 Infinite Loop, Cupertino, CA 95014</a></li>
