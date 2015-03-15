@@ -54,6 +54,10 @@ class SQLite3Mock(object):
             return value
 
     @staticmethod
+    def fetchone():
+        return SQLite3Mock.fetchall()
+
+    @staticmethod
     # pylint: disable=unused-argument
     def connect(db_file):
         return SQLite3Mock

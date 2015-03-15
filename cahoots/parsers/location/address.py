@@ -54,7 +54,7 @@ class AddressParser(BaseParser):
 
     @classmethod
     def get_street_suffix(cls, working_data):
-        """Looks at our data for a stree suffix and returns the entity"""
+        """Looks at our data for a street suffix and returns the entity"""
         sql_items = []
 
         for _ in working_data:
@@ -120,12 +120,12 @@ class AddressParser(BaseParser):
 
         working_data.extend(data_combinations)
 
-        for word in [x for x in working_data if not self.is_invalid_int(x)]:
+        database = LocationDatabase.get_database()
+        cursor = database.cursor()
 
-            params = (word, word, word, word, word)
+        for test in [x for x in working_data if not self.is_invalid_int(x)]:
 
-            database = LocationDatabase.get_database()
-            cursor = database.cursor()
+            params = (test, test, test, test, test)
 
             sql = 'SELECT count(*) FROM city WHERE ' +\
                   'country = ? OR ' +\
@@ -142,7 +142,7 @@ class AddressParser(BaseParser):
 
             if row:
                 entity = {}
-                entity['query'] = word
+                entity['query'] = test
                 entity['match_count'] = row
                 results.append(entity)
                 tokens += 1
