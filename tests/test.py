@@ -38,6 +38,7 @@ import cahoots.parsers.date  # flake8: noqa
 import cahoots.parsers.email  # flake8: noqa
 import cahoots.parsers.equation  # flake8: noqa
 import cahoots.parsers.location  # flake8: noqa
+import cahoots.parsers.location.address  # flake8: noqa
 import cahoots.parsers.location.coordinate  # flake8: noqa
 import cahoots.parsers.location.postalcode  # flake8: noqa
 import cahoots.parsers.measurement  # flake8: noqa

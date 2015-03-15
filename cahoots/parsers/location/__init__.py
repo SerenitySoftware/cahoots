@@ -21,7 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from SereneRegistry import registry
 import sqlite3
 import os
 
@@ -61,12 +60,19 @@ class LocationDatabase(object):
             return None
 
     @classmethod
-    def hydrate(cls, rows, prototype):
+    def hydrate(cls, data, prototype):
         """hydrates a set of entities"""
-        entities = []
-        for row in rows:
-            entities.append(prototype(row))
-        return entities
+        if isinstance(data, list):
+            entities = []
+            for row in data:
+                entities.append(prototype(row))
+            return entities
+        elif isinstance(data, tuple):
+            return prototype(data)
+        else:
+            raise TypeError(
+                'Location entity hydration requires a list or tuple.'
+            )
 
 
 # pylint: disable=too-many-instance-attributes
@@ -95,8 +101,9 @@ class CountryEntity(object):
         self.abbreviation,\
             self.name = data
 
+
 class StreetSuffixEntity(object):
-    """Represents a stree suffix entity"""
+    """Represents a street suffix entity"""
 
     def __init__(self, data):
         self.suffix_name = data[0]

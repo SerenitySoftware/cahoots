@@ -81,7 +81,7 @@ class PostalCodeParser(BaseParser):
                 'SELECT * FROM city WHERE postal_code = ?',
                 (data,)
             ).fetchall()
-            entities = ldb.hydrate(rows, CityEntity)
+            entities = LocationDatabase.hydrate(rows, CityEntity)
         except sqlite3.Error:
             database.close()
             return None
@@ -92,7 +92,7 @@ class PostalCodeParser(BaseParser):
                     'SELECT * FROM city WHERE postal_code = ?',
                     (prefix,)
                 ).fetchall()
-                prefix_entities = ldb.hydrate(rows, CityEntity)
+                prefix_entities = LocationDatabase.hydrate(rows, CityEntity)
                 entities.extend(prefix_entities)
             except sqlite3.Error:
                 database.close()
@@ -110,7 +110,6 @@ class PostalCodeParser(BaseParser):
     @classmethod
     def prepare_postal_code_data(cls, entities, cursor):
         """Preps our CityEntity objects with country data and converts dicts"""
-        ldb = LocationDatabase()
         cities = []
 
         for city in entities:
@@ -120,10 +119,10 @@ class PostalCodeParser(BaseParser):
                     (city.country,)
                 ).fetchall()
             except sqlite3.Error:
-                pass
+                rows = []
 
-            if len(rows) > 0:
-                entities = ldb.hydrate(rows, CountryEntity)
+            if rows:
+                entities = LocationDatabase.hydrate(rows, CountryEntity)
                 entity = entities[0]
                 entity.name = entity.name.title()
                 entity.abbreviation = entity.abbreviation.upper()
