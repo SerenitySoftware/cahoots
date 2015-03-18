@@ -2,9 +2,9 @@ LICENSES FOR ALL SNIPPETS USED IN THE PROGRAMMING PARSER BAYES TRAINER ARE INCLU
 ALL SNIPPETS ARE TAKEN FROM PROJECTS USING EITHER THE BSD OR MIT LICENSES.
 
 
---------
+--------------------------------
 https://github.com/jekyll/jekyll
----
+--------------------------------
 
 The MIT License (MIT)
 
@@ -29,9 +29,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
---
+--------------------------------------
 https://github.com/twbs/bootstrap-sass
---
+--------------------------------------
 
 The MIT License (MIT)
 
@@ -56,9 +56,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
---
+------------------------------------
 https://github.com/jnicklas/capybara
---
+------------------------------------
 
 (The MIT License)
 
@@ -84,9 +84,9 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
---
+---------------------------------
 https://github.com/intridea/grape
---
+---------------------------------
 
 Copyright (c) 2010-2015 Michael Bleigh and Intridea, Inc.
 
@@ -110,9 +110,9 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
---
+-------------------------------
 https://github.com/ryanb/cancan
---
+-------------------------------
 
 Copyright (c) 2011 Ryan Bates
 
@@ -136,9 +136,9 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
---
+--------------------------------------
 https://github.com/middleman/middleman
---
+--------------------------------------
 
 Copyright (c) 2010-2014 Thomas Reynolds
 
@@ -149,9 +149,9 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
---
+---------------------------------
 https://github.com/Shopify/liquid
---
+---------------------------------
 
 Copyright (c) 2005, 2006 Tobias Luetke
 
@@ -175,9 +175,9 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
---
+-----------------------------------
 https://github.com/drapergem/draper
---
+-----------------------------------
 
 (The MIT License)
 
@@ -188,9 +188,9 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED ‘AS IS’, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
---
+----------------------------------
 https://github.com/flyerhzm/bullet
---
+----------------------------------
 
 Copyright (c) 2009 - 2010 Richard Huang (flyerhzm@gmail.com)
 
