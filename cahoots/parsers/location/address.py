@@ -43,6 +43,8 @@ class AddressParser(BaseParser):
     and determine if it's likely that this is an address or not.
     """
 
+    subtype = "Without Addressee"
+
     def __init__(self, config):
         BaseParser.__init__(self, config, "Address", 0)
 
@@ -202,10 +204,12 @@ class AddressParser(BaseParser):
             results['addressed_to'] = suspected_name
 
             if NameParser in self.config.enabledModules:
-                if not self.is_address_name(suspected_name):
-                    return
-                else:
+                if self.is_address_name(suspected_name):
+                    self.subtype = "With Addressee"
                     self.confidence += 25
+                else:
+                    # If it starts with non-name text, not an address
+                    return
 
         # Looking for items in the city database that match words in the data
         token_count, results = self.find_address_tokens(working_data, results)
@@ -215,4 +219,4 @@ class AddressParser(BaseParser):
         # Subtracting a little confidence for each token that wasn't found
         self.confidence -= 5*(len(working_data)-token_count)
 
-        yield self.result(None, min(100, self.confidence), results)
+        yield self.result(self.subtype, min(100, self.confidence), results)

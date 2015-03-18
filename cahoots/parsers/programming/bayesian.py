@@ -25,9 +25,9 @@ from SereneRegistry import registry
 import redis
 import redisbayes
 import os
-import glob
 import string
 import time
+import zipfile
 
 
 class ProgrammingBayesianClassifier(object):
@@ -58,14 +58,13 @@ class ProgrammingBayesianClassifier(object):
         )
 
         directory = os.path.dirname(os.path.abspath(__file__))
-        path = os.path.join(directory, "bayes_trainers/*")
 
         trainers = {}
 
-        for file_path in glob.glob(path):
-            with open(file_path, 'r') as language_file:
-                language = file_path.split('.').pop()
-                trainers[language] = language_file.read()
+        trainer_zip = zipfile.ZipFile(directory + '/trainers.zip', 'r')
+        for filename in trainer_zip.namelist():
+            language = filename.split('.')[0]
+            trainers[language] = trainer_zip.read(filename)
 
         for language in trainers:
             classifier.train(language, trainers[language])
