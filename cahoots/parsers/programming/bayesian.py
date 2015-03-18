@@ -25,7 +25,6 @@ from SereneRegistry import registry
 import redis
 import redisbayes
 import os
-import glob
 import string
 import time
 import zipfile

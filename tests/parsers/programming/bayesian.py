@@ -76,6 +76,25 @@ class RedisBayesStub(object):
         return 'FooBar'
 
 
+class ZipFileStub(object):
+
+    called = []
+
+    def __init__(self, filename, filemode):
+        filename = filename.split('/').pop()
+        ZipFileStub.called.append('init-' + filename + '-' + filemode)
+
+    @classmethod
+    def namelist(cls):
+        ZipFileStub.called.append('namelist')
+        return ['foo.def', 'bar.def']
+
+    @classmethod
+    def read(cls, filename):
+        ZipFileStub.called.append('read-' + filename)
+        return filename + '-text'
+
+
 class ProgrammingBayesianClassifierTests(unittest.TestCase):
 
     def setUp(self):
@@ -93,9 +112,11 @@ class ProgrammingBayesianClassifierTests(unittest.TestCase):
         RedisBayesStub.Languages = {}
         RedisBayesStub.Flushed = False
         RedisBayesStub.data_string = None
+        ZipFileStub.called = []
 
     @mock.patch('redis.Redis', RedisStub)
     @mock.patch('redisbayes.RedisBayes', RedisBayesStub)
+    @mock.patch('zipfile.ZipFile', ZipFileStub)
     def test_bootstrapSetsUpClassifierAsExpected(self):
 
         ProgrammingBayesianClassifier.bootstrap(TestConfig)
@@ -105,11 +126,29 @@ class ProgrammingBayesianClassifierTests(unittest.TestCase):
         self.assertEqual(RedisStub.Unix_socket_path, None)
         self.assertEqual(RedisStub.Connection_pool, None)
 
+        self.assertEqual(
+            ZipFileStub.called,
+            [
+                'init-trainers.zip-r',
+                'namelist',
+                'read-foo.def',
+                'read-bar.def'
+            ]
+        )
+
         self.assertIsInstance(RedisBayesStub.Redis, RedisStub)
         self.assertTrue(ismethod(RedisBayesStub.Tokenizer))
         self.assertEqual(':', RedisBayesStub.Prefix[-1:])
         self.assertIsInstance(registry.get('PP_redis_bayes'), RedisBayesStub)
         self.assertTrue(RedisBayesStub.Flushed)
+
+        self.assertEqual(
+            RedisBayesStub.Languages,
+            {
+                'foo': 'foo.def-text',
+                'bar': 'bar.def-text'
+            }
+        )
 
     @mock.patch('redis.Redis', RedisStub)
     @mock.patch('redisbayes.RedisBayes', RedisBayesStub)

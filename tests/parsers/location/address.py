@@ -360,7 +360,7 @@ class AddressParserTests(unittest.TestCase):
         count = 0
         for res in result:
             self.assertIsInstance(res, ParseResult)
-            self.assertIsNone(res.subtype)
+            self.assertEqual(res.subtype, 'With Addressee')
             self.assertEqual(res.confidence, 40)
             self.assertEqual(
                 res.result_value,
