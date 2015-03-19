@@ -64,6 +64,7 @@ from tests.parsers.equation import *  # flake8: noqa
 from tests.parsers.location import *  # flake8: noqa
 from tests.parsers.location.address import *  # flake8: noqa
 from tests.parsers.location.coordinate import *  # flake8: noqa
+from tests.parsers.location.landmark import *  # flake8: noqa
 from tests.parsers.location.postalcode import *  # flake8: noqa
 from tests.parsers.measurement import *  # flake8: noqa
 from tests.parsers.name import *  # flake8: noqa
