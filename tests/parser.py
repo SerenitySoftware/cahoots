@@ -83,22 +83,22 @@ class FakeDate(datetime.datetime):
 class CahootsParserTests(unittest.TestCase):
 
     def test_bootstrapSetsUpParserProperly(self):
-        CahootsParser(ParserTestConfig)
+        CahootsParser(ParserTestConfig, True)
         self.assertTrue(FakeModule.bootstrappingComplete)
         FakeModule.bootstrappingComplete = False
 
     def test_parserCreatesInstanceOfBaseConfig(self):
-        parser = CahootsParser(bootstrap=False)
+        parser = CahootsParser()
         self.assertIsInstance(parser.config, BaseConfig)
 
     def test_parserInstantiatesBaseConfig(self):
-        parser = CahootsParser(BaseConfig(), False)
+        parser = CahootsParser(BaseConfig())
         self.assertIsInstance(parser.config, BaseConfig)
 
     @mock.patch('datetime.datetime', FakeDate)
     def test_parserReturnsExpectedParserResult(self):
         FakeDate.now = classmethod(lambda cls: 'thetimeisnow')
-        parser = CahootsParser(ParserTestConfig, False)
+        parser = CahootsParser(ParserTestConfig)
         result = parser.parse('data_string')
 
         self.assertEqual(5, len(result))

@@ -32,8 +32,7 @@ import os
 
 APP = Flask(__name__, static_folder='static')
 
-CFG = WSGIConfig()
-PARSER = CahootsParser(CFG)
+PARSER = CahootsParser(WSGIConfig(), True)
 
 
 class CahootsWSGI(object):
@@ -123,6 +122,6 @@ def view_api():
 if __name__ == "__main__":
     APP.run(
         host="0.0.0.0",
-        port=int(os.environ.get('PORT', 8000)),
-        debug=PARSER.config.debug
+        port=int(os.environ.get('PORT', WSGIConfig.web_port)),
+        debug=WSGIConfig.debug
     )

@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
     config.vm.synced_folder ".", "/vagrant", type: "nfs"
 
     # Provisioning
-    config.vm.provision :shell, :path => "setup/provision.sh"
+    config.vm.provision :shell, :path => "setup/dev_provision.sh"
 
     # SSH Configuration
     config.ssh.username = "vagrant"

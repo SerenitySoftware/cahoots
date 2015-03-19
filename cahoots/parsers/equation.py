@@ -172,7 +172,7 @@ class EquationParser(BaseParser):
 
         try:
             return eval(equation.strip())
-        except (SyntaxError, TypeError):
+        except (AttributeError, SyntaxError, TypeError):
             self.confidence = 0
             return False
 
