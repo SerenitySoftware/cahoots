@@ -28,3 +28,5 @@ class WSGIConfig(BaseConfig):
     """Extends the base config to enable debug mode for web"""
 
     debug = True
+
+    web_port = 8000

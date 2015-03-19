@@ -100,6 +100,22 @@ class CoordinateParser(BaseParser):
         )
         return lat_lon
 
+    @classmethod
+    def generate_result_data(cls, result):
+        '''Adds a google map link to the result data'''
+        result_dict = {
+            'latitude': result[0],
+            'longitude': result[1]
+        }
+
+        # throwing this in there for funsies
+        url = 'https://www.google.com/maps?q=' + result[0] + ',' + result[1]
+        additional_data = {
+            'map_url': url
+        }
+
+        return result_dict, additional_data
+
     def parse(self, data):
         """parses data to determine if this is a location"""
         data = data.strip()
@@ -108,26 +124,30 @@ class CoordinateParser(BaseParser):
         match = registry.get('CP_coord_regex').match(data)
         if match:
             res = self.get_standard_coord_data(match)
-            yield self.result("Standard", 80, res.to_string())
+            result, add_data = self.generate_result_data(res.to_string())
+            yield self.result("Standard", 80, result, add_data)
             return
 
         # Degree coordinate match
         match = registry.get('CP_deg_regex').match(data)
         if match:
             res = self.get_degree_based_coord_data(match, 'd% %H')
-            yield self.result("Degree", 100, res.to_string())
+            result, add_data = self.generate_result_data(res.to_string())
+            yield self.result("Degree", 100, result, add_data)
             return
 
         # Degree/minute coordinate match
         match = registry.get('CP_deg_min_regex').match(data)
         if match:
             res = self.get_degree_based_coord_data(match, 'd% %m% %H')
-            yield self.result("Degree/Minute", 100, res.to_string())
+            result, add_data = self.generate_result_data(res.to_string())
+            yield self.result("Degree/Minute", 100, result, add_data)
             return
 
         # Degree/minutes/second coordinate match
         match = registry.get('CP_deg_min_sec_regex').match(data)
         if match:
             res = self.get_degree_based_coord_data(match, 'd% %m% %S% %H')
-            yield self.result("Degree/Minute/Second", 100, res.to_string())
+            result, add_data = self.generate_result_data(res.to_string())
+            yield self.result("Degree/Minute/Second", 100, result, add_data)
             return

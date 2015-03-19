@@ -55,7 +55,7 @@ class CahootsParser(object):
     # The 'config' variable, if set, needs to be a class that extends
     # BaseConfig, or an instance of a class that does.
     # In the case that it's a class, we will instantiate the class.
-    def __init__(self, config=None, bootstrap=True):
+    def __init__(self, config=None, bootstrap=False):
 
         if config is not None:
             if inspect.isclass(config) and issubclass(config, BaseConfig):
@@ -70,19 +70,19 @@ class CahootsParser(object):
         # This bootstraps our parsing system and
         # gets all modules ready for parsing.
         if bootstrap:
-            self.bootstrap()
+            self.bootstrap(self.config)
 
-    def bootstrap(self):
+    @classmethod
+    def bootstrap(cls, config):
         """Bootstraps each parser. Can be used for cache warming, etc."""
-        for module in self.config.enabledModules:
+        for module in config.enabledModules:
             # If the module overrides the base bootstrap,
             # we output a message about it
-            if self.config.debug\
-               and module.bootstrap != BaseParser.bootstrap:
+            if module.bootstrap != BaseParser.bootstrap:
                 print ' * ' + time.strftime('%X %x %Z') +\
                       ' * Bootstrapping '+module.__name__
 
-            module.bootstrap(self.config)
+            module.bootstrap(config)
 
     def parse(self, data_string):
         """Parses input data and returns a dict of result data"""
