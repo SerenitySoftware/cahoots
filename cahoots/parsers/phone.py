@@ -135,10 +135,8 @@ class PhoneParser(BaseParser):
             return
 
         # if this is an ip address, we take a big hit.
-        if URIParser in self.config.enabledModules:
-            uri_parser = URIParser(self.config)
-            if uri_parser.is_ipv4_address(data_string):
-                self.confidence -= 25
+        if URIParser.is_ipv4_address(data_string):
+            self.confidence -= 25
 
         # If this is an integer, we take a big hit.
         int_data_string = None

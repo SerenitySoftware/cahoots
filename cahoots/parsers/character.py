@@ -66,10 +66,9 @@ class CharacterParser(BaseParser):
 
         # If this character doesn't evaluate as a boolean, we're positive
         # it's a character if it passes one of the specific evaulations.
-        if BooleanParser in self.config.enabledModules:
-            boolp = BooleanParser(self.config)
-            if not boolp.is_true(data) and not boolp.is_false(data):
-                self.confidence = 100
+        if not BooleanParser.is_true(data) and \
+                not BooleanParser.is_false(data):
+            self.confidence = 100
 
         if self.is_letter(data):
             yield self.result("Letter", data=character_data)

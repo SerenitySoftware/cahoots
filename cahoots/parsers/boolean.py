@@ -38,23 +38,25 @@ class BooleanParser(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Boolean")
 
-    def is_true(self, data):
+    @classmethod
+    def is_true(cls, data):
         """Checks if a value is true"""
-        if data in self.strongTrue:
+        if data in cls.strongTrue:
             return 100
-        elif data in self.mediumTrue:
+        elif data in cls.mediumTrue:
             return 75
-        elif data in self.weakTrue:
+        elif data in cls.weakTrue:
             return 50
         return 0
 
-    def is_false(self, data):
+    @classmethod
+    def is_false(cls, data):
         """Checks if a value is false"""
-        if data in self.strongFalse:
+        if data in cls.strongFalse:
             return 100
-        elif data in self.mediumFalse:
+        elif data in cls.mediumFalse:
             return 75
-        elif data in self.weakFalse:
+        elif data in cls.weakFalse:
             return 50
         return 0
 

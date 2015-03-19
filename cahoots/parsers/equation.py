@@ -197,13 +197,12 @@ class EquationParser(BaseParser):
             for _ in set(prog_parser.find_common_tokens(dataset)):
                 confidence -= 5
 
-        # if this is a valid postal code, we remove a bunch of con
+        # if this is a valid postal code, we remove a bunch of confidence
         if len(data) == 10 and PostalCodeParser in self.config.enabledModules:
             rgx = registry.get('ZCP_postal_code_regex')
-            if rgx.match(data):
-                postal_parser = PostalCodeParser(self.config)
-                if postal_parser.get_postal_code_data(data) is not None:
-                    confidence -= 15
+            if rgx.match(data) and \
+                PostalCodeParser.get_postal_code_data(data) is not None:
+                confidence -= 15
 
         return confidence
 
