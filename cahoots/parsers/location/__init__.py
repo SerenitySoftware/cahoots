@@ -74,6 +74,31 @@ class LocationDatabase(object):
                 'Location entity hydration requires a list or tuple.'
             )
 
+    @classmethod
+    def substitute_country_data(cls, entities, cursor):
+        """Preps our entity objects with country data and converts dicts"""
+        results = []
+
+        for result in entities:
+            try:
+                rows = cursor.execute(
+                    'SELECT * FROM country WHERE abbreviation = ?',
+                    (result.country,)
+                ).fetchall()
+            except sqlite3.Error:
+                rows = []
+
+            if rows:
+                entities = LocationDatabase.hydrate(rows, CountryEntity)
+                entity = entities[0]
+                entity.name = entity.name.title()
+                entity.abbreviation = entity.abbreviation.upper()
+                result.country = vars(entity)
+
+            results.append(result)
+
+        return results
+
 
 # pylint: disable=too-many-instance-attributes
 class CityEntity(object):
@@ -92,6 +117,18 @@ class CityEntity(object):
             self.latitude,\
             self.longitude,\
             self.coord_accuracy = data
+
+
+class LandmarkEntity(object):
+    """Represents a landmark database entity"""
+
+    def __init__(self, data):
+        self.resource,\
+            self.address,\
+            self.city,\
+            self.county,\
+            self.state,\
+            self.country = data
 
 
 class CountryEntity(object):

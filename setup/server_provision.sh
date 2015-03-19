@@ -38,6 +38,9 @@ rm cahoots/parsers/location/data/country.csv
 bzip2 -d -k cahoots/parsers/location/data/street_suffix.csv.bz2
 cat cahoots/parsers/location/data/street_suffix.sql | sqlite3 cahoots/parsers/location/data/location.sqlite
 rm cahoots/parsers/location/data/street_suffix.csv
+bzip2 -d -k cahoots/parsers/location/data/landmark.csv.bz2
+cat cahoots/parsers/location/data/landmark.sql | sqlite3 cahoots/parsers/location/data/location.sqlite
+rm cahoots/parsers/location/data/landmark.csv
 
 echo " "
 echo "Provisioning Complete!"

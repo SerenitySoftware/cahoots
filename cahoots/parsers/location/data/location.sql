@@ -1,7 +1,7 @@
 CREATE TABLE `city` (
         `country`       TEXT collate nocase,
         `postal_code`   TEXT collate nocase,
-        `city`  TEXT collate nocase,
+        `city`          TEXT collate nocase,
         `state1`        TEXT collate nocase,
         `state2`        TEXT collate nocase,
         `province1`     TEXT,
@@ -29,3 +29,13 @@ CREATE TABLE `street_suffix` (
         `suffix_name`  TEXT collate nocase
 );
 CREATE INDEX idx_suffix_name on street_suffix (suffix_name collate nocase);
+
+CREATE TABLE `landmark` (
+        `resource`      TEXT collate nocase,
+        `address`       TEXT,
+        `city`          TEXT,
+        `county`        TEXT,
+        `state`         TEXT,
+        `country`       TEXT
+);
+CREATE INDEX idx_resource on landmark (resource collate nocase);

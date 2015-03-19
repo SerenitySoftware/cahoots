@@ -24,7 +24,6 @@ SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 import sqlite3
-from cahoots.parsers.location import CityEntity
 from cahoots.parsers.location.postalcode import PostalCodeParser
 from tests.parsers.location import SQLite3Mock
 from tests.config import TestConfig
@@ -107,37 +106,6 @@ class PostalCodeParserTests(unittest.TestCase):
                 ('SELECT * FROM city WHERE postal_code = ?', ('21901-2000',)),
                 ('SELECT * FROM city WHERE postal_code = ?', ('21901',))
             ]
-        )
-
-        SQLite3Mock.reset()
-        SQLite3Mock.fetchall_returns = [sqlite3.Error('Error')]
-        entity = CityEntity(
-            ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
-        )
-
-        result = self.zcp.prepare_postal_code_data([entity], SQLite3Mock)
-        self.assertEqual(
-            SQLite3Mock.execute_calls,
-            [
-                ('SELECT * FROM country WHERE abbreviation = ?', ('a',))
-            ]
-        )
-        self.assertEqual(
-            result,
-            [{
-                "province1": "f",
-                "city": "c",
-                "province2": "g",
-                "country": "a",
-                "community2": "i",
-                "community1": "h",
-                "state2": "e",
-                "state1": "d",
-                "coord_accuracy": "l",
-                "postal_code": "b",
-                "longitude": "k",
-                "latitude": "j"
-            }]
         )
 
     @mock.patch('sqlite3.connect', SQLite3Mock.connect)

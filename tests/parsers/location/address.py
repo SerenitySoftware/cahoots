@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
-import sqlite3
 from cahoots.parsers.location import StreetSuffixEntity
 from cahoots.parsers.location.address import AddressParser
 from cahoots.result import ParseResult
@@ -31,6 +30,7 @@ from tests.parsers.location import SQLite3Mock
 from SereneRegistry import registry
 import unittest
 import mock
+import sqlite3
 
 
 class AddressParserTests(unittest.TestCase):
