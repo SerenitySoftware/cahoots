@@ -68,7 +68,7 @@ class LandmarkParser(BaseParser):
         try:
             rows = cursor.execute(
                 'SELECT * FROM landmark WHERE resource like ?',
-                ('%' + data + '%',)
+                (data + '%',)
             ).fetchall()
             entities = LocationDatabase.hydrate(rows, LandmarkEntity)
             entities = \

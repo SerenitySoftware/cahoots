@@ -91,7 +91,7 @@ class LandmarkParserTests(unittest.TestCase):
                 ('PRAGMA temp_store = 2', None),
                 (
                     'SELECT * FROM landmark WHERE resource like ?',
-                    ('%End Of Time%',)
+                    ('End Of Time%',)
                 )
             ]
         )
@@ -130,7 +130,7 @@ class LandmarkParserTests(unittest.TestCase):
                 ('PRAGMA temp_store = 2', None),
                 (
                     'SELECT * FROM landmark WHERE resource like ?',
-                    ('%End Of Time%',)
+                    ('End Of Time%',)
                 ),
                 ('SELECT * FROM country WHERE abbreviation = ?', ('f',))
             ]
