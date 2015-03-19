@@ -40,7 +40,6 @@ cat cahoots/parsers/location/data/street_suffix.sql | sqlite3 cahoots/parsers/lo
 rm cahoots/parsers/location/data/street_suffix.csv
 
 echo " "
-echo " "
 echo "Provisioning Complete!"
 echo "Ensure you have added this directory to the PYTHONPATH"
 echo " "
