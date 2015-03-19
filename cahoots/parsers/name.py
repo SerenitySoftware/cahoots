@@ -49,7 +49,8 @@ class NameParser(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Name", 0)
 
-    def basic_validation(self, data):
+    @classmethod
+    def basic_validation(cls, data):
         """
         Make sure every word in the phrase either
         starts with a Capital Letter or a Number
@@ -57,7 +58,7 @@ class NameParser(BaseParser):
         return len(data) == len(
             [word for word in data if
              (word[0].isupper() or (len(data) > 1 and word[0].isdigit())) and
-             not word.isdigit() and not self.has_bad_characters(word)]
+             not word.isdigit() and not cls.has_bad_characters(word)]
         )
 
     @classmethod

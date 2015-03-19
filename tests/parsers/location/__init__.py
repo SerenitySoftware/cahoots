@@ -152,3 +152,23 @@ class LocationDatabaseTests(unittest.TestCase):
 
         with self.assertRaises(TypeError):
             LocationDatabase.hydrate('foo', StreetSuffixEntity)
+
+    @mock.patch('sqlite3.connect', SQLite3Mock.connect)
+    def test_substitute_country_data(self):
+        SQLite3Mock.fetchall_returns = [sqlite3.Error('Error')]
+        entity = CityEntity(
+            ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
+        )
+
+        result = \
+            LocationDatabase.substitute_country_data([entity], SQLite3Mock)
+        self.assertEqual(
+            SQLite3Mock.execute_calls,
+            [
+                ('SELECT * FROM country WHERE abbreviation = ?', ('a',))
+            ]
+        )
+        self.assertIsInstance(
+            result[0],
+            CityEntity
+        )

@@ -36,6 +36,7 @@ from cahoots.parsers import\
 from cahoots.parsers.location import\
     address,\
     coordinate,\
+    landmark,\
     postalcode,\
     LocationDatabase
 
@@ -66,9 +67,10 @@ class BaseConfig(object):
         uri.URIParser,
         email.EmailParser,
         programming.ProgrammingParser,
-        coordinate.CoordinateParser,
-        postalcode.PostalCodeParser,
         address.AddressParser,
+        coordinate.CoordinateParser,
+        landmark.LandmarkParser,
+        postalcode.PostalCodeParser,
         equation.EquationParser,
         measurement.MeasurementParser,
     ]

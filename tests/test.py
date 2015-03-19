@@ -40,6 +40,7 @@ import cahoots.parsers.equation  # flake8: noqa
 import cahoots.parsers.location  # flake8: noqa
 import cahoots.parsers.location.address  # flake8: noqa
 import cahoots.parsers.location.coordinate  # flake8: noqa
+import cahoots.parsers.location.landmark  # flake8: noqa
 import cahoots.parsers.location.postalcode  # flake8: noqa
 import cahoots.parsers.measurement  # flake8: noqa
 import cahoots.parsers.name  # flake8: noqa

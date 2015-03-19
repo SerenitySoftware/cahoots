@@ -24,7 +24,7 @@ SOFTWARE.
 from cahoots.parsers.base import BaseParser
 from SereneRegistry import registry
 from cahoots.parsers.location import \
-    LocationDatabase, CityEntity, CountryEntity
+    LocationDatabase, CityEntity
 import re
 import sqlite3
 
@@ -66,7 +66,8 @@ class PostalCodeParser(BaseParser):
         )
         registry.set('ZCP_postal_code_regex', postal_regex)
 
-    def get_postal_code_data(self, data):
+    @classmethod
+    def get_postal_code_data(cls, data):
         """If this looks like a postal code, we try to get its info"""
         plus_postal_code = '-' in data
 
@@ -102,35 +103,11 @@ class PostalCodeParser(BaseParser):
             database.close()
             return None
 
-        entities = self.prepare_postal_code_data(entities, cursor)
+        entities = LocationDatabase.substitute_country_data(entities, cursor)
+        entities = [vars(x) for x in entities]
 
         database.close()
         return entities
-
-    @classmethod
-    def prepare_postal_code_data(cls, entities, cursor):
-        """Preps our CityEntity objects with country data and converts dicts"""
-        cities = []
-
-        for city in entities:
-            try:
-                rows = cursor.execute(
-                    'SELECT * FROM country WHERE abbreviation = ?',
-                    (city.country,)
-                ).fetchall()
-            except sqlite3.Error:
-                rows = []
-
-            if rows:
-                entities = LocationDatabase.hydrate(rows, CountryEntity)
-                entity = entities[0]
-                entity.name = entity.name.title()
-                entity.abbreviation = entity.abbreviation.upper()
-                city.country = vars(entity)
-
-            cities.append(vars(city))
-
-        return cities
 
     def calculate_confidence(self, data, results):
         """calculates the confidence that this is a postal code"""

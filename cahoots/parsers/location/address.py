@@ -70,7 +70,9 @@ class AddressParser(BaseParser):
                 'SELECT * FROM street_suffix WHERE ' + " or ".join(sql_items),
                 tuple(working_data)
             ).fetchone()
+            database.close()
         except sqlite3.Error:
+            database.close()
             return None
 
         if row is not None:
@@ -140,6 +142,7 @@ class AddressParser(BaseParser):
                 row = cursor.execute(sql, params).fetchone()
                 row = row[0]
             except sqlite3.Error:
+                database.close()
                 return 0, results
 
             if row:
@@ -149,6 +152,8 @@ class AddressParser(BaseParser):
                 results['address_tokens'].append(entity)
                 tokens += 1
                 self.confidence += 20
+
+        database.close()
 
         return (tokens, results)
 

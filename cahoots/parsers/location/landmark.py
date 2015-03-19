@@ -22,6 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from cahoots.parsers.base import BaseParser
+from cahoots.parsers.location import LocationDatabase, LandmarkEntity
+from cahoots.parsers.name import NameParser
+from SereneRegistry import registry
+import sqlite3
+import string
+import re
 
 
 class LandmarkParser(BaseParser):
@@ -34,6 +40,47 @@ class LandmarkParser(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Landmark", 100)
 
+    @staticmethod
+    def bootstrap(config):
+        """preps the address parser"""
+        the_regex = re.compile('^the ', re.IGNORECASE)
+        registry.set('LP_the_regex', the_regex)
+
     def parse(self, data):
         """parses for landmarks"""
-        data = data.strip()
+        data = registry.get('LP_the_regex').sub('', data).strip()
+
+        if len(data) > 75:
+            return
+
+        if not NameParser.basic_validation(data.split()):
+            return
+
+        allowed_chars = string.whitespace + string.letters + string.digits
+        allowed_chars += '.,-:'
+
+        if [x for x in data if x not in allowed_chars]:
+            return
+
+        database = LocationDatabase.get_database()
+        cursor = database.cursor()
+
+        try:
+            rows = cursor.execute(
+                'SELECT * FROM landmark WHERE resource like ?',
+                ('%' + data + '%',)
+            ).fetchall()
+            entities = LocationDatabase.hydrate(rows, LandmarkEntity)
+            entities = \
+                LocationDatabase.substitute_country_data(entities, cursor)
+            entities = [vars(x) for x in entities]
+            database.close()
+        except sqlite3.Error:
+            database.close()
+            return
+
+        if entities:
+            self.confidence = \
+                95-(2*len(entities)) if len(entities) > 1 else 95
+            subtype = 'Single' if len(entities) == 1 else 'Multiple'
+            yield self.result(subtype, self.confidence, entities)
