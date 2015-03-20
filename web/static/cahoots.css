@@ -75,9 +75,8 @@ textarea.bordered {
 }
 
 #header {
-    background: #333 url('/static/dark_leather.png') top left repeat;
+    background: url('/static/dark_leather.png') top left repeat;
     padding: 16px 0 0 0;
-    border-bottom: 1px solid #8A8A8A;
 }
 
 #header h1 {
@@ -132,8 +131,8 @@ textarea.bordered {
 }
 
 #primary {
-  height: 280px;
-  padding-top: 60px;
+  height: 282px;
+  padding-top: 65px;
 }
 
 #primary h2 {
@@ -220,23 +219,37 @@ textarea.bordered {
 }
 
 div#footer {
+    background: url('/static/dark_leather.png') top left repeat;
     margin-top: 25px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #EDEDED;
+    padding: 14px 0 0;
+    border-top: 5px solid #50adbf;
+}
+
+div#footer a {
+    color: #5bc4d9;
+}
+
+div#footer a:hover {
+    color: #EDEDED;
 }
 
 div#footer div.ss_copyright {
     margin: 0 auto;
-    width: 315px;
-    margin-bottom: 5px;
+    width: 398px;
+    margin-bottom: 10px;
 }
 
 div#footer div.favicon_copyright {
     margin: 0 auto;
-    width: 395px;
+    width: 391px;
     margin-bottom: 5px;
 }
 
 div#footer div.background_copyright {
     margin: 0 auto;
-    width: 433px;
+    width: 428px;
     margin-bottom: 15px;
 }
