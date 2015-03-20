@@ -109,27 +109,6 @@ textarea.bordered {
 	display: inline-block;
 }
 
-#header h3 {
-	clear: none;
-	color: #5bc4d9;
-	text-align: right;
-	font-size: 16px;
-	font-weight: normal;
-	display: inline-block;
-	float: right;
-	margin: 17px 0 0 0;
-	padding: 0;
-}
-
-#header h3 a {
-	text-decoration: none;
-	color: #5bc4d9;
-}
-
-#header h3 a:hover {
-	color: #DEDEDE;
-}
-
 #primary {
   height: 282px;
   padding-top: 65px;
