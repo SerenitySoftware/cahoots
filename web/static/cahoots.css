@@ -95,7 +95,7 @@ textarea.bordered {
 	color: #DEDEDE;
 }
 
-#header:hover h1 a {
+#header h1 a:hover {
 	color: #5bc4d9;
 }
 
@@ -127,8 +127,8 @@ textarea.bordered {
 	color: #5bc4d9;
 }
 
-#header:hover h3 a {
-	color: #5bc4d9;
+#header h3 a:hover {
+	color: #DEDEDE;
 }
 
 #primary {
