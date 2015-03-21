@@ -1,4 +1,3 @@
 python-dev
 python-pip
-redis-server
 sqlite3

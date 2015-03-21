@@ -31,21 +31,7 @@ import mock
 import unittest
 
 
-class RedisStub(object):
-
-    Host = None
-    Port = None
-    Unix_socket_path = None
-    Connection_pool = None
-
-    def __init__(self, host, port, unix_socket_path, connection_pool):
-        RedisStub.Host = host
-        RedisStub.Port = port
-        RedisStub.Unix_socket_path = unix_socket_path
-        RedisStub.Connection_pool = connection_pool
-
-
-class RedisBayesStub(object):
+class SimpleBayesStub(object):
 
     Redis = None
     Tokenizer = None
@@ -57,22 +43,16 @@ class RedisBayesStub(object):
 
     data_string = None
 
-    def __init__(self, redis=None, tokenizer=None, prefix=None):
-        RedisBayesStub.Redis = redis
-        RedisBayesStub.Tokenizer = tokenizer
-        RedisBayesStub.Prefix = prefix
+    def __init__(self, tokenizer=None):
+        SimpleBayesStub.Tokenizer = tokenizer
 
     @classmethod
     def train(cls, language, sample):
-        RedisBayesStub.Languages[language] = sample
-
-    @classmethod
-    def flush(cls):
-        RedisBayesStub.Flushed = True
+        SimpleBayesStub.Languages[language] = sample
 
     @classmethod
     def score(cls, data_string):
-        RedisBayesStub.data_string = data_string
+        SimpleBayesStub.data_string = data_string
         return 'FooBar'
 
 
@@ -98,33 +78,20 @@ class ZipFileStub(object):
 class ProgrammingBayesianClassifierTests(unittest.TestCase):
 
     def setUp(self):
-        registry.set('PP_redis_bayes', RedisBayesStub())
+        registry.set('PP_bayes', SimpleBayesStub())
 
     def tearDown(self):
         registry.flush()
-        RedisStub.Host = None
-        RedisStub.Port = None
-        RedisStub.Unix_socket_path = None
-        RedisStub.Connection_pool = None
-        RedisBayesStub.Redis = None
-        RedisBayesStub.Tokenizer = None
-        RedisBayesStub.Prefix = None
-        RedisBayesStub.Languages = {}
-        RedisBayesStub.Flushed = False
-        RedisBayesStub.data_string = None
+        SimpleBayesStub.Tokenizer = None
+        SimpleBayesStub.Languages = {}
+        SimpleBayesStub.data_string = None
         ZipFileStub.called = []
 
-    @mock.patch('redis.Redis', RedisStub)
-    @mock.patch('redisbayes.RedisBayes', RedisBayesStub)
+    @mock.patch('simplebayes.SimpleBayes', SimpleBayesStub)
     @mock.patch('zipfile.ZipFile', ZipFileStub)
     def test_bootstrapSetsUpClassifierAsExpected(self):
 
         ProgrammingBayesianClassifier.bootstrap(TestConfig)
-
-        self.assertEqual(RedisStub.Host, 'localhost')
-        self.assertEqual(RedisStub.Port, 6379)
-        self.assertEqual(RedisStub.Unix_socket_path, None)
-        self.assertEqual(RedisStub.Connection_pool, None)
 
         self.assertEqual(
             ZipFileStub.called,
@@ -136,22 +103,18 @@ class ProgrammingBayesianClassifierTests(unittest.TestCase):
             ]
         )
 
-        self.assertIsInstance(RedisBayesStub.Redis, RedisStub)
-        self.assertTrue(ismethod(RedisBayesStub.Tokenizer))
-        self.assertEqual(':', RedisBayesStub.Prefix[-1:])
-        self.assertIsInstance(registry.get('PP_redis_bayes'), RedisBayesStub)
-        self.assertTrue(RedisBayesStub.Flushed)
+        self.assertTrue(ismethod(SimpleBayesStub.Tokenizer))
+        self.assertIsInstance(registry.get('PP_bayes'), SimpleBayesStub)
 
         self.assertEqual(
-            RedisBayesStub.Languages,
+            SimpleBayesStub.Languages,
             {
                 'foo': 'foo.def-text',
                 'bar': 'bar.def-text'
             }
         )
 
-    @mock.patch('redis.Redis', RedisStub)
-    @mock.patch('redisbayes.RedisBayes', RedisBayesStub)
+    @mock.patch('simplebayes.SimpleBayes', SimpleBayesStub)
     def test_classifierProducesExpectedResult(self):
 
         ProgrammingBayesianClassifier.bootstrap(TestConfig)
@@ -159,7 +122,7 @@ class ProgrammingBayesianClassifierTests(unittest.TestCase):
         classifier = ProgrammingBayesianClassifier()
         result = classifier.classify('echo "Hello World";')
 
-        self.assertEqual('echo "Hello World";', RedisBayesStub.data_string)
+        self.assertEqual('echo "Hello World";', SimpleBayesStub.data_string)
         self.assertEqual('FooBar', result)
 
     def test_tokenizerProducesExpectedList(self):

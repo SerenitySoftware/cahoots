@@ -22,11 +22,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from SereneRegistry import registry
-import redis
-import redisbayes
+import simplebayes
 import os
 import string
-import time
 import zipfile
 
 
@@ -37,24 +35,14 @@ class ProgrammingBayesianClassifier(object):
     """
 
     @staticmethod
+    # pylint: disable=unused-argument
     def bootstrap(config):
         """
         Trains the bayes classifier with examples
         from various programming languages
         """
-        bayes_redis = redis.Redis(
-            host=config.redis['host'],
-            port=config.redis['port'],
-            unix_socket_path=config.redis['unix_socket_path'],
-            connection_pool=config.redis['connection_pool']
-        )
-
-        namespace = str(time.time())+':'
-
-        classifier = redisbayes.RedisBayes(
-            redis=bayes_redis,
-            tokenizer=ProgrammingBayesianClassifier.bayes_tokenizer,
-            prefix=namespace
+        classifier = simplebayes.SimpleBayes(
+            ProgrammingBayesianClassifier.bayes_tokenizer
         )
 
         directory = os.path.dirname(os.path.abspath(__file__))
@@ -69,13 +57,7 @@ class ProgrammingBayesianClassifier(object):
         for language in trainers:
             classifier.train(language, trainers[language])
 
-        old_rb = registry.get('PP_redis_bayes')
-
-        registry.set('PP_redis_bayes', classifier)
-
-        # Getting rid of the old namespaced data.
-        if old_rb:
-            old_rb.flush()
+        registry.set('PP_bayes', classifier)
 
     @staticmethod
     def bayes_tokenizer(text):
@@ -95,6 +77,6 @@ class ProgrammingBayesianClassifier(object):
         Takes an string and creates a dict of
         programming language match probabilities
         """
-        classifier = registry.get('PP_redis_bayes')
+        classifier = registry.get('PP_bayes')
 
         return classifier.score(data_string)
