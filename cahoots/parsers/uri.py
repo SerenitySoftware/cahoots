@@ -25,8 +25,6 @@ from cahoots.parsers.base import BaseParser
 from cahoots.util import strings_intersect
 import urlparse
 import string
-# pylint: disable=W0611
-import win_inet_pton    # flake8: noqa
 import socket
 
 

@@ -37,8 +37,7 @@ from cahoots.parsers.location import\
     address,\
     coordinate,\
     landmark,\
-    postalcode,\
-    LocationDatabase
+    postalcode
 
 
 class BaseConfig(object):
@@ -74,27 +73,6 @@ class BaseConfig(object):
         equation.EquationParser,
         measurement.MeasurementParser,
     ]
-
-    enabledUtilityModules = [
-        LocationDatabase
-    ]
-
-    """
-    Redis config
-        Specify one of the following three:
-        1. host and port
-         - Current values are the redis default
-        2. unix_socket_path
-         - The file path to the unix socket.
-        3. connection_pool
-          - Instance of redis.connection.ConnectionPool
-    """
-    redis = {
-        'host': 'localhost',
-        'port': 6379,
-        'unix_socket_path': None,
-        'connection_pool': None
-    }
 
     """
     Configuration for the templating system

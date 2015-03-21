@@ -32,7 +32,7 @@ import os
 
 APP = Flask(__name__, static_folder='static')
 
-PARSER = CahootsParser(WSGIConfig(), True)
+PARSER = CahootsParser(WSGIConfig, True)
 
 
 class CahootsWSGI(object):

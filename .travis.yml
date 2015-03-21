@@ -8,9 +8,9 @@ python:
 install:
   - pip install -r setup/requirements.txt
   - pip install -r setup/requirements.dev.txt
-  - wget https://pypi.python.org/packages/source/p/pylint/pylint-1.4.1.tar.gz
-  - tar -xvf pylint-1.4.1.tar.gz
-  - cd pylint-1.4.1
+  - wget https://pypi.python.org/packages/source/p/pylint/pylint-1.4.3.tar.gz
+  - tar -xvf pylint-1.4.3.tar.gz
+  - cd pylint-1.4.3
   - python setup.py install
   - cd ..
 script:
