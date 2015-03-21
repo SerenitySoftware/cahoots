@@ -1,7 +1,10 @@
 #!/bin/bash
 
+cd /vagrant
+
 echo " "
 echo "Beginning Provisioning!"
+echo "Please ignore any 'stdin' related errors. It's an Ubuntu+Vagrant bug."
 
 echo " "
 echo " [Cahoots] Step 1: Adding APT Repositories and Updating APT"
@@ -27,6 +30,7 @@ echo " "
 echo " [Cahoots] Step 5: Installing Development Python Packages"
 echo " "
 pip install -r setup/requirements.dev.txt
+cd ~/
 wget https://pypi.python.org/packages/source/p/pylint/pylint-1.4.3.tar.gz
 tar -xvf pylint-1.4.3.tar.gz
 cd pylint-1.4.3
@@ -34,6 +38,7 @@ python setup.py install
 cd ..
 rm -rf pylint-1.4.3
 rm -f pylint-1.4.3.tar.gz
+cd /vagrant
 
 echo " "
 echo " [Cahoots] Step 6: Importing Location Database"
@@ -53,6 +58,18 @@ cat cahoots/parsers/location/data/landmark.sql | sqlite3 cahoots/parsers/locatio
 rm cahoots/parsers/location/data/landmark.csv
 
 echo " "
-echo "Provisioning Complete!"
-echo "Ensure you have added this directory to the PYTHONPATH"
+echo " [Cahoots] Step 7: Moving files around"
+echo 'cd /vagrant' >> /home/vagrant/.bashrc
+echo 'export PYTHONPATH=$PYTHONPATH:/vagrant' >> /home/vagrant/.bashrc
+
 echo " "
+echo " "
+echo "Provisioning Complete!"
+echo " "
+echo "Instructions for web client:"
+echo "1) Type 'vagrant ssh' to connect to your vm."
+echo "2) Type './web/wsgi.py' to start Cahoots."
+echo " "
+echo "Instructions for unit/pylint/flake8 tests:"
+echo "1) Type 'vagrant ssh' to connect to your vm."
+echo "2) Type './tests/build.sh' to execute the test suite."
