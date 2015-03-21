@@ -64,7 +64,7 @@ Cahoots Server Setup
 Unit/Flake8/Pylint Test Execution
 ---------------------------------
 1. Run the command `vagrant ssh` to connect to your VM. (Alternative: Use PuTTY with host `127.0.0.1`, port `2222` and username/password `vagrant`.)
-2. Run the command `./tests/vagrant_build.sh` to execute unit/flake8/pylint tests.
+2. Run the command `./tests/build.sh` to execute unit/flake8/pylint tests.
 
 Web Interface Usage
 -------------------
