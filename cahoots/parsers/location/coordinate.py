@@ -102,7 +102,7 @@ class CoordinateParser(BaseParser):
 
     @classmethod
     def generate_result_data(cls, result):
-        '''Adds a google map link to the result data'''
+        """Adds a google map link to the result data"""
         result_dict = {
             'latitude': result[0],
             'longitude': result[1]
@@ -116,38 +116,59 @@ class CoordinateParser(BaseParser):
 
         return result_dict, additional_data
 
+    def get_coordinate_test_parameters(self):
+        """Returns the test parameters for coordinate tests"""
+        return [
+            (
+                # Standard coordinate match
+                'CP_coord_regex',  # Name of the registry key holding regex
+                self.get_standard_coord_data,  # formatting function
+                None,  # Specific input format for the formatting function
+                'Standard',  # Subtype if match
+                80,  # Confidence if match
+            ),
+            (
+                # Degree coordinate match
+                'CP_deg_regex',
+                self.get_degree_based_coord_data,
+                'd% %H',
+                'Degree',
+                100,
+            ),
+            (
+                # Degree/minute coordinate match
+                'CP_deg_min_regex',
+                self.get_degree_based_coord_data,
+                'd% %m% %H',
+                'Degree/Minute',
+                100,
+            ),
+            (
+                # Degree/minutes/second coordinate match
+                'CP_deg_min_sec_regex',
+                self.get_degree_based_coord_data,
+                'd% %m% %S% %H',
+                'Degree/Minute/Second',
+                100,
+            ),
+        ]
+
     def parse(self, data):
         """parses data to determine if this is a location"""
         data = data.strip()
 
-        # Standard coordinate match
-        match = registry.get('CP_coord_regex').match(data)
-        if match:
-            res = self.get_standard_coord_data(match)
-            result, add_data = self.generate_result_data(res.to_string())
-            yield self.result("Standard", 80, result, add_data)
-            return
+        test_parameters = self.get_coordinate_test_parameters()
 
-        # Degree coordinate match
-        match = registry.get('CP_deg_regex').match(data)
-        if match:
-            res = self.get_degree_based_coord_data(match, 'd% %H')
-            result, add_data = self.generate_result_data(res.to_string())
-            yield self.result("Degree", 100, result, add_data)
-            return
+        for reg_key, format_func, fmt, subtype, confidence in test_parameters:
+            # checking each of our types of coordinates and breaking on find
+            match = registry.get(reg_key).match(data)
+            if match:
+                # if a format_arg provided, we pass it into formatting func
+                res = format_func(match, fmt) if fmt else format_func(match)
 
-        # Degree/minute coordinate match
-        match = registry.get('CP_deg_min_regex').match(data)
-        if match:
-            res = self.get_degree_based_coord_data(match, 'd% %m% %H')
-            result, add_data = self.generate_result_data(res.to_string())
-            yield self.result("Degree/Minute", 100, result, add_data)
-            return
+                # Prepping processed data with better metadata
+                result, add_data = self.generate_result_data(res.to_string())
+                yield self.result(subtype, confidence, result, add_data)
 
-        # Degree/minutes/second coordinate match
-        match = registry.get('CP_deg_min_sec_regex').match(data)
-        if match:
-            res = self.get_degree_based_coord_data(match, 'd% %m% %S% %H')
-            result, add_data = self.generate_result_data(res.to_string())
-            yield self.result("Degree/Minute/Second", 100, result, add_data)
-            return
+                # Only looking to match one format, so we break here
+                break
