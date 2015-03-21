@@ -1,7 +1,5 @@
 #!/bin/bash
 
-cd /vagrant
-
 echo " "
 echo "Beginning Provisioning!"
 
