@@ -57,17 +57,13 @@ class NameParser(BaseParser):
         """
         return len(data) == len(
             [word for word in data if
+             # Has to start with a capital letter or digit
              (word[0].isupper() or (len(data) > 1 and word[0].isdigit())) and
-             not word.isdigit() and not cls.has_bad_characters(word)]
+             # Whole word can't be a digit
+             not word.isdigit() and
+             # Must contain only printable characters
+             not [char for char in word if char not in string.printable]]
         )
-
-    @classmethod
-    def has_bad_characters(cls, word):
-        """not all characters are allowed in names"""
-        for char in word:
-            if char not in string.printable:
-                return True
-        return False
 
     def is_prefix(self, word):
         """Checks to see if the word passed in is a name prefix"""
@@ -95,6 +91,19 @@ class NameParser(BaseParser):
 
         if len(word) == 2:
             return word[1] == '.' and word[0].isalpha()
+
+    def detect_prefix_or_suffix(self, data):
+        """
+        Checking for things like Mr. or Jr. Big boost for these values.
+        If found, we remove them from the list of words
+        """
+        if len(data) > 2:
+            if self.is_prefix(data[0]):
+                data.pop(0)
+                self.confidence += 20
+            if self.is_suffix(data[-1]):
+                data.pop()
+                self.confidence += 20
 
     def calculate_confidence(self, data):
         '''Calculates confidence based on various attributes of the data'''
@@ -136,15 +145,7 @@ class NameParser(BaseParser):
         if len(data) >= 7 or not self.basic_validation(data):
             return
 
-        # Checking for things like Mr. or Jr. Big boost for these values.
-        # If found, we remove them from the list of words
-        if len(data) > 2:
-            if self.is_prefix(data[0]):
-                data.pop(0)
-                self.confidence += 20
-            if self.is_suffix(data[-1]):
-                data.pop()
-                self.confidence += 20
+        self.detect_prefix_or_suffix(data)
 
         self.calculate_confidence(data)
 

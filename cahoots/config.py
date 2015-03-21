@@ -37,8 +37,7 @@ from cahoots.parsers.location import\
     address,\
     coordinate,\
     landmark,\
-    postalcode,\
-    LocationDatabase
+    postalcode
 
 
 class BaseConfig(object):

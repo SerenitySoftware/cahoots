@@ -58,8 +58,8 @@ Cahoots Server Setup
 1. Clone this repository.
 2. Enter the directory containing this readme file.
 3. Run the command `./setup/server_provision.sh` to install all dependencies and setup cahoots.
-4. As a priviledged user: Run the command `nohup ./web/wsgi.py $`
-5. To terminate the server: Run the command `killall wsgi.py`
+4. As a priviledged user: Run the command `nohup ./web/server.py $`
+5. To terminate the server: Run the command `killall server.py`
 
 Unit/Flake8/Pylint Test Execution
 ---------------------------------
@@ -69,6 +69,6 @@ Unit/Flake8/Pylint Test Execution
 Web Interface Usage
 -------------------
 1. Run the command `vagrant ssh` to connect to your VM. (Alternative: Use PuTTY with host `127.0.0.1`, port `2222` and username/password `vagrant`.)
-2. Run the command `./web/wsgi.py` in your VM  to start the Cahoots web interface.
+2. Run the command `./web/server.py` in your VM  to start the Cahoots web interface.
 3. Visit `http://localhost:8000` to use the web interface.
 4. POST or GET against `http://localhost:8000/api/` using the `q` parameter to retrieve JSON API responses.
