@@ -3,8 +3,7 @@ mako
 dateutils
 pyyaml
 pygments
-pyparsing
-redisbayes
+simplebayes
 phonenumbers
 simplejson
 SereneRegistry

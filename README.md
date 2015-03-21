@@ -22,8 +22,7 @@ Software Requirements
 ---------------------
 1. python-dev
 2. python-pip
-3. redis-server
-4. sqlite3
+3. sqlite3
 
 Python Package Requirements
 ---------------------------
