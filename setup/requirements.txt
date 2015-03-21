@@ -3,6 +3,7 @@ mako
 dateutils
 pyyaml
 pygments
+pyparsing
 simplebayes
 phonenumbers
 simplejson
