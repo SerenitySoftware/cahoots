@@ -4,10 +4,10 @@ dateutils
 pyyaml
 pygments
 pyparsing
-simplebayes
 phonenumbers
 simplejson
 SereneRegistry
 win_inet_pton
 hiredis
 LatLon
+simplebayes

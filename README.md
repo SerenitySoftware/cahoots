@@ -32,7 +32,7 @@ Python Package Requirements
 4. pyyaml
 5. pygments
 6. pyparsing
-7. redisbayes
+7. simplebayes
 8. phonenumbers
 9. simplejson
 10. SereneRegistry
@@ -46,12 +46,20 @@ Contributor Dev Requirements
 2. [Vagrant 1.7+](http://www.vagrantup.com)
 3. [Git] (http://git-scm.com/)
 
-Setup
------
+Dev VM Setup
+------------
 1. Clone this repository and `cd` into the clone's directory.
 2. Run the command `git submodule update --init`.
 3. Run the command `vagrant up` or `vagrant up --provider vmware_workstation` in the clone's root.
 4. Wait for provisioning to complete (will take several minutes).
+
+Cahoots Server Setup
+--------------------
+1. Clone this repository.
+2. Enter the directory containing this readme file.
+3. Run the command `./setup/server_provision.sh` to install all dependencies and setup cahoots.
+4. As a priviledged user: Run the command `nohup ./web/wsgi.py $`
+5. To terminate the server: Run the command `killall wsgi.py`
 
 Unit/Flake8/Pylint Test Execution
 ---------------------------------
