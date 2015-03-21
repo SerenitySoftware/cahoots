@@ -81,24 +81,27 @@ class PhoneParserTests(unittest.TestCase):
 
     def test_getphonenumberobjectWithRegionFlaggedPhoneReturnsDict(self):
 
-        self.assertTrue(
-            type(self.pp.get_phone_number_object("+1-979-549-5150")) is dict
+        self.assertIsInstance(
+            self.pp.get_phone_number_object("+1-979-549-5150"),
+            dict
         )
 
     def test_getphonenumberobjectWithTenDigitNoRegionAndNoDescTriesAgain(self):
 
         self.pp.digits = "1234567890"
 
-        self.assertTrue(
-            type(self.pp.get_phone_number_object("1234567890")) is dict
+        self.assertIsInstance(
+            self.pp.get_phone_number_object("1234567890"),
+            dict
         )
 
     def test_getphonenumberobjectWith11DigitNoRegionAndNoDescTriesAgain(self):
 
         self.pp.digits = "11234567890"
 
-        self.assertTrue(
-            type(self.pp.get_phone_number_object("11234567890")) is dict
+        self.assertIsInstance(
+            self.pp.get_phone_number_object("11234567890"),
+            dict
         )
 
     @mock.patch(
@@ -112,9 +115,7 @@ class PhoneParserTests(unittest.TestCase):
         result = self.pp.get_phone_number_object("1234567890")
 
         self.assertEqual(2, PhoneParserTests.dfvnmCallCount)
-        self.assertTrue(
-            type(result) is dict
-        )
+        self.assertIsInstance(result, dict)
 
     def test_parseWithInvalidLengthStringYieldsNothing(self):
 

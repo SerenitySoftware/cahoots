@@ -35,6 +35,7 @@ class ProgrammingBayesianClassifier(object):
     """
 
     @staticmethod
+    # pylint: disable=unused-argument
     def bootstrap(config):
         """
         Trains the bayes classifier with examples
@@ -56,7 +57,7 @@ class ProgrammingBayesianClassifier(object):
         for language in trainers:
             classifier.train(language, trainers[language])
 
-        registry.set('PP_redis_bayes', classifier)
+        registry.set('PP_bayes', classifier)
 
     @staticmethod
     def bayes_tokenizer(text):
@@ -76,6 +77,6 @@ class ProgrammingBayesianClassifier(object):
         Takes an string and creates a dict of
         programming language match probabilities
         """
-        classifier = registry.get('PP_redis_bayes')
+        classifier = registry.get('PP_bayes')
 
         return classifier.score(data_string)

@@ -1,7 +1,4 @@
 #!/bin/bash
-
-cd /vagrant
-
 echo
 echo
 echo " [Cahoots] Step 1: Executing Unit Tests"
