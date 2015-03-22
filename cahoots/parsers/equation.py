@@ -178,6 +178,8 @@ class EquationParser(BaseParser):
 
     def calculate_confidence(self, data):
         """Calculates a confidence rating for this (possible) equation"""
+        # We start with 100% confidence, and
+        # then lower our confidence if needed.
         confidence = 100
 
         # lowering confidence if we have a phone number
@@ -206,6 +208,15 @@ class EquationParser(BaseParser):
 
         return confidence
 
+    @classmethod
+    def clean_data(cls, data):
+        """Removes and replaces data in prep for equation parsing"""
+        clean_data = string.replace(data.upper(), 'X', '*')
+        clean_data = string.replace(clean_data, '^', '**')
+        clean_data = string.replace(clean_data, 'THE', '')
+        clean_data = clean_data.strip()
+        return clean_data
+
     def parse(self, data):
         """
         Standard parse function for checking if
@@ -217,16 +228,11 @@ class EquationParser(BaseParser):
             return
 
         # Doing some initial data cleanup
-        clean_data = string.replace(data.upper(), 'X', '*')
-        clean_data = string.replace(clean_data, '^', '**')
-        clean_data = string.replace(clean_data, 'THE', '')
-        clean_data = clean_data.strip()
+        clean_data = self.clean_data(data)
 
-        if len(clean_data) == 0:
+        if not clean_data:
             return
 
-        # We start with 100% confidence, and
-        # then lower our confidence if needed.
         if self.is_simple_equation(clean_data):
             result_type = "Simple"
         elif self.is_text_equation(clean_data):
