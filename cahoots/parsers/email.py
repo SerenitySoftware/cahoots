@@ -22,6 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from cahoots.parsers.base import BaseParser
+from SereneRegistry import registry
+from validate_email import VALID_ADDRESS_REGEXP
 import re
 
 
@@ -31,16 +33,15 @@ class EmailParser(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Email", 100)
 
-    @classmethod
-    def matches_email_pattern(cls, data):
-        """Checking if the data is an email address"""
-        return re.match(
-            r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$", data
-        )
+    @staticmethod
+    def bootstrap(config):
+        """Bootstraps the email parser"""
+        email_regex = re.compile(VALID_ADDRESS_REGEXP)
+        registry.set('EP_valid_regex', email_regex)
 
     def parse(self, data_string):
-        if '@' not in data_string:
+        if len(data_string) > 254 or '@' not in data_string:
             return
 
-        if self.matches_email_pattern(data_string):
+        if registry.get('EP_valid_regex').match(data_string):
             yield self.result("Email Address", self.confidence)

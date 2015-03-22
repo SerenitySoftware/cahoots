@@ -108,45 +108,24 @@ class PhoneParser(BaseParser):
             'region': num_region or None,
         }
 
-    def parse(self, data_string):
-        data_string = data_string.strip()
-
-        self.digits = [c for c in data_string if c in string.digits]
-
-        if len(data_string) > 30 or len(self.digits) < 7:
-            return
-
-        letter_set = set()
-        self.letters = [c for c in data_string if
-                        c in string.letters and
-                        c not in letter_set and
-                        not letter_set.add(c)]
-        self.punctuation = [c for c in data_string if
-                            c in string.punctuation or
-                            c in string.whitespace]
-
-        if len(self.letters) > len(self.digits):
-            return
-
-        # Parsing our input, looking for phone numbers
-        phone_number_data = self.get_phone_number_object(data_string)
-
-        if not phone_number_data:
-            return
-
+    def calculate_confidence(self, data_string, phone_number_data):
+        """
+        Various confidence calculations
+        :param data_string: the data passed to the parser
+        :type data_string: string
+        :param phone_number_data: data that the phone number parsing produced
+        :type phone_number_data: dict
+        """
         # if this is an ip address, we take a big hit.
         if URIParser.is_ipv4_address(data_string):
             self.confidence -= 25
 
         # If this is an integer, we take a big hit.
-        int_data_string = None
         try:
-            int_data_string = int(data_string)
+            if int(data_string) is not None:
+                self.confidence -= 20
         except ValueError:
             pass
-
-        if int_data_string is not None:
-            self.confidence -= 20
 
         # Length penalties
         if len(self.digits) == 10:
@@ -167,6 +146,41 @@ class PhoneParser(BaseParser):
         # this as a phone number, we raise confidence
         if len(self.punctuation) > 0:
             self.confidence += (5 * len(set(self.punctuation)))
+
+    def parse(self, data_string):
+        data_string = data_string.strip()
+
+        # 30 is a stretch...
+        if len(data_string) > 30:
+            return
+
+        self.digits = [c for c in data_string if c in string.digits]
+
+        # We're just assuming less than 7 nums = not phone
+        if len(self.digits) < 7:
+            return
+
+        letter_set = set()
+        self.letters = [c for c in data_string if
+                        c in string.letters and
+                        c not in letter_set and
+                        not letter_set.add(c)]
+
+        # We don't believe this is a phone number if more letters than nums
+        if len(self.letters) > len(self.digits):
+            return
+
+        self.punctuation = [c for c in data_string if
+                            c in string.punctuation or
+                            c in string.whitespace]
+
+        # Parsing our input, looking for phone numbers
+        phone_number_data = self.get_phone_number_object(data_string)
+
+        if not phone_number_data:
+            return
+
+        self.calculate_confidence(data_string, phone_number_data)
 
         yield self.result(
             "Phone Number",

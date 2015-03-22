@@ -46,22 +46,9 @@ class LandmarkParser(BaseParser):
         the_regex = re.compile('^the ', re.IGNORECASE)
         registry.set('LP_the_regex', the_regex)
 
-    def parse(self, data):
-        """parses for landmarks"""
-        data = registry.get('LP_the_regex').sub('', data).strip()
-
-        if len(data) > 75:
-            return
-
-        if not NameParser.basic_validation(data.split()):
-            return
-
-        allowed_chars = string.whitespace + string.letters + string.digits
-        allowed_chars += '.,-:'
-
-        if [x for x in data if x not in allowed_chars]:
-            return
-
+    @classmethod
+    def find_matching_landmarks(cls, data):
+        """Looks in the database for landmarks matching datastring"""
         database = LocationDatabase.get_database()
         cursor = database.cursor()
 
@@ -78,6 +65,36 @@ class LandmarkParser(BaseParser):
         except sqlite3.Error:
             database.close()
             return
+
+        return entities
+
+    @classmethod
+    def prepare_landmark_datastring(cls, data):
+        """Cleans up and validates the datastring"""
+        data = registry.get('LP_the_regex').sub('', data).strip()
+
+        if len(data) > 75:
+            return
+
+        if not NameParser.basic_validation(data.split()):
+            return
+
+        allowed_chars = string.whitespace + string.letters + string.digits
+        allowed_chars += '.,-:'
+
+        if [x for x in data if x not in allowed_chars]:
+            return
+
+        return data
+
+    def parse(self, data):
+        """parses for landmarks"""
+        data = self.prepare_landmark_datastring(data)
+
+        if not data:
+            return
+
+        entities = self.find_matching_landmarks(data)
 
         if entities:
             self.confidence = \

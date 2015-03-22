@@ -66,6 +66,7 @@ class CharacterParser(BaseParser):
 
         # If this character doesn't evaluate as a boolean, we're positive
         # it's a character if it passes one of the specific evaulations.
+        data = data.lower()
         if not BooleanParser.is_true(data) and \
                 not BooleanParser.is_false(data):
             self.confidence = 100

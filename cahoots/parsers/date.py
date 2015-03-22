@@ -55,54 +55,69 @@ class DateParser(BaseParser):
 
         return False
 
+    @classmethod
+    def confidence_normalizer(cls, ds_length, punctuation, letters, digits):
+        """Generates a confidence normalizer for use in calculating conf"""
+        normalizer = 1.0
+
+        if ds_length > 4:
+            normalizer *= 1.05
+
+        if len(punctuation) <= 1:
+            normalizer *= 1.05
+
+        if '/' in punctuation and punctuation.count('/') < 3:
+            normalizer *= (1.0 + (.05 * punctuation.count('/')))
+
+        if len(letters) == 0 and len(digits) < 4:
+            normalizer *= 0.5
+
+        return normalizer
+
+    def calculate_confidence(self, ds_length, punctuation, letters, digits):
+        """Looks at various factors to see how sure we are this is a date"""
+        if ds_length == 4:
+            self.confidence += 10
+        elif ds_length <= 7:
+            self.confidence += 40
+        else:
+            self.confidence += 80
+
+        self.confidence = int(
+            round(
+                float(self.confidence) *
+                self.confidence_normalizer(
+                    ds_length, punctuation, letters, digits
+                )
+            )
+        )
+
     def parse(self, data_string):
+        data_string = data_string.strip()
+
+        if len(data_string) < 4:
+            return
+
+        # Checking for a natural language date
+        parsed_date = self.natural_parse(data_string)
+        if parsed_date:
+            yield self.result("Date", 100, parsed_date)
+            return
+
+        # Checking for other date standards
+        try:
+            parsed_date = dateUtilParser.parse(data_string)
+        except (StopIteration, ValueError):
+            return
+
         punctuation = [c for c in data_string if
                        c in string.punctuation or
                        c in string.whitespace]
         letters = [c for c in data_string if c in string.letters]
         digits = [c for c in data_string if c in string.digits]
 
-        ds_length = len(data_string)
+        self.calculate_confidence(
+            len(data_string), punctuation, letters, digits
+        )
 
-        if ds_length < 4:
-            return
-
-        # Checking for a natural language date
-        parsed_date = self.natural_parse(data_string)
-
-        if parsed_date:
-            yield self.result("Date", 100, parsed_date)
-            return
-
-        # we will use this to adjust the final confidence score
-        confidence_normalizer = 1.0
-
-        if ds_length > 4:
-            confidence_normalizer *= 1.05
-
-        if len(punctuation) <= 1:
-            confidence_normalizer *= 1.05
-
-        if '/' in punctuation and punctuation.count('/') < 3:
-            confidence_normalizer *= (1.0 + (.05 * punctuation.count('/')))
-
-        if len(letters) == 0 and len(digits) < 4:
-            confidence_normalizer *= 0.5
-
-        try:
-            parsed_date = dateUtilParser.parse(data_string)
-
-            if ds_length == 4:
-                self.confidence += 10
-            elif ds_length <= 7:
-                self.confidence += 40
-            else:
-                self.confidence += 80
-
-            self.confidence = int(
-                round(float(self.confidence)*confidence_normalizer)
-            )
-
-            yield self.result("Date", self.confidence, parsed_date)
-        except (StopIteration, ValueError):
-            pass
+        yield self.result("Date", self.confidence, parsed_date)

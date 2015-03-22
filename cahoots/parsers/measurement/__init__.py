@@ -188,10 +188,10 @@ class MeasurementParser(BaseParser):
             yield self.result(self.get_sub_type(system_id))
             return
 
-        elif not set(data).intersection(set(string.digits))\
-                and not set(data).intersection(set(string.whitespace)):
-            # If there aren't any digits or whitespace in the data,
-            # we pretty much can just eliminate it at this point
+        # If there aren't any digits or whitespace in the data,
+        # we pretty much can just eliminate it at this point
+        if not set(data).intersection(set(string.digits)) and \
+                not set(data).intersection(set(string.whitespace)):
             return
 
         # processing the data by identifying and removing found units from it
@@ -210,9 +210,6 @@ class MeasurementParser(BaseParser):
         except StandardError:
             return
 
-        # assembling a string representing the subtypes we found
-        sub_types = []
+        # yielding the subtypes we found
         for sid in system_ids:
-            sub_types.append(self.get_sub_type(sid))
-
-        yield self.result(', '.join(sub_types))
+            yield self.result(self.get_sub_type(sid))

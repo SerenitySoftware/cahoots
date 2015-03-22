@@ -75,12 +75,11 @@ class URIParser(BaseParser):
             return
 
         dot_count = data_string.count(".")
-        colon_count = data_string.count(":")
 
-        if dot_count >= 2 or colon_count >= 2:
+        if dot_count >= 2 or data_string.count(":") >= 2:
             if self.is_ipv4_address(data_string):
                 # lowering the confidence because "Technically"
-                # and ipv4 address could be a phone number
+                # an ipv4 address could be a phone number
                 self.confidence -= 5
                 # if there's whitespace in the ip address, lower confidence
                 if strings_intersect(string.whitespace, data_string):

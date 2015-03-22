@@ -155,6 +155,17 @@ class ProgrammingParser(BaseParser):
 
         return normal_scores
 
+    def get_possible_languages(self, dataset):
+        """
+        Goes through each language's keywords and finds
+        languages that share keywords with the provided data set
+        """
+        return [language for language, language_data in
+                self.language_keywords.items() if
+                self.basic_language_heuristic(
+                    language_data, dataset
+                )]
+
     def parse(self, data):
         """
         Determines if the data is an example of one of our trained languages
@@ -167,11 +178,7 @@ class ProgrammingParser(BaseParser):
             return
 
         # Step 2: Which languages match, based on keywords alone?
-        matched_languages = [language for language, language_data in
-                             self.language_keywords.items() if
-                             self.basic_language_heuristic(
-                                 language_data, dataset
-                             )]
+        matched_languages = self.get_possible_languages(dataset)
 
         # Step 3: Which languages match, based on a smarter lexer?
         lexer = ProgrammingLexer(matched_languages, data.lower())

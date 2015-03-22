@@ -9,3 +9,4 @@ simplejson
 SereneRegistry
 LatLon
 simplebayes
+validate_email
