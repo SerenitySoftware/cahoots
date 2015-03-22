@@ -119,18 +119,24 @@ class PhoneParserTests(unittest.TestCase):
 
     def test_parseWithInvalidLengthStringYieldsNothing(self):
 
-        for result in self.pp.parse("1234"):
-            self.assertFalse(result)
+        count = 1
+        for _ in self.pp.parse("1234"):
+            count -= 1
+        self.assertEqual(1, count)
 
     def test_parseWithMoreLettersThanNumbersYieldsNothing(self):
 
-        for result in self.pp.parse("abcdefghi1234567"):
-            self.assertFalse(result)
+        count = 1
+        for _ in self.pp.parse("abcdefghi1234567"):
+            count -= 1
+        self.assertEqual(1, count)
 
     def test_parseWithInvalidPhoneYieldsNothing(self):
 
-        for result in self.pp.parse("1234567123456712345671234567"):
-            self.assertFalse(result)
+        count = 1
+        for _ in self.pp.parse("1234567123456712345671234567"):
+            count -= 1
+        self.assertEqual(1, count)
 
     def test_parseWithIntegerYieldsExpectedConfidence(self):
 
@@ -163,3 +169,10 @@ class PhoneParserTests(unittest.TestCase):
             results.append(result)
             self.assertEqual(15, result.confidence)
         self.assertEqual(1, len(results))
+
+    def test_parseWithTooLongDataYieldsNothing(self):
+
+        count = 5
+        for _ in self.pp.parse("1231231234123123123412312312345"):
+            count -= 1
+        self.assertEqual(5, count)
