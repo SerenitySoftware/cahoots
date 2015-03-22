@@ -21,9 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=too-many-branches
-# pylint: disable=too-many-return-statements
-# pylint: disable=too-many-locals
 # pylint: disable=unnecessary-lambda
 # pylint: disable=too-many-instance-attributes
 from cahoots.parsers.base import BaseParser
@@ -40,6 +37,7 @@ from pyparsing import\
     replaceWith
 from operator import mul
 import re
+from cahoots.result import ParseResult
 
 
 class NumberParser(BaseParser):
@@ -57,7 +55,7 @@ class NumberParser(BaseParser):
         self.defined_units = [
             ("zero", 0),
             ("oh", 0),
-            ("  postal", 0),
+            ("zip", 0),
             ("zilch", 0),
             ("nada", 0),
             ("bupkis", 0),
@@ -288,20 +286,21 @@ class NumberParser(BaseParser):
 
         return True, data
 
-    def parse(self, data):
+    @classmethod
+    def prep_data(cls, data):
+        """Removes unwanted stuff from data"""
         data = data.strip()
 
-        if data == "":
-            return
+        if not data:
+            return data
 
         if data[0] == "-":
             data = data[1:]
 
-        data = data.replace(",", "")
+        return data.replace(",", "")
 
-        if data == '':
-            return
-
+    def parse_fraction(self, data):
+        """finds and confidence scores a fraction"""
         is_fraction, value = self.is_fraction(data)
         if is_fraction:
             fraction_confidence = 100
@@ -320,14 +319,16 @@ class NumberParser(BaseParser):
                 if not eqp.solve_equation(eqp.auto_float(data)):
                     fraction_confidence -= 40
 
-            yield self.result("Fraction", fraction_confidence, value)
-            return
+            return self.result("Fraction", fraction_confidence, value)
 
+    def parse_binary(self, data):
+        """finds and confidence scores a binary"""
         is_binary, value = self.is_binary(data)
         if is_binary:
-            yield self.result("Binary", 100, value)
-            return
+            return self.result("Binary", 100, value)
 
+    def parse_integer(self, data):
+        """finds and confidence scores a integer"""
         is_integer, value = self.is_integer(data)
         if is_integer:
             integer_confidence = 75
@@ -342,32 +343,59 @@ class NumberParser(BaseParser):
 
             is_octal, octal_value = self.is_octal(data)
             if is_octal:
-                yield self.result("Integer", integer_confidence, value)
-                yield self.result("Octal", octal_confidence, octal_value)
-                return
+                return [
+                    self.result("Integer", integer_confidence, value),
+                    self.result("Octal", octal_confidence, octal_value)
+                ]
 
             # Just an int
-            yield self.result("Integer", integer_confidence, value)
-            return
+            return self.result("Integer", integer_confidence, value)
 
+    def parse_float(self, data):
+        """finds and confidence scores a float"""
         if '.' in data:
             is_float, value = self.is_float(data)
             if is_float:
-                yield self.result("Decimal", 100, value)
-                return
+                return self.result("Decimal", 100, value)
 
+    def parse_hex(self, data):
+        """finds and confidence scores a hex number"""
         if len(data) > 1:
             is_hex, value = self.is_hex(data)
             if is_hex:
-                yield self.result("Hexadecimal", 100, value)
-                return
+                return self.result("Hexadecimal", 100, value)
 
+    def parse_roman_numeral(self, data):
+        """finds and confidence scores a roman numeral"""
         is_roman_numeral, value = self.is_roman_numeral(data)
         if is_roman_numeral:
-            yield self.result("Roman Numeral", 100, value)
-            return
+            return self.result("Roman Numeral", 100, value)
 
+    def parse_word_number(self, data):
+        """finds and confidence scores a word-number"""
         is_word, value = self.is_words(data)
         if is_word:
-            yield self.result("Word Number", 100, value)
+            return self.result("Word Number", 100, value)
+
+    def parse(self, data):
+        data = self.prep_data(data)
+
+        if not data:
             return
+
+        # cascading through our potential parsers until we find something
+        results = \
+            self.parse_fraction(data) or \
+            self.parse_binary(data) or \
+            self.parse_integer(data) or \
+            self.parse_float(data) or \
+            self.parse_hex(data) or \
+            self.parse_roman_numeral(data) or \
+            self.parse_word_number(data)
+
+        if results:
+            if not isinstance(results, list):
+                results = [results]
+            for result in results:
+                if isinstance(result, ParseResult):
+                    yield result
