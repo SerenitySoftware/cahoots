@@ -40,7 +40,7 @@ class EmailParser(BaseParser):
         registry.set('EP_valid_regex', email_regex)
 
     def parse(self, data_string):
-        if '@' not in data_string:
+        if len(data_string) > 254 or '@' not in data_string:
             return
 
         if registry.get('EP_valid_regex').match(data_string):
