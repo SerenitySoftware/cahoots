@@ -107,7 +107,7 @@ class DateParser(BaseParser):
         # Checking for other date standards
         try:
             parsed_date = dateUtilParser.parse(data_string)
-        except (StopIteration, ValueError):
+        except (StopIteration, ValueError, OverflowError):
             return
 
         punctuation = [c for c in data_string if
