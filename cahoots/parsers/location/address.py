@@ -55,11 +55,11 @@ class AddressParser(BaseParser):
         registry.set('AP_split_regex', split_regex)
 
     @classmethod
-    def get_street_suffix(cls, working_data):
+    def get_street_suffix(cls, data_set):
         """Looks at our data for a street suffix and returns the entity"""
         sql_items = []
 
-        for _ in working_data:
+        for _ in data_set:
             sql_items.append('suffix_name = ?')
 
         database = LocationDatabase.get_database()
@@ -68,7 +68,7 @@ class AddressParser(BaseParser):
         try:
             row = cursor.execute(
                 'SELECT * FROM street_suffix WHERE ' + " or ".join(sql_items),
-                tuple(working_data)
+                tuple(data_set)
             ).fetchone()
             database.close()
         except sqlite3.Error:
@@ -79,12 +79,12 @@ class AddressParser(BaseParser):
             return LocationDatabase.hydrate(row, StreetSuffixEntity)
 
     @classmethod
-    def separate_suspected_name(cls, working_data):
+    def separate_suspected_name(cls, data_set):
         """Separates a suspected name from the beginning of an address"""
         name_elems = []
-        work_data = list(working_data)
+        work_data = list(data_set)
         conjunctions = ['and', 'but', 'or', 'yet', 'for', 'nor', 'so']
-        for word in working_data:
+        for word in data_set:
             if not word[0].isdigit():
                 work_data.pop(0)
                 # skipping conjunctions, ex: Alice and Bob Saget
@@ -157,28 +157,11 @@ class AddressParser(BaseParser):
 
         return (tokens, results)
 
-    def parse(self, data):
-        """parses for address"""
-        data = data.strip()
-
-        if len(data) > 100:
-            return
-
-        # If there are no digits, we return.
-        if not [x for x in data if x.isdigit()]:
-            return
-
-        split_regex = registry.get('AP_split_regex')
-        # splitting the data string and removing empty values
-        working_data = [x for x in split_regex.split(data) if x]
-
-        if len(working_data) <= 3:
-            return
-
-        # At least one of the words should start with a number
-        if not [x for x in working_data if x[:1].isdigit()]:
-            return
-
+    def generate_result_data(self, data, data_set):
+        """
+        Examines the data_set and generates a result
+        dict, or returns nothing if there's a failure
+        """
         results = {
             'street_suffix': None,
             'addressed_to': None,
@@ -186,15 +169,15 @@ class AddressParser(BaseParser):
         }
 
         # With no street suffix, we don't consider this an address
-        suffix = self.get_street_suffix(working_data)
+        suffix = self.get_street_suffix(data_set)
         if not suffix:
             return
 
-        suffix_test = [x.lower() for x in working_data]
+        suffix_test = [x.lower() for x in data_set]
         try:
             # removing the suffix from the list of working data
             index = suffix_test.index(suffix.suffix_name)
-            working_data.pop(index)
+            data_set.pop(index)
         except ValueError:
             # if for some reason we found an invalid suffix, we probably cry
             return
@@ -203,8 +186,8 @@ class AddressParser(BaseParser):
 
         # Looking to see if this address starts with a name, since no digit
         if not data[0].isdigit():
-            working_data, suspected_name = \
-                self.separate_suspected_name(working_data)
+            data_set, suspected_name = \
+                self.separate_suspected_name(data_set)
 
             results['addressed_to'] = suspected_name
 
@@ -217,11 +200,32 @@ class AddressParser(BaseParser):
                     return
 
         # Looking for items in the city database that match words in the data
-        token_count, results = self.find_address_tokens(working_data, results)
-        if token_count == 0:
+        token_count, results = self.find_address_tokens(data_set, results)
+
+        return (results, token_count, data_set)
+
+    def parse(self, data):
+        """parses for address"""
+        data = data.strip()
+
+        # If invalid length or there are no digits, we return.
+        if len(data) > 100 or not [x for x in data if x.isdigit()]:
             return
 
-        # Subtracting a little confidence for each token that wasn't found
-        self.confidence -= 5*(len(working_data)-token_count)
+        split_regex = registry.get('AP_split_regex')
+        # splitting the data string and removing empty values
+        data_set = [x for x in split_regex.split(data) if x]
 
-        yield self.result(self.subtype, min(100, self.confidence), results)
+        # At least 4 words and one of the words should start with a number
+        if len(data_set) <= 3 or not [x for x in data_set if x[:1].isdigit()]:
+            return
+
+        results, token_count, data_set = \
+            self.generate_result_data(data, data_set) \
+            or (None, None, None)
+
+        if token_count:
+            # Subtracting a little confidence for each token that wasn't found
+            self.confidence -= 5*(len(data_set)-token_count)
+
+            yield self.result(self.subtype, min(100, self.confidence), results)
