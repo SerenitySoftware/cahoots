@@ -206,12 +206,18 @@ class MeasurementParserTests(unittest.TestCase):
         self.assertEqual(count, 1)
 
     def test_parseWithMultipleUnitTypesYieldsProperSubtype(self):
+
+        expected_results = [
+            [34, 'Imperial Length'],
+            [34, 'Metric Volume']
+        ]
+
         count = 0
         for result in self.mp.parse('4 inches 50 liters'):
-            self.assertEqual(result.confidence, 34)
-            self.assertEqual(result.subtype, 'Imperial Length, Metric Volume')
+            self.assertEqual(result.confidence, expected_results[count][0])
+            self.assertEqual(result.subtype, expected_results[count][1])
             count += 1
-        self.assertEqual(count, 1)
+        self.assertEqual(count, 2)
 
     def test_parseWithUnitButTooManyNonNumbersYieldsNothing(self):
         count = 0
