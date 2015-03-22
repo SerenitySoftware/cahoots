@@ -33,18 +33,11 @@ class EmailParserTests(unittest.TestCase):
     ep = None
 
     def setUp(self):
+        EmailParser.bootstrap(TestConfig())
         self.ep = EmailParser(TestConfig())
 
     def tearDown(self):
         self.ep = None
-
-    def test_matches_email_pattern(self):
-        self.assertTrue(self.ep.matches_email_pattern("foobar@photoflit.com"))
-        self.assertTrue(self.ep.matches_email_pattern("foo+bar@photoflit.com"))
-        self.assertTrue(self.ep.matches_email_pattern("foo.bar@gmail.com"))
-        self.assertTrue(self.ep.matches_email_pattern("foo@photoflit.co.uk"))
-        self.assertFalse(self.ep.matches_email_pattern("asdf@asdf"))
-        self.assertFalse(self.ep.matches_email_pattern("asdfasdf"))
 
     def test_parseWithNoAtSymbolReturnsNothing(self):
         count = 0

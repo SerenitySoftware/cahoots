@@ -130,5 +130,5 @@ class PostalCodeParser(BaseParser):
             results = self.get_postal_code_data(data)
             if results is not None:
                 self.calculate_confidence(data, results)
-                yield self.result(None, self.confidence, results)
+                yield self.result("Postal Code", self.confidence, results)
                 return

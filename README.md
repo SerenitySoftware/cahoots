@@ -37,6 +37,7 @@ Python Package Requirements
 9. simplejson
 10. SereneRegistry
 11. LatLon
+12. validate_email
 
 Dev Linux Setup / Usage / Requirements
 ------------------------------
