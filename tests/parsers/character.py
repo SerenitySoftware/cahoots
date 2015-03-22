@@ -100,9 +100,9 @@ class CharacterParserTests(unittest.TestCase):
 
     def test_parseBooleanLetterYieldsLowerConfidence(self):
         count = 0
-        for result in self.cp.parse('t'):
+        for result in self.cp.parse('T'):
             count += 1
             self.assertEqual(result.subtype, 'Letter')
-            self.assertEqual(result.data, {'char-code': 116})
+            self.assertEqual(result.data, {'char-code': 84})
             self.assertEqual(result.confidence, 25)
         self.assertEqual(count, 1)
