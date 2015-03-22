@@ -88,3 +88,9 @@ class DateParserTests(unittest.TestCase):
         for _ in self.dp.parse('asdf;lkj'):
             count += 1
         self.assertEqual(count, 0)
+
+    def test_OutOfRangePhoneNumberYieldsNothing(self):
+        count = 0
+        for _ in self.dp.parse('7052383102'):
+            count += 1
+        self.assertEqual(count, 0)
