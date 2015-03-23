@@ -21,23 +21,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from cahoots.parsers import\
-    boolean,\
-    character,\
-    date,\
-    email,\
-    equation,\
-    measurement,\
-    name,\
-    number,\
-    phone,\
-    programming,\
-    uri
-from cahoots.parsers.location import\
-    address,\
-    coordinate,\
-    landmark,\
-    postalcode
+from cahoots.parsers.boolean import BooleanParser
+from cahoots.parsers.character import CharacterParser
+from cahoots.parsers.date import DateParser
+from cahoots.parsers.email import EmailParser
+from cahoots.parsers.equation import EquationParser
+from cahoots.parsers.measurement import MeasurementParser
+from cahoots.parsers.name import NameParser
+from cahoots.parsers.number import NumberParser
+from cahoots.parsers.phone import PhoneParser
+from cahoots.parsers.programming import ProgrammingParser
+from cahoots.parsers.uri import URIParser
+from cahoots.parsers.location.address import AddressParser
+from cahoots.parsers.location.coordinate import CoordinateParser
+from cahoots.parsers.location.landmark import LandmarkParser
+from cahoots.parsers.location.postalcode import PostalCodeParser
 
 
 class BaseConfig(object):
@@ -57,21 +55,21 @@ class BaseConfig(object):
         confidence scores, a change in result determination, etc.
     """
     enabledModules = [
-        name.NameParser,
-        number.NumberParser,
-        character.CharacterParser,
-        boolean.BooleanParser,
-        date.DateParser,
-        phone.PhoneParser,
-        uri.URIParser,
-        email.EmailParser,
-        programming.ProgrammingParser,
-        address.AddressParser,
-        coordinate.CoordinateParser,
-        landmark.LandmarkParser,
-        postalcode.PostalCodeParser,
-        equation.EquationParser,
-        measurement.MeasurementParser,
+        AddressParser,
+        BooleanParser,
+        CharacterParser,
+        CoordinateParser,
+        DateParser,
+        EmailParser,
+        EquationParser,
+        LandmarkParser,
+        MeasurementParser,
+        NameParser,
+        NumberParser,
+        PhoneParser,
+        PostalCodeParser,
+        ProgrammingParser,
+        URIParser,
     ]
 
     """
@@ -79,7 +77,7 @@ class BaseConfig(object):
     """
     template = {
         'lookups': [
-            'web/templates/'
+            'cahootserver/templates/'
         ],
         'modules': '/tmp/makocache/'
     }

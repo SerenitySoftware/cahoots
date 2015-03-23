@@ -5,3 +5,5 @@
 build
 .cover*
 simplebayes
+Cahoots.egg-info/
+dist/

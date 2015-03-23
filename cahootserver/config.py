@@ -25,8 +25,6 @@ from cahoots.config import BaseConfig
 
 
 class WSGIConfig(BaseConfig):
-    """Extends the base config to enable debug mode for web"""
-
-    debug = True
+    """Extends the base config to enable debug mode for cahootserver"""
 
     web_port = 8000

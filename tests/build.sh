@@ -10,12 +10,12 @@ echo -e "\nExit Code:" $?
 echo
 echo " [Cahoots] Step 2: Executing pep8 and pyflakes Tests (flake8)."
 echo
-flake8 cahoots tests web
+flake8 cahoots tests cahootserver
 echo "Exit Code:" $?
 
 echo
 echo " [Cahoots] Step 3: Executing pylint Tests"
 echo
-pylint cahoots tests web --reports=no
+pylint cahoots tests cahootserver --reports=no
 echo "Exit Code:" $?
 echo

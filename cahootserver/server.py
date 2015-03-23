@@ -25,14 +25,17 @@ SOFTWARE.
 from flask import Flask, request
 from mako.lookup import TemplateLookup
 from cahoots.parser import CahootsParser
-from web.config import WSGIConfig
-from web import out
+from cahootserver.config import WSGIConfig
+from cahootserver import out
 import os
+import sys
+import getopt
 
 
 APP = Flask(__name__, static_folder='static')
 
-PARSER = CahootsParser(WSGIConfig, True)
+# Will instantiate this later
+PARSER = CahootsParser
 
 
 class CahootsWSGI(object):
@@ -57,16 +60,6 @@ class CahootsWSGI(object):
         rendered_template = self.template_lookup.get_template(template)
         return rendered_template.render(**context)
 
-    @classmethod
-    def get_request_variable(cls, web_request, parameter):
-        """retrieves a get or post request variable"""
-        if web_request.method == 'POST':
-            query = request.form.get(parameter, '')
-        elif web_request.method == 'GET':
-            query = request.args.get(parameter, '')
-
-        return query
-
 
 class CahootsClassifier(CahootsWSGI):
     """Responsible for handling web requests"""
@@ -76,7 +69,7 @@ class CahootsClassifier(CahootsWSGI):
 
     def render_home(self, web_request):
         """renders web interface"""
-        query = self.get_request_variable(web_request, 'q')
+        query = web_request.form.get('snippet', '')
 
         results = None
         if query != '':
@@ -96,9 +89,10 @@ class CahootsClassifierApi(CahootsWSGI):
     def __init__(self, cahoots_parser):
         super(CahootsClassifierApi, self).__init__(cahoots_parser)
 
-    def render_api(self, api_request):
+    @classmethod
+    def render_api(cls, api_request):
         """renders cahoots response in json"""
-        query = self.get_request_variable(api_request, 'q')
+        query = api_request.form.get('snippet', '')
 
         results = None
         if query != '':
@@ -113,15 +107,70 @@ def view_classifier():
     return CahootsClassifier(PARSER).render_home(request)
 
 
-@APP.route("/api/", methods=['POST', 'GET'])
+@APP.route("/api/", methods=['POST'])
+@APP.route("/api", methods=['POST'])
 def view_api():
     """displays a cahoots response in pure json"""
     return CahootsClassifierApi(PARSER).render_api(request)
 
 
-if __name__ == "__main__":
+def usage():
+    """Cahoots Help"""
+    print
+    print "Cahoots Server Help:"
+    print
+    print "\t-h, --help"
+    print "\t\tShow this help"
+    print
+    print "\t-p [port], --port [port]"
+    print "\t\tSet the port the server should listen on"
+    print
+    print "\t-d, --debug"
+    print "\t\tRun the server in debug mode (errors displayed, debug output)"
+    print
+
+
+def launch_server():
+    """
+    Runs our server!
+    """
+    try:
+        opts, _ = getopt.getopt(
+            sys.argv[1:],
+            "hp:d",
+            ["help", "port=", "debug"]
+        )
+    except getopt.GetoptError as gerror:
+        print '\nError: ' + gerror.msg
+        usage()
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif opt in ("-d", "--debug"):
+            WSGIConfig.debug = True
+        elif opt in ("-p", "--port"):
+            try:
+                WSGIConfig.web_port = int(arg)
+                if WSGIConfig.web_port > 65535:
+                    raise ValueError
+            except ValueError:
+                print '\nError: Invalid port'
+                usage()
+                sys.exit()
+
+    # pylint: disable=global-statement
+    global PARSER
+    PARSER = CahootsParser(WSGIConfig, True)
+
     APP.run(
         host="0.0.0.0",
         port=int(os.environ.get('PORT', WSGIConfig.web_port)),
         debug=WSGIConfig.debug
     )
+
+
+if __name__ == "__main__":
+    launch_server()
