@@ -23,14 +23,10 @@ SOFTWARE.
 """
 from phonenumbers.phonenumberutil import NumberParseException
 from phonenumbers import phonenumberutil
+from phonenumbers import geocoder
 from cahoots.parsers.base import BaseParser
 from cahoots.parsers.uri import URIParser
 import string
-
-
-# Please see comment in bootstrap method
-# pylint: disable=invalid-name
-geocoder = None
 
 
 class PhoneParser(BaseParser):
@@ -42,23 +38,6 @@ class PhoneParser(BaseParser):
 
     def __init__(self, config):
         BaseParser.__init__(self, config, "Phone", 100)
-
-    @staticmethod
-    def bootstrap(config):
-        """
-        This is very naughty and I should be ashamed of myself,
-        but the geocoder module imports some auto-executing
-        garbage that takes a sinister amount of time to execute.
-        I'm doing this so someone can import the CahootsParser
-        without having to take a nap while waiting for it to import.
-
-        Assuming this issue is ever corrected on the phonenumbers
-        end, I'll remove this obscene bit of code.
-        """
-        from phonenumbers import geocoder as coder
-        # pylint: disable=invalid-name,global-statement
-        global geocoder
-        geocoder = coder
 
     def get_phone_number_object(self, data_string):
         """Takes the data_string and tries to parse a phone number out of it"""

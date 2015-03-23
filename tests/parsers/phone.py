@@ -57,7 +57,6 @@ class PhoneParserTests(unittest.TestCase):
     dfvnmCallCount = 0
 
     def setUp(self):
-        PhoneParser.bootstrap(TestConfig())
         self.pp = PhoneParser(TestConfig())
 
     def tearDown(self):
