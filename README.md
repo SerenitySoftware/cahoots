@@ -13,15 +13,15 @@ Beta, Accepting Contributions
 [![Build Status](https://img.shields.io/badge/pylint-10.00/10-brightgreen.svg?style=flat)](https://travis-ci.org/SerenitySoftwareLLC/cahoots)
 [![Build Status](https://img.shields.io/badge/flake8-passing-brightgreen.svg?style=flat)](https://travis-ci.org/SerenitySoftwareLLC/cahoots)
 
-#### [Documentation Home / What Is Cahoots? »](https://github.com/hickeroar/cahoots/wiki)
+#### [Documentation Home / What Is Cahoots? »](https://github.com/SerenitySoftwareLLC/cahoots/wiki)
 
-#### [Requirements and Dependencies »](https://github.com/hickeroar/cahoots/wiki/Requirements-and-Dependencies)
+#### [Requirements and Dependencies »](https://github.com/SerenitySoftwareLLC/cahoots/wiki/Requirements-and-Dependencies)
 
-#### [Development Environment Setup »](https://github.com/hickeroar/cahoots/wiki/Development-Environment-Setup)
+#### [Development Environment Setup »](https://github.com/SerenitySoftwareLLC/cahoots/wiki/Development-Environment-Setup)
 
-#### [Cahoots Server Setup »](https://github.com/hickeroar/cahoots/wiki/Cahoots-Server-Setup)
+#### [Cahoots Server Setup »](https://github.com/SerenitySoftwareLLC/cahoots/wiki/Cahoots-Server-Setup)
 
-#### [Using Cahoots In Your Application »](https://github.com/hickeroar/cahoots/wiki/Using-Cahoots-In-Your-Application)
+#### [Using Cahoots In Your Application »](https://github.com/SerenitySoftwareLLC/cahoots/wiki/Using-Cahoots-In-Your-Application)
 
 License
 -------
