@@ -36,9 +36,11 @@ class TestConfig(cahoots.config.BaseConfig):
         cahoots.parsers.phone.PhoneParser,
         cahoots.parsers.uri.URIParser,
         cahoots.parsers.email.EmailParser,
-        # programming.ProgrammingParser,
-        cahoots.parsers.location.postalcode.PostalCodeParser,
+        # cahoots.parsers.programming.ProgrammingParser,
+        cahoots.parsers.location.address.AddressParser,
         cahoots.parsers.location.coordinate.CoordinateParser,
+        cahoots.parsers.location.landmark.LandmarkParser,
+        cahoots.parsers.location.postalcode.PostalCodeParser,
         cahoots.parsers.equation.EquationParser,
         cahoots.parsers.measurement.MeasurementParser,
     ]
