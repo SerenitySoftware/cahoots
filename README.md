@@ -23,6 +23,8 @@ Beta, Accepting Contributions
 
 #### [Using Cahoots In Your Application »](https://github.com/SerenitySoftwareLLC/cahoots/wiki/Using-Cahoots-In-Your-Application)
 
+#### [Demo of Cahoots Web Server »](http://cahoots.rwven.com/)
+
 License
 -------
 ```
