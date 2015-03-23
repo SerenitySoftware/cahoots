@@ -77,7 +77,7 @@ class BaseConfig(object):
     """
     template = {
         'lookups': [
-            'web/templates/'
+            'cahootserver/templates/'
         ],
         'modules': '/tmp/makocache/'
     }

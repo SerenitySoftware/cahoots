@@ -25,14 +25,17 @@ SOFTWARE.
 from flask import Flask, request
 from mako.lookup import TemplateLookup
 from cahoots.parser import CahootsParser
-from web.config import WSGIConfig
-from web import out
+from cahootserver.config import WSGIConfig
+from cahootserver import out
 import os
+import sys
+import getopt
 
 
 APP = Flask(__name__, static_folder='static')
 
-PARSER = CahootsParser(WSGIConfig, True)
+# Will instantiate this later
+PARSER = CahootsParser
 
 
 class CahootsWSGI(object):
@@ -119,9 +122,63 @@ def view_api():
     return CahootsClassifierApi(PARSER).render_api(request)
 
 
-if __name__ == "__main__":
+def usage():
+    """Cahoots Help"""
+    print
+    print "Cahoots Server Help:"
+    print
+    print "\t-h, --help"
+    print "\t\tShow this help"
+    print
+    print "\t-p [port], --port [port]"
+    print "\t\tSet the port the server should listen on"
+    print
+    print "\t-d, --debug"
+    print "\t\tRun the server in debug mode (errors displayed, debug output)"
+    print
+
+
+def launch_server():
+    """
+    Runs our server!
+    """
+    try:
+        opts, _ = getopt.getopt(
+            sys.argv[1:],
+            "hp:d",
+            ["help", "port=", "debug"]
+        )
+    except getopt.GetoptError as gerror:
+        print '\nError: ' + gerror.msg
+        usage()
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif opt in ("-d", "--debug"):
+            WSGIConfig.debug = True
+        elif opt in ("-p", "--port"):
+            try:
+                WSGIConfig.web_port = int(arg)
+                if WSGIConfig.web_port > 65535:
+                    raise ValueError
+            except ValueError:
+                print '\nError: Invalid port'
+                usage()
+                sys.exit()
+
+    # pylint: disable=global-statement
+    global PARSER
+    PARSER = CahootsParser(WSGIConfig, True)
+
     APP.run(
         host="0.0.0.0",
         port=int(os.environ.get('PORT', WSGIConfig.web_port)),
         debug=WSGIConfig.debug
     )
+
+
+if __name__ == "__main__":
+    launch_server()

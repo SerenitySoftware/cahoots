@@ -2,16 +2,17 @@
 import csv
 import sqlite3
 import subprocess
-import setuptools
-from distutils.core import setup
-from distutils.command.install import install
+from setuptools import setup
+from setuptools.command.install import install
 
 
 class cahoots_install(install):
-    def run(self):
-        install.run(self)
+    """
+    Extension of setuptools install class for post-install scripting
+    """
 
-        print 'Preparing Location Database And Data For Import...'
+    def prep_location_data(self):
+        """Copies dist database and extracts location data"""
         location_install_cmds = [
             'cp {0}cahoots/parsers/location/data/location.sqlite.dist {0}cahoots/parsers/location/data/location.sqlite',
             'bzip2 -d -k {0}cahoots/parsers/location/data/city.txt.bz2',
@@ -23,12 +24,8 @@ class cahoots_install(install):
         for command in location_install_cmds:
             subprocess.call(command.format(self.install_lib), shell=True)
 
-        print "Importing Location Data Into Location Database..."
-        database = sqlite3.connect(self.install_lib+'cahoots/parsers/location/data/location.sqlite')
-        database.text_factory = str
-        cursor = database.cursor()
-
-        print "Importing 'city' Table..."
+    def import_city_data(self, cursor):
+        """Imports city data"""
         city_file = self.install_lib+'cahoots/parsers/location/data/city.txt'
         city_csv = csv.DictReader(
             open(city_file, 'rb'),
@@ -42,7 +39,8 @@ class cahoots_install(install):
              for i in city_csv]
         )
 
-        print "Importing 'country' Table..."
+    def import_country_data(self, cursor):
+        """Imports country data"""
         country_file = self.install_lib+'cahoots/parsers/location/data/country.csv'
         country_csv = csv.DictReader(
             open(country_file, 'rb'),
@@ -56,7 +54,8 @@ class cahoots_install(install):
              for i in country_csv]
         )
 
-        print "Importing 'street_suffix' Table..."
+    def import_street_suffix_data(self, cursor):
+        """Imports street_suffix data"""
         suffix_file = self.install_lib+'cahoots/parsers/location/data/street_suffix.csv'
         suffix_csv = csv.DictReader(
             open(suffix_file, 'rb'),
@@ -70,7 +69,8 @@ class cahoots_install(install):
              for i in suffix_csv]
         )
 
-        print "Importing 'landmark' Table..."
+    def import_landmark_data(self, cursor):
+        """Imports landmark data"""
         landmark_file = self.install_lib+'cahoots/parsers/location/data/landmark.csv'
         landmark_csv = csv.DictReader(
             open(landmark_file, 'rb'),
@@ -84,10 +84,8 @@ class cahoots_install(install):
              for i in landmark_csv]
         )
 
-        database.commit()
-        database.close()
-
-        print 'Cleaning Location Database Import Temp Files...'
+    def cleanup_location_data(self):
+        """Deletes temp files"""
         location_cleanup_cmds = [
             'rm {0}cahoots/parsers/location/data/city.txt',
             'rm {0}cahoots/parsers/location/data/country.csv',
@@ -97,6 +95,36 @@ class cahoots_install(install):
 
         for command in location_cleanup_cmds:
             subprocess.call(command.format(self.install_lib), shell=True)
+
+    def run(self):
+        """Runs the install and post-install actions"""
+        install.run(self)
+
+        print 'Preparing/extracting location database and data for import...'
+        self.prep_location_data()
+
+        print "Importing location data into location database..."
+        database = sqlite3.connect(self.install_lib+'cahoots/parsers/location/data/location.sqlite')
+        database.text_factory = str
+        cursor = database.cursor()
+
+        print "Importing city data..."
+        self.import_city_data(cursor)
+
+        print "Importing country data..."
+        self.import_country_data(cursor)
+
+        print "Importing street suffix data..."
+        self.import_street_suffix_data(cursor)
+
+        print "Importing landmark data..."
+        self.import_landmark_data(cursor)
+
+        database.commit()
+        database.close()
+
+        print 'Cleaning up location import temporary files...'
+        self.cleanup_location_data()
 
         print 'Done!'
 
@@ -121,12 +149,27 @@ setup (
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
     ],
+    install_requires = [
+        'flask',
+        'mako',
+        'dateutils',
+        'pyyaml',
+        'pygments',
+        'pyparsing',
+        'phonenumbers',
+        'simplejson',
+        'SereneRegistry',
+        'LatLon',
+        'simplebayes',
+        'validate_email',
+    ],
     packages = [
         'cahoots',
         'cahoots.parsers',
         'cahoots.parsers.location',
         'cahoots.parsers.measurement',
         'cahoots.parsers.programming',
+        'cahootserver',
     ],
     package_data = {
         'cahoots': [
@@ -141,7 +184,16 @@ setup (
             'parsers/programming/trainers.zip',
             # Measurement
             'parsers/measurement/units/*',
-        ]
+        ],
+        'cahootserver': [
+            'static/*',
+            'templates/*',
+        ],
+    },
+    entry_points={
+        'console_scripts': [
+            'cahootserver = cahootserver.server:launch_server',
+        ],
     },
 )
 # python ./setup.py sdist upload
