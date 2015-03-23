@@ -60,16 +60,6 @@ class CahootsWSGI(object):
         rendered_template = self.template_lookup.get_template(template)
         return rendered_template.render(**context)
 
-    @classmethod
-    def get_request_variable(cls, web_request, parameter):
-        """retrieves a get or post request variable"""
-        if web_request.method == 'POST':
-            query = request.form.get(parameter, '')
-        elif web_request.method == 'GET':
-            query = request.args.get(parameter, '')
-
-        return query
-
 
 class CahootsClassifier(CahootsWSGI):
     """Responsible for handling web requests"""
@@ -79,7 +69,7 @@ class CahootsClassifier(CahootsWSGI):
 
     def render_home(self, web_request):
         """renders web interface"""
-        query = self.get_request_variable(web_request, 'q')
+        query = web_request.form.get('snippet', '')
 
         results = None
         if query != '':
@@ -99,9 +89,10 @@ class CahootsClassifierApi(CahootsWSGI):
     def __init__(self, cahoots_parser):
         super(CahootsClassifierApi, self).__init__(cahoots_parser)
 
-    def render_api(self, api_request):
+    @classmethod
+    def render_api(cls, api_request):
         """renders cahoots response in json"""
-        query = self.get_request_variable(api_request, 'q')
+        query = api_request.form.get('snippet', '')
 
         results = None
         if query != '':
@@ -116,7 +107,8 @@ def view_classifier():
     return CahootsClassifier(PARSER).render_home(request)
 
 
-@APP.route("/api/", methods=['POST', 'GET'])
+@APP.route("/api/", methods=['POST'])
+@APP.route("/api", methods=['POST'])
 def view_api():
     """displays a cahoots response in pure json"""
     return CahootsClassifierApi(PARSER).render_api(request)
