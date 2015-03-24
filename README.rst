@@ -3,12 +3,21 @@ Cahoots
 A Text Comprehension Engine in Python
 -------------------------------------
 
-Status
-------
+Project Status
+--------------
 ::
 
     Beta, Accepting Contributions
 
+Build Status
+------------
+.. image:: https://travis-ci.org/SerenitySoftwareLLC/cahoots.svg?branch=master
+.. image:: https://img.shields.io/badge/coverage-100%-brightgreen.svg?style=flat
+.. image:: https://img.shields.io/badge/pylint-10.00/10-brightgreen.svg?style=flat
+.. image:: https://img.shields.io/badge/flake8-passing-brightgreen.svg?style=flat
+
+Documentation
+-------------
 `Documentation Home / What Is Cahoots? » <https://github.com/SerenitySoftwareLLC/cahoots/wiki>`_
 
 `Requirements and Dependencies » <https://github.com/SerenitySoftwareLLC/cahoots/wiki/Requirements-and-Dependencies>`_
