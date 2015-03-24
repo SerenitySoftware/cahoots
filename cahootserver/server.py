@@ -32,7 +32,10 @@ import sys
 import getopt
 
 
-APP = Flask(__name__, static_folder='static')
+APP = Flask(
+    __name__,
+    static_folder=os.path.dirname(os.path.realpath(__file__)) + '/static'
+)
 
 # Will instantiate this later
 PARSER = CahootsParser

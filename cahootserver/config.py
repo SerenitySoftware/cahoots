@@ -22,9 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from cahoots.config import BaseConfig
+import os
 
 
 class WSGIConfig(BaseConfig):
     """Extends the base config to enable debug mode for cahootserver"""
 
     web_port = 8000
+
+    """
+    Configuration for the templating system
+    """
+    template = {
+        'lookups': [
+            os.path.dirname(os.path.realpath(__file__)) + '/templates/'
+        ],
+        'modules': '/tmp/makocache/'
+    }
