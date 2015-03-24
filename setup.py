@@ -4,6 +4,7 @@ import sqlite3
 import subprocess
 from setuptools import setup
 from setuptools.command.install import install
+from distutils import log
 
 
 class cahoots_install(install):
@@ -100,33 +101,33 @@ class cahoots_install(install):
         """Runs the install and post-install actions"""
         install.run(self)
 
-        print 'Preparing/extracting location database and data for import...'
+        log.info("Preparing/extracting location database and data for import...")
         self.prep_location_data()
 
-        print "Importing location data into location database..."
+        log.info("Importing location data into location database...")
         database = sqlite3.connect(self.install_lib+'cahoots/parsers/location/data/location.sqlite')
         database.text_factory = str
         cursor = database.cursor()
 
-        print "Importing city data..."
+        log.info("Importing city data...")
         self.import_city_data(cursor)
 
-        print "Importing country data..."
+        log.info("Importing country data...")
         self.import_country_data(cursor)
 
-        print "Importing street suffix data..."
+        log.info("Importing street suffix data...")
         self.import_street_suffix_data(cursor)
 
-        print "Importing landmark data..."
+        log.info("Importing landmark data...")
         self.import_landmark_data(cursor)
 
         database.commit()
         database.close()
 
-        print 'Cleaning up location import temporary files...'
+        log.info('Cleaning up location import temporary files...')
         self.cleanup_location_data()
 
-        print 'Done!'
+        log.info('Done!')
 
 
 setup (
@@ -134,7 +135,7 @@ setup (
         'install': cahoots_install
     },
     name = 'Cahoots',
-    version = '0.1.0',
+    version = '0.1.2',
     url = 'https://github.com/SerenitySoftwareLLC/cahoots',
     maintainer='Serenity Software',
     maintainer_email = 'hello@serenitysoftware.io',
@@ -150,6 +151,7 @@ setup (
         'Programming Language :: Python :: 2.7',
     ],
     install_requires = [
+        'watchdog',
         'flask',
         'mako',
         'dateutils',

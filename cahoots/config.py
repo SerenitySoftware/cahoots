@@ -71,13 +71,3 @@ class BaseConfig(object):
         ProgrammingParser,
         URIParser,
     ]
-
-    """
-    Configuration for the templating system
-    """
-    template = {
-        'lookups': [
-            'cahootserver/templates/'
-        ],
-        'modules': '/tmp/makocache/'
-    }
