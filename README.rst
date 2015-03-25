@@ -30,6 +30,12 @@ Documentation
 
 `Demo of Cahoots Web Server » <http://cahoots.rwven.com/>`_
 
+Installation
+------------
+::
+
+    sudo pip install cahoots
+
 License
 -------
 ::

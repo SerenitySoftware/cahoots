@@ -25,6 +25,12 @@ Beta, Accepting Contributions
 
 #### [Demo of Cahoots Web Server »](http://cahoots.rwven.com/)
 
+Installation
+------------
+```bash
+sudo pip install cahoots
+```
+
 License
 -------
 ```
