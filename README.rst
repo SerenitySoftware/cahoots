@@ -30,20 +30,6 @@ Cahoots is not meant for diagramming and mining large sets of text. While a text
 
 Cahoots is not software that you would integrate into a non-daemon web app that would bootstrap and instantiate it on every page view. The bootstrap process can be somewhat intensive and should only run once (during an application's launch process).
 
-Documentation
--------------
-`What Is Cahoots? What Is Cahoots NOT? » <https://github.com/SerenitySoftwareLLC/cahoots/wiki>`_
-
-`Requirements and Dependencies » <https://github.com/SerenitySoftwareLLC/cahoots/wiki/Requirements-and-Dependencies>`_
-
-`Development Environment Setup » <https://github.com/SerenitySoftwareLLC/cahoots/wiki/Development-Environment-Setup>`_
-
-`Cahoots Server Setup » <https://github.com/SerenitySoftwareLLC/cahoots/wiki/Cahoots-Server-Setup>`_
-
-`Using Cahoots In Your Application » <https://github.com/SerenitySoftwareLLC/cahoots/wiki/Using-Cahoots-In-Your-Application>`_
-
-`Demo of Cahoots Web Server » <http://cahoots.rwven.com/>`_
-
 Installation
 ------------
 ::
@@ -112,7 +98,21 @@ Basic Server Usage
 
     $ sudo cahootserver --port 80
     $ ./cahootserver/server.py
-     * Running on http://0.0.0.0:8000/ (Press CTRL+C to quit)
+     * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+
+Documentation
+-------------
+`What Is Cahoots? What Is Cahoots NOT? » <https://github.com/SerenitySoftwareLLC/cahoots/wiki>`_
+
+`Requirements and Dependencies » <https://github.com/SerenitySoftwareLLC/cahoots/wiki/Requirements-and-Dependencies>`_
+
+`Development Environment Setup » <https://github.com/SerenitySoftwareLLC/cahoots/wiki/Development-Environment-Setup>`_
+
+`Cahoots Server Setup » <https://github.com/SerenitySoftwareLLC/cahoots/wiki/Cahoots-Server-Setup>`_
+
+`Using Cahoots In Your Application » <https://github.com/SerenitySoftwareLLC/cahoots/wiki/Using-Cahoots-In-Your-Application>`_
+
+`Demo of Cahoots Web Server » <http://cahoots.rwven.com/>`_
 
 License
 -------
