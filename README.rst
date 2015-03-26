@@ -3,12 +3,6 @@ Cahoots
 A Text Comprehension Engine in Python
 -------------------------------------
 
-Project Status
---------------
-::
-
-    Beta, Accepting Contributions
-
 Build Status
 ------------
 .. image:: https://travis-ci.org/SerenitySoftwareLLC/cahoots.svg?branch=master
