@@ -26,13 +26,13 @@ Cahoots is not software that you would integrate into a non-daemon web app that 
 
 Installation
 ------------
-::bash
+::
 
     sudo pip install cahoots
 
 Basic Module Usage
 ------------------
-::python
+::
 
     >>> from cahoots.parser import CahootsParser
     >>> cahoots = CahootsParser(bootstrap=True)
@@ -56,7 +56,7 @@ Basic Module Usage
 
 Basic Server Usage
 ------------------
-::bash
+::
 
     $ cahootserver --help
 
