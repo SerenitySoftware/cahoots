@@ -113,7 +113,7 @@ class PostalCodeParser(BaseParser):
         """calculates the confidence that this is a postal code"""
 
         # The longer the data string, the higher the confidence
-        self.confidence -= (20-len(data))
+        self.confidence -= (40-(2*len(data)))
 
         if len(results) > 1:
             self.confidence -= (7 * len(results))
