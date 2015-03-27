@@ -190,7 +190,7 @@ class AddressParser(BaseParser):
 
             results['addressed_to'] = suspected_name
 
-            if NameParser in self.config.enabledModules:
+            if NameParser in self.config.enabled_modules:
                 if self.is_address_name(suspected_name):
                     self.subtype = "With Addressee"
                     self.confidence += 25

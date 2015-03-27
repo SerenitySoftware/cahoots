@@ -130,9 +130,9 @@ class EquationParserTests(unittest.TestCase):
         mock_ProgrammingParserSet
     )
     def test_calculate_confidenceWithProgrammingParserLowersConfidence(self):
-        TestConfig.enabledModules.append(ProgrammingParser)
+        TestConfig.enabled_modules.append(ProgrammingParser)
         self.assertEqual(self.ep.calculate_confidence("979-549-5150"), 70)
-        TestConfig.enabledModules.remove(ProgrammingParser)
+        TestConfig.enabled_modules.remove(ProgrammingParser)
 
     def test_parseSimpleNumberYieldsNothing(self):
         count = 0

@@ -42,7 +42,7 @@ class NumberWithNonNumbers(BaseNormalizer):
         return results
 
 
-class IntOrOctWithPhoneDateOrPostCode(BaseNormalizer):
+class IntOctWithPhoneDatePostalCode(BaseNormalizer):
     """Normalizes Int/Oct where Phone, Date, or Postal Code Are Present"""
 
     @staticmethod

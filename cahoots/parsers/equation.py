@@ -193,14 +193,14 @@ class EquationParser(BaseParser):
 
         # We remove confidence for every token
         # shared with a programming language.
-        if ProgrammingParser in self.config.enabledModules:
+        if ProgrammingParser in self.config.enabled_modules:
             prog_parser = ProgrammingParser(self.config)
             dataset = prog_parser.create_dataset(data)
             for _ in set(prog_parser.find_common_tokens(dataset)):
                 confidence -= 5
 
         # if this is a valid postal code, we remove a bunch of confidence
-        if len(data) == 10 and PostalCodeParser in self.config.enabledModules:
+        if len(data) == 10 and PostalCodeParser in self.config.enabled_modules:
             rgx = registry.get('ZCP_postal_code_regex')
             if rgx.match(data) and \
                 PostalCodeParser.get_postal_code_data(data) is not None:

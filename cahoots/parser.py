@@ -76,7 +76,7 @@ class CahootsParser(object):
     @classmethod
     def bootstrap(cls, config):
         """Bootstraps each parser. Can be used for cache warming, etc."""
-        for module in config.enabledModules:
+        for module in config.enabled_modules:
             # If the module overrides the base bootstrap,
             # we output a message about it
             if module.bootstrap != BaseParser.bootstrap and config.debug:
@@ -93,7 +93,7 @@ class CahootsParser(object):
         threads = []
 
         # Creating/starting a thread for each parser module
-        for module in self.config.enabledModules:
+        for module in self.config.enabled_modules:
             thread = ParserThread(self.config, module, data_string)
             thread.start()
             threads.append(thread)
@@ -117,7 +117,7 @@ class CahootsParser(object):
 
             # Hierarchical Confidence Normalization
             normalizer_chain = HierarchicalNormalizerChain(
-                self.config.enabledConfidenceNormalizers,
+                self.config,
                 types,
                 list(set(all_types))
             )

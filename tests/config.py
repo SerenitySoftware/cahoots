@@ -27,7 +27,7 @@ import cahoots
 
 class TestConfig(cahoots.config.BaseConfig):
 
-    enabledModules = [
+    enabled_modules = [
         cahoots.parsers.name.NameParser,
         cahoots.parsers.number.NumberParser,
         cahoots.parsers.character.CharacterParser,

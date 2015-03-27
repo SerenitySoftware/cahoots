@@ -51,7 +51,7 @@ class ParserTestConfig(BaseConfig):
 
     debug = True
 
-    enabledModules = [
+    enabled_modules = [
         FakeModule,
     ]
 

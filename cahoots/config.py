@@ -39,7 +39,7 @@ from cahoots.parsers.location.landmark import LandmarkParser
 from cahoots.parsers.location.postalcode import PostalCodeParser
 # Hierarchical Confidence Normalizers
 from cahoots.confidence.normalizers.number import \
-    NumberWithNonNumbers, IntOrOctWithPhoneDateOrPostCode
+    NumberWithNonNumbers, IntOctWithPhoneDatePostalCode
 from cahoots.confidence.normalizers.date import DateWithPostalCode
 
 
@@ -59,7 +59,7 @@ class BaseConfig(object):
         modules which seek its "council." This may result in unexpected
         confidence scores, a change in result determination, etc.
     """
-    enabledModules = [
+    enabled_modules = [
         AddressParser,
         BooleanParser,
         CharacterParser,
@@ -77,8 +77,8 @@ class BaseConfig(object):
         URIParser,
     ]
 
-    enabledConfidenceNormalizers = [
+    enabled_confidence_normalizers = [
         NumberWithNonNumbers,
-        IntOrOctWithPhoneDateOrPostCode,
+        IntOctWithPhoneDatePostalCode,
         DateWithPostalCode,
     ]

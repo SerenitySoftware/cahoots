@@ -313,7 +313,7 @@ class NumberParser(BaseParser):
             # if the fraction isn't solve-able, we lower the confidence
             # significantly it might "technically" be a fraction made up
             # of roman numerals, etc.
-            if EquationParser in self.config.enabledModules:
+            if EquationParser in self.config.enabled_modules:
                 eqp = EquationParser(self.config)
                 if not eqp.solve_equation(eqp.auto_float(data)):
                     fraction_confidence -= 40
