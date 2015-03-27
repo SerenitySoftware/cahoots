@@ -151,7 +151,7 @@ class NumberParserTests(unittest.TestCase):
             count += 1
             self.assertEqual(result.subtype, 'Integer')
             self.assertEqual(result.result_value, 123456789)
-            self.assertEqual(result.confidence, 65)
+            self.assertEqual(result.confidence, 75)
         self.assertEqual(count, 1)
 
     def test_parseWithOctalNumberYieldsProperResult(self):

@@ -24,6 +24,7 @@ SOFTWARE.
 from cahoots.parsers.base import BaseParser
 from cahoots.util import truncate_text
 from cahoots.config import BaseConfig
+from cahoots.confidence.normalizer import HierarchicalNormalizerChain
 import datetime
 import threading
 import time
@@ -105,23 +106,31 @@ class CahootsParser(object):
         for thr in threads:
             results.extend(thr.results)
 
-        match_types = list(set([result.type for result in results]))
-        matches = sorted(
-            results,
-            key=lambda result: result.confidence,
-            reverse=True
-        )
-        match_count = len(matches)
-        query = data_string
+        # Getting a unique list of result types.
+        types = list(set([result.type for result in results]))
+
+        if results:
+            # Hierarchical Confidence Normalization
+            normalizer_chain = HierarchicalNormalizerChain(
+                self.config.enabledConfidenceNormalizers
+            )
+            results = normalizer_chain.normalize(results, types)
+
+            # Sorting our results by confidence value
+            results = sorted(
+                results,
+                key=lambda result: result.confidence,
+                reverse=True
+            )
 
         return {
-            'query': truncate_text(query),
+            'query': truncate_text(data_string),
             'date': datetime.datetime.now(),
             'execution_seconds': time.time() - start_time,
-            'top': matches[0] if len(matches) > 0 else None,
+            'top': results[0] if len(results) > 0 else None,
             'results': {
-                'count': match_count,
-                'types': match_types,
-                'matches': matches
+                'count': len(results),
+                'types': types,
+                'matches': results
             }
         }

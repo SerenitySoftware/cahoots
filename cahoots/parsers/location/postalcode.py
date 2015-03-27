@@ -116,7 +116,9 @@ class PostalCodeParser(BaseParser):
         self.confidence -= (20-len(data))
 
         if len(results) > 1:
-            self.confidence -= (3 * len(results))
+            self.confidence -= (7 * len(results))
+
+        self.confidence = max(self.confidence, 10)
 
     def parse(self, data):
         """parses data to determine if this is a location"""

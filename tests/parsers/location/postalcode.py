@@ -158,7 +158,7 @@ class PostalCodeParserTests(unittest.TestCase):
                     "latitude": "j"
                 }
             ])
-            self.assertEqual(result.confidence, 79)
+            self.assertEqual(result.confidence, 71)
         self.assertEqual(1, count)
         self.assertEqual(
             SQLite3Mock.execute_calls,

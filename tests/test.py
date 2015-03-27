@@ -30,6 +30,9 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
 import cahoots  # flake8: noqa
 import cahoots.parser  # flake8: noqa
+import cahoots.confidence.normalizer  # flake8: noqa
+import cahoots.confidence.normalizers.base  # flake8: noqa
+import cahoots.confidence.normalizers.number  # flake8: noqa
 import cahoots.config  # flake8: noqa
 import cahoots.parsers.base  # flake8: noqa
 import cahoots.parsers.boolean  # flake8: noqa
