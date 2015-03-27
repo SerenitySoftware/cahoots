@@ -29,12 +29,15 @@ class HierarchicalNormalizerChain(object):
     on the presence of other result types.
     """
 
-    def __init__(self, normalizers):
+    def __init__(self, normalizers, types, all_types):
         self.normalizers = normalizers
+        self.types = types
+        self.all_types = all_types
 
-    def normalize(self, results, types):
+    def normalize(self, results):
         """Runs all normalizers against the result set"""
-        for normalizer in [n for n in self.normalizers if n.test(types)]:
-            results = normalizer.normalize(results, types)
+        for normalizer in [n for n in self.normalizers if
+                           n.test(self.types, self.all_types)]:
+            results = normalizer.normalize(results)
 
         return results

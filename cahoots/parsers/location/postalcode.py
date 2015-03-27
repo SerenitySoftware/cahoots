@@ -118,8 +118,6 @@ class PostalCodeParser(BaseParser):
         if len(results) > 1:
             self.confidence -= (7 * len(results))
 
-        self.confidence = max(self.confidence, 10)
-
     def parse(self, data):
         """parses data to determine if this is a location"""
         data = data.strip()
@@ -132,5 +130,6 @@ class PostalCodeParser(BaseParser):
             results = self.get_postal_code_data(data)
             if results is not None:
                 self.calculate_confidence(data, results)
-                yield self.result("Postal Code", self.confidence, results)
-                return
+                if self.confidence > 0:
+                    yield self.result("Postal Code", self.confidence, results)
+                    return

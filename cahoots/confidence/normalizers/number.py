@@ -21,31 +21,51 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+from cahoots.confidence.normalizers.base import BaseNormalizer
 
 
-class NumberNormalizer(object):
-    """Normalizes Number Results"""
+class NumberWithNonNumbers(BaseNormalizer):
+    """Normalizes All Number Results Where Non-Numbers Are Present"""
 
     @staticmethod
-    def test(types):
+    def test(types, _):
         """We want to normalize if there are Numbers as well as non numbers"""
         others = [t for t in types if t != 'Number']
         return len(others) > 0 and len(others) != len(types)
 
     @staticmethod
-    def normalize(results, types):
-        """Significantly hitting Number results of certain types"""
+    def normalize(results):
+        """If we don't just have numbers, we cut our confidence in half."""
+        for result in [r for r in results if r.type == 'Number']:
+            result.confidence = int(result.confidence * 0.5)
+
+        return results
+
+
+class IntOrOctWithPhoneDateOrPostCode(BaseNormalizer):
+    """Normalizes Int/Oct where Phone, Date, or Postal Code Are Present"""
+
+    @staticmethod
+    def test(_, types):
+        """We want to normalize if there are Numbers as well as non numbers"""
         intersections = {
-            'intoct': ['Postal Code', 'Date', 'Phone']
+            'alter': ['Integer', 'Octal'],
+            'search': ['Postal Code', 'Date', 'Phone']
         }
 
-        # Looking through all number subtypes and normalizing any results
-        for result in [r for r in results if r.type == 'Number']:
+        if set(intersections['alter']).intersection(types) and \
+                set(intersections['search']).intersection(types):
+            return True
+        return False
 
-            if result.subtype in ['Integer', 'Octal'] and \
-                    set(intersections['intoct']).intersection(types):
-                # Certain subtypes cause major reductions against int/octal
-                result.confidence = \
-                    5 if result.subtype == 'Octal' else 10
+    @staticmethod
+    def normalize(results):
+        """Significantly hitting items that qualify"""
+
+        for result in \
+                [r for r in results if r.subtype in ['Integer', 'Octal']]:
+
+            result.confidence = \
+                5 if result.subtype == 'Octal' else 10
 
         return results

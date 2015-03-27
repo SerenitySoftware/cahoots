@@ -106,15 +106,22 @@ class CahootsParser(object):
         for thr in threads:
             results.extend(thr.results)
 
-        # Getting a unique list of result types.
+        # Unique list of all major types
         types = list(set([result.type for result in results]))
 
         if results:
+            # Getting a unique list of result types.
+            all_types = []
+            for res in results:
+                all_types.extend([res.type, res.subtype])
+
             # Hierarchical Confidence Normalization
             normalizer_chain = HierarchicalNormalizerChain(
-                self.config.enabledConfidenceNormalizers
+                self.config.enabledConfidenceNormalizers,
+                types,
+                list(set(all_types))
             )
-            results = normalizer_chain.normalize(results, types)
+            results = normalizer_chain.normalize(results)
 
             # Sorting our results by confidence value
             results = sorted(

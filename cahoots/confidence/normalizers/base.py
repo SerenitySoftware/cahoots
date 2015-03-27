@@ -27,7 +27,7 @@ class BaseNormalizer(object):
     """Interface for Normalizer classes"""
 
     @staticmethod
-    def test(types):
+    def test(types, all_types):
         """Tests if we should attempt to normalize/alter this value"""
         raise NotImplementedError("Class must override the test() method")
 
