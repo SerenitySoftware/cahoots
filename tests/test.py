@@ -60,6 +60,7 @@ import cahoots.util  # flake8: noqa
 from tests.confidence.normalizer import *  # flake8: noqa
 from tests.confidence.normalizers.base import *  # flake8: noqa
 from tests.confidence.normalizers.date import *  # flake8: noqa
+from tests.confidence.normalizers.number import *  # flake8: noqa
 from tests.parser import *  # flake8: noqa
 from tests.parsers.base import *  # flake8: noqa
 from tests.parsers.boolean import *  # flake8: noqa

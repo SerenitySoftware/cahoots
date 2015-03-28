@@ -23,8 +23,8 @@ SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.confidence.normalizers.date import DateWithPostalCode
-import unittest
 from cahoots.result import ParseResult
+import unittest
 
 
 class DateWithPostalCodeTests(unittest.TestCase):
@@ -44,6 +44,22 @@ class DateWithPostalCodeTests(unittest.TestCase):
             if res.type == 'Date':
                 count += 1
                 self.assertEqual(res.confidence, 70)
+            elif res.type == "Postal Code":
+                count += 1
+
+        self.assertEqual(count, len(results))
+
+    def test_normalizer_with_pc_conf_under_70(self):
+        date_result = ParseResult('Date', None, 10)
+        pc_result = ParseResult('Postal Code', None, 40)
+
+        results = DateWithPostalCode.normalize([date_result, pc_result])
+
+        count = 0
+        for res in results:
+            if res.type == 'Date':
+                count += 1
+                self.assertEqual(res.confidence, 44)
             elif res.type == "Postal Code":
                 count += 1
 

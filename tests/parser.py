@@ -55,6 +55,9 @@ class ParserTestConfig(BaseConfig):
         FakeModule,
     ]
 
+    enabled_confidence_normalizers = [
+    ]
+
 
 class parserThreadTests(unittest.TestCase):
 
