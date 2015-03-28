@@ -29,11 +29,12 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__))[:-11])
 sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
 import cahoots  # flake8: noqa
-import cahoots.parser  # flake8: noqa
 import cahoots.confidence.normalizer  # flake8: noqa
 import cahoots.confidence.normalizers.base  # flake8: noqa
+import cahoots.confidence.normalizers.date  # flake8: noqa
 import cahoots.confidence.normalizers.number  # flake8: noqa
 import cahoots.config  # flake8: noqa
+import cahoots.parser  # flake8: noqa
 import cahoots.parsers.base  # flake8: noqa
 import cahoots.parsers.boolean  # flake8: noqa
 import cahoots.parsers.character  # flake8: noqa
@@ -56,7 +57,9 @@ import cahoots.parsers.uri  # flake8: noqa
 import cahoots.result  # flake8: noqa
 import cahoots.util  # flake8: noqa
 
-from tests.util import *  # flake8: noqa
+from tests.confidence.normalizer import *  # flake8: noqa
+from tests.confidence.normalizers.base import *  # flake8: noqa
+from tests.confidence.normalizers.date import *  # flake8: noqa
 from tests.parser import *  # flake8: noqa
 from tests.parsers.base import *  # flake8: noqa
 from tests.parsers.boolean import *  # flake8: noqa
@@ -77,3 +80,4 @@ from tests.parsers.programming import *  # flake8: noqa
 from tests.parsers.programming.bayesian import *  # flake8: noqa
 from tests.parsers.programming.lexer import *  # flake8: noqa
 from tests.parsers.uri import *  # flake8: noqa
+from tests.util import *  # flake8: noqa
