@@ -24,6 +24,7 @@ SOFTWARE.
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.confidence.normalizer import HierarchicalNormalizerChain
 from cahoots.confidence.normalizers.base import BaseNormalizer
+from cahoots.result import ParseResult
 from tests.config import TestConfig
 import unittest
 
@@ -35,16 +36,23 @@ class NormalizerStub(BaseNormalizer):
         return True
 
     @staticmethod
-    def normalize(_):
-        return ['normalized']
+    def normalize(results):
+        return results
 
 
 class HierarchicalNormalizerChainTests(unittest.TestCase):
 
     def test_normalizer_normalizes(self):
+        res = [
+            ParseResult('Test', 'Test', 100),
+            ParseResult('Test', 'Test', 0)
+        ]
+
         conf = TestConfig()
         conf.enabled_confidence_normalizers.append(NormalizerStub)
         hnc = HierarchicalNormalizerChain(conf, [], [])
-        results = hnc.normalize([])
+        results = hnc.normalize(res)
 
-        self.assertEqual(results, ['normalized'])
+        self.assertEqual(1, len(results))
+        for res in results:
+            self.assertIsInstance(res, ParseResult)

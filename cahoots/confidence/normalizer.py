@@ -41,4 +41,5 @@ class HierarchicalNormalizerChain(object):
                  n.test(self.types, self.all_types)]:
             results = normalizer.normalize(results)
 
-        return results
+        # returning only results that have a condfidence greater than 0
+        return [res for res in results if res.confidence > 0]
