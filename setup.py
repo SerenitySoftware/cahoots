@@ -135,7 +135,7 @@ setup (
         'install': cahoots_install
     },
     name = 'Cahoots',
-    version = '0.2.0',
+    version = '0.2.1',
     url = 'https://github.com/SerenitySoftwareLLC/cahoots',
     maintainer='Serenity Software',
     maintainer_email = 'hello@serenitysoftware.io',
@@ -167,6 +167,8 @@ setup (
     ],
     packages = [
         'cahoots',
+        'cahoots.confidence',
+        'cahoots.confidence.normalizers',
         'cahoots.parsers',
         'cahoots.parsers.location',
         'cahoots.parsers.measurement',
