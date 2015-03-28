@@ -25,7 +25,6 @@ from phonenumbers.phonenumberutil import NumberParseException
 from phonenumbers import phonenumberutil
 from phonenumbers import geocoder
 from cahoots.parsers.base import BaseParser
-from cahoots.parsers.uri import URIParser
 import string
 
 
@@ -116,10 +115,6 @@ class PhoneParser(BaseParser):
         :param phone_number_data: data that the phone number parsing produced
         :type phone_number_data: dict
         """
-        # if this is an ip address, we take a big hit.
-        if URIParser.is_ipv4_address(data_string):
-            self.confidence -= 25
-
         # If this is an integer, we take a big hit.
         try:
             if int(data_string) is not None:

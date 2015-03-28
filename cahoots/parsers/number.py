@@ -24,7 +24,6 @@ SOFTWARE.
 # pylint: disable=unnecessary-lambda
 # pylint: disable=too-many-instance-attributes
 from cahoots.parsers.base import BaseParser
-from cahoots.parsers.phone import PhoneParser
 from cahoots.parsers.equation import EquationParser
 from binascii import unhexlify
 from pyparsing import\
@@ -314,7 +313,7 @@ class NumberParser(BaseParser):
             # if the fraction isn't solve-able, we lower the confidence
             # significantly it might "technically" be a fraction made up
             # of roman numerals, etc.
-            if EquationParser in self.config.enabledModules:
+            if EquationParser in self.config.enabled_modules:
                 eqp = EquationParser(self.config)
                 if not eqp.solve_equation(eqp.auto_float(data)):
                     fraction_confidence -= 40
@@ -333,13 +332,6 @@ class NumberParser(BaseParser):
         if is_integer:
             integer_confidence = 75
             octal_confidence = 25
-
-            # 10 point confidence penalty if int is also a phone number
-            if PhoneParser in self.config.enabledModules:
-                PhoneParser.bootstrap(self.config)
-                phone_parser = PhoneParser(self.config)
-                for _ in phone_parser.parse(data):
-                    integer_confidence -= 10
 
             is_octal, octal_value = self.is_octal(data)
             if is_octal:

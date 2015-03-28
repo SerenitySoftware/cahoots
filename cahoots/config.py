@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+# Cahoots Parsers
 from cahoots.parsers.boolean import BooleanParser
 from cahoots.parsers.character import CharacterParser
 from cahoots.parsers.date import DateParser
@@ -36,6 +37,14 @@ from cahoots.parsers.location.address import AddressParser
 from cahoots.parsers.location.coordinate import CoordinateParser
 from cahoots.parsers.location.landmark import LandmarkParser
 from cahoots.parsers.location.postalcode import PostalCodeParser
+# Hierarchical Confidence Normalizers
+from cahoots.confidence.normalizers.character import CharacterWithoutBoolean
+from cahoots.confidence.normalizers.date import DateWithPostalCode
+from cahoots.confidence.normalizers.equation import \
+    EquationWithPhonePostalCode
+from cahoots.confidence.normalizers.number import \
+    IntOctWithPhoneDatePostalCode, NumberWithNonNumbers
+from cahoots.confidence.normalizers.phone import PhoneWithUri
 
 
 class BaseConfig(object):
@@ -54,7 +63,7 @@ class BaseConfig(object):
         modules which seek its "council." This may result in unexpected
         confidence scores, a change in result determination, etc.
     """
-    enabledModules = [
+    enabled_modules = [
         AddressParser,
         BooleanParser,
         CharacterParser,
@@ -70,4 +79,13 @@ class BaseConfig(object):
         PostalCodeParser,
         ProgrammingParser,
         URIParser,
+    ]
+
+    enabled_confidence_normalizers = [
+        CharacterWithoutBoolean,
+        DateWithPostalCode,
+        EquationWithPhonePostalCode,
+        IntOctWithPhoneDatePostalCode,
+        NumberWithNonNumbers,
+        PhoneWithUri,
     ]

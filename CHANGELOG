@@ -1,0 +1,5 @@
+0.2.0 - Beta
+------------
+- Postprocessing now executes to alter the confidence values of specific results based on the presence/value of other parse results.
+  This reduces complexity in the parsers as well as increases performance. Also removes some module interdependency.
+- Fixing some pylint bad names that for some reason the tester missed.

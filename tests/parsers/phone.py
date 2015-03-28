@@ -151,7 +151,7 @@ class PhoneParserTests(unittest.TestCase):
         results = []
         for result in self.pp.parse("123.123.123.123"):
             results.append(result)
-            self.assertEqual(50, result.confidence)
+            self.assertEqual(75, result.confidence)
         self.assertEqual(1, len(results))
 
     def test_parseWithTenDigitsYieldsExpectedConfidence(self):
@@ -159,7 +159,7 @@ class PhoneParserTests(unittest.TestCase):
         results = []
         for result in self.pp.parse("1231231231"):
             results.append(result)
-            self.assertEqual(30, result.confidence)
+            self.assertEqual(55, result.confidence)
         self.assertEqual(1, len(results))
 
     def test_parseWithNineDigitsYieldsExpectedConfidence(self):
@@ -167,7 +167,7 @@ class PhoneParserTests(unittest.TestCase):
         results = []
         for result in self.pp.parse("123123123"):
             results.append(result)
-            self.assertEqual(15, result.confidence)
+            self.assertEqual(40, result.confidence)
         self.assertEqual(1, len(results))
 
     def test_parseWithTooLongDataYieldsNothing(self):

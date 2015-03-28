@@ -24,6 +24,7 @@ SOFTWARE.
 from cahoots.parsers.base import BaseParser
 from cahoots.util import truncate_text
 from cahoots.config import BaseConfig
+from cahoots.confidence.normalizer import HierarchicalNormalizerChain
 import datetime
 import threading
 import time
@@ -75,7 +76,7 @@ class CahootsParser(object):
     @classmethod
     def bootstrap(cls, config):
         """Bootstraps each parser. Can be used for cache warming, etc."""
-        for module in config.enabledModules:
+        for module in config.enabled_modules:
             # If the module overrides the base bootstrap,
             # we output a message about it
             if module.bootstrap != BaseParser.bootstrap and config.debug:
@@ -92,7 +93,7 @@ class CahootsParser(object):
         threads = []
 
         # Creating/starting a thread for each parser module
-        for module in self.config.enabledModules:
+        for module in self.config.enabled_modules:
             thread = ParserThread(self.config, module, data_string)
             thread.start()
             threads.append(thread)
@@ -105,23 +106,38 @@ class CahootsParser(object):
         for thr in threads:
             results.extend(thr.results)
 
-        match_types = list(set([result.type for result in results]))
-        matches = sorted(
-            results,
-            key=lambda result: result.confidence,
-            reverse=True
-        )
-        match_count = len(matches)
-        query = data_string
+        # Unique list of all major types
+        types = list(set([result.type for result in results]))
+
+        if results:
+            # Getting a unique list of result types.
+            all_types = []
+            for res in results:
+                all_types.extend([res.type, res.subtype])
+
+            # Hierarchical Confidence Normalization
+            normalizer_chain = HierarchicalNormalizerChain(
+                self.config,
+                types,
+                list(set(all_types))
+            )
+            results = normalizer_chain.normalize(results)
+
+            # Sorting our results by confidence value
+            results = sorted(
+                results,
+                key=lambda result: result.confidence,
+                reverse=True
+            )
 
         return {
-            'query': truncate_text(query),
+            'query': truncate_text(data_string),
             'date': datetime.datetime.now(),
             'execution_seconds': time.time() - start_time,
-            'top': matches[0] if len(matches) > 0 else None,
+            'top': results[0] if len(results) > 0 else None,
             'results': {
-                'count': match_count,
-                'types': match_types,
-                'matches': matches
+                'count': len(results),
+                'types': types,
+                'matches': results
             }
         }

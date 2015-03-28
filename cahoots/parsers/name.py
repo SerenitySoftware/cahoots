@@ -72,7 +72,7 @@ class NameParser(BaseParser):
 
     def is_suffix(self, word):
         """Checks to see if the word passed in is a name suffix"""
-        if NumberParser in self.config.enabledModules:
+        if NumberParser in self.config.enabled_modules:
             nump = NumberParser(self.config)
             if nump.is_roman_numeral(word) != (False, 0):
                 return True

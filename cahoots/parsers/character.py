@@ -22,7 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from cahoots.parsers.base import BaseParser
-from cahoots.parsers.boolean import BooleanParser
 import string
 
 
@@ -63,13 +62,6 @@ class CharacterParser(BaseParser):
         character_data = {
             'char-code': ord(data)
         }
-
-        # If this character doesn't evaluate as a boolean, we're positive
-        # it's a character if it passes one of the specific evaulations.
-        data = data.lower()
-        if not BooleanParser.is_true(data) and \
-                not BooleanParser.is_false(data):
-            self.confidence = 100
 
         if self.is_letter(data):
             yield self.result("Letter", data=character_data)

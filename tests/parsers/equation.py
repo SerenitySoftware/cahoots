@@ -25,13 +25,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from cahoots.parsers.equation import EquationParser
-from cahoots.parsers.programming import ProgrammingParser
-from tests.parsers.location import SQLite3Mock
-from cahoots.parsers.location.postalcode import PostalCodeParser
 from tests.config import TestConfig
 from SereneRegistry import registry
 import unittest
-import mock
 
 
 class EquationParserTests(unittest.TestCase):
@@ -43,7 +39,6 @@ class EquationParserTests(unittest.TestCase):
         self.ep = EquationParser(TestConfig)
 
     def tearDown(self):
-        SQLite3Mock.reset()
         registry.flush()
         self.ep = None
 
@@ -116,24 +111,6 @@ class EquationParserTests(unittest.TestCase):
             100
         )
 
-    @classmethod
-    # pylint: disable=unused-argument
-    def mock_ProgrammingParserSet(cls, data):
-        return set([1, 2])
-
-    @mock.patch(
-        'cahoots.parsers.programming.ProgrammingParser.create_dataset',
-        mock_ProgrammingParserSet
-    )
-    @mock.patch(
-        'cahoots.parsers.programming.ProgrammingParser.find_common_tokens',
-        mock_ProgrammingParserSet
-    )
-    def test_calculate_confidenceWithProgrammingParserLowersConfidence(self):
-        TestConfig.enabledModules.append(ProgrammingParser)
-        self.assertEqual(self.ep.calculate_confidence("979-549-5150"), 70)
-        TestConfig.enabledModules.remove(ProgrammingParser)
-
     def test_parseSimpleNumberYieldsNothing(self):
         count = 0
         for _ in self.ep.parse('1234'):
@@ -169,41 +146,3 @@ class EquationParserTests(unittest.TestCase):
         for _ in self.ep.parse('This is not a text equation'):
             count += 1
         self.assertEqual(count, 0)
-
-    @mock.patch('sqlite3.connect', SQLite3Mock.connect)
-    def test_parse_postal_code_yields_result_with_lower_confidence(self):
-        PostalCodeParser.bootstrap(TestConfig())
-        SQLite3Mock.fetchall_returns = [
-            [('us', 'united states')],
-            [],
-            [
-                ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
-            ]
-        ]
-        count = 0
-        for result in self.ep.parse('90210-1210'):
-            count += 1
-            self.assertEqual(result.result_value, 89000)
-            self.assertEqual(result.confidence, 75)
-        self.assertEqual(1, count)
-        self.assertEqual(
-            SQLite3Mock.execute_calls,
-            [
-                (
-                    'PRAGMA temp_store = 2',
-                    None
-                ),
-                (
-                    'SELECT * FROM city WHERE postal_code = ?',
-                    ('90210-1210',)
-                ),
-                (
-                    'SELECT * FROM city WHERE postal_code = ?',
-                    ('90210',)
-                ),
-                (
-                    'SELECT * FROM country WHERE abbreviation = ?',
-                    ('a',)
-                )
-            ]
-        )
