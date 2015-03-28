@@ -22,34 +22,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
-from cahoots.confidence.normalizers.equation import \
-    EquationWithPhonePostalCode
+from cahoots.confidence.normalizers.phone import PhoneWithUri
 from cahoots.result import ParseResult
 import unittest
 
 
-class EquationWithPhonePostalCodeTests(unittest.TestCase):
+class PhoneWithUriTests(unittest.TestCase):
 
     def test_test(self):
-        self.assertFalse(EquationWithPhonePostalCode.test(
-            ['Equation', 'Boolean'], []
+        self.assertFalse(PhoneWithUri.test(
+            ['Phone', 'Boolean'], []
         ))
-        self.assertTrue(EquationWithPhonePostalCode.test(
-            ['Equation', 'Postal Code'], []
+        self.assertTrue(PhoneWithUri.test(
+            ['Phone', 'URI'], []
         ))
 
     def test_normalizer(self):
-        eq_result = ParseResult('Equation', None, 90)
-        pc_result = ParseResult('Postal Code', None, 80)
+        eq_result = ParseResult('Phone', None, 90)
+        uri_result = ParseResult('URI', None, 80)
 
-        results = EquationWithPhonePostalCode.normalize([eq_result, pc_result])
+        results = PhoneWithUri.normalize([eq_result, uri_result])
 
         count = 0
         for res in results:
-            if res.type == 'Equation':
+            if res.type == 'Phone':
                 count += 1
-                self.assertEqual(res.confidence, 75)
-            elif res.type == "Postal Code":
+                self.assertEqual(res.confidence, 65)
+            elif res.type == "URI":
                 count += 1
                 self.assertEqual(res.confidence, 80)
 

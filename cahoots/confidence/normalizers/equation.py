@@ -24,17 +24,22 @@ SOFTWARE.
 from cahoots.confidence.normalizers.base import BaseNormalizer
 
 
-class EquationWithPostalCode(BaseNormalizer):
-    """Normalizes Equations scores if there's a postal code present"""
+class EquationWithPhonePostalCode(BaseNormalizer):
+    """Normalizes Equations scores if there's a phone/postal code present"""
 
     @staticmethod
     def test(types, _):
-        """We want to normalize if there is an equation and a postal code"""
-        return 'Equation' in types and 'Postal Code' in types
+        """
+        We want to normalize if there is an equation and a phone/postal code
+        """
+        return 'Equation' in types and \
+               ('Postal Code' in types or 'Phone' in types)
 
     @staticmethod
     def normalize(results):
-        """15 point confidence hit if this equation is also a postal code"""
+        """
+        15 point confidence hit if this equation is also a phone/postal code
+        """
         for result in [r for r in results if r.type == 'Equation']:
             result.confidence -= 15
 
