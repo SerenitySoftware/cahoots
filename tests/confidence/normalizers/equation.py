@@ -22,32 +22,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
-from cahoots.confidence.normalizers.character import CharacterWithoutBoolean
+from cahoots.confidence.normalizers.equation import EquationWithPostalCode
 from cahoots.result import ParseResult
 import unittest
 
 
-class CharacterWithoutBooleanTests(unittest.TestCase):
+class EquationWithPostalCodeTests(unittest.TestCase):
 
     def test_test(self):
-        self.assertFalse(CharacterWithoutBoolean.test(
-            ['Character', 'Boolean'], []
+        self.assertFalse(EquationWithPostalCode.test(
+            ['Equation', 'Boolean'], []
         ))
-        self.assertTrue(CharacterWithoutBoolean.test(
-            ['Character', 'Postal Code'], []
+        self.assertTrue(EquationWithPostalCode.test(
+            ['Equation', 'Postal Code'], []
         ))
 
     def test_normalizer(self):
-        char_result = ParseResult('Character', None, 25)
+        char_result = ParseResult('Equation', None, 90)
         pc_result = ParseResult('Postal Code', None, 80)
 
-        results = CharacterWithoutBoolean.normalize([char_result, pc_result])
+        results = EquationWithPostalCode.normalize([char_result, pc_result])
 
         count = 0
         for res in results:
-            if res.type == 'Character':
+            if res.type == 'Equation':
                 count += 1
-                self.assertEqual(res.confidence, 100)
+                self.assertEqual(res.confidence, 75)
             elif res.type == "Postal Code":
                 count += 1
                 self.assertEqual(res.confidence, 80)

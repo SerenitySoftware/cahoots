@@ -22,16 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 # pylint: disable=eval-used
-# pylint: disable=unused-import
 from phonenumbers.phonenumberutil import NumberParseException
-from cahoots.parsers.location.postalcode import PostalCodeParser
-from cahoots.parsers.programming import ProgrammingParser
 from cahoots.parsers.base import BaseParser
 from cahoots.util import is_number
 from phonenumbers import phonenumberutil
-from SereneRegistry import registry
 import re
 import string
+# pylint: disable=unused-import
 import math  # flake8: noqa
 
 
@@ -176,7 +173,8 @@ class EquationParser(BaseParser):
             self.confidence = 0
             return False
 
-    def calculate_confidence(self, data):
+    @classmethod
+    def calculate_confidence(cls, data):
         """Calculates a confidence rating for this (possible) equation"""
         # We start with 100% confidence, and
         # then lower our confidence if needed.
@@ -190,21 +188,6 @@ class EquationParser(BaseParser):
                     confidence -= 10
         except NumberParseException:
             pass
-
-        # We remove confidence for every token
-        # shared with a programming language.
-        if ProgrammingParser in self.config.enabled_modules:
-            prog_parser = ProgrammingParser(self.config)
-            dataset = prog_parser.create_dataset(data)
-            for _ in set(prog_parser.find_common_tokens(dataset)):
-                confidence -= 5
-
-        # if this is a valid postal code, we remove a bunch of confidence
-        if len(data) == 10 and PostalCodeParser in self.config.enabled_modules:
-            rgx = registry.get('ZCP_postal_code_regex')
-            if rgx.match(data) and \
-                PostalCodeParser.get_postal_code_data(data) is not None:
-                confidence -= 15
 
         return confidence
 

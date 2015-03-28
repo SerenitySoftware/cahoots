@@ -21,35 +21,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-# pylint: disable=invalid-name,too-many-public-methods,missing-docstring
-from cahoots.confidence.normalizers.character import CharacterWithoutBoolean
-from cahoots.result import ParseResult
-import unittest
+from cahoots.confidence.normalizers.base import BaseNormalizer
 
 
-class CharacterWithoutBooleanTests(unittest.TestCase):
+class EquationWithPostalCode(BaseNormalizer):
+    """Normalizes Equations scores if there's a postal code present"""
 
-    def test_test(self):
-        self.assertFalse(CharacterWithoutBoolean.test(
-            ['Character', 'Boolean'], []
-        ))
-        self.assertTrue(CharacterWithoutBoolean.test(
-            ['Character', 'Postal Code'], []
-        ))
+    @staticmethod
+    def test(types, _):
+        """We want to normalize if there is an equation and a postal code"""
+        return 'Equation' in types and 'Postal Code' in types
 
-    def test_normalizer(self):
-        char_result = ParseResult('Character', None, 25)
-        pc_result = ParseResult('Postal Code', None, 80)
+    @staticmethod
+    def normalize(results):
+        """15 point confidence hit if this equation is also a postal code"""
+        for result in [r for r in results if r.type == 'Equation']:
+            result.confidence -= 15
 
-        results = CharacterWithoutBoolean.normalize([char_result, pc_result])
-
-        count = 0
-        for res in results:
-            if res.type == 'Character':
-                count += 1
-                self.assertEqual(res.confidence, 100)
-            elif res.type == "Postal Code":
-                count += 1
-                self.assertEqual(res.confidence, 80)
-
-        self.assertEqual(count, len(results))
+        return results

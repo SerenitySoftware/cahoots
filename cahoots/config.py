@@ -40,6 +40,7 @@ from cahoots.parsers.location.postalcode import PostalCodeParser
 # Hierarchical Confidence Normalizers
 from cahoots.confidence.normalizers.character import CharacterWithoutBoolean
 from cahoots.confidence.normalizers.date import DateWithPostalCode
+from cahoots.confidence.normalizers.equation import EquationWithPostalCode
 from cahoots.confidence.normalizers.number import \
     IntOctWithPhoneDatePostalCode, NumberWithNonNumbers
 
@@ -81,6 +82,7 @@ class BaseConfig(object):
     enabled_confidence_normalizers = [
         CharacterWithoutBoolean,
         DateWithPostalCode,
+        EquationWithPostalCode,
         IntOctWithPhoneDatePostalCode,
         NumberWithNonNumbers,
     ]

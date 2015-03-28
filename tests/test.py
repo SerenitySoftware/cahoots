@@ -33,6 +33,7 @@ import cahoots.confidence.normalizer  # flake8: noqa
 import cahoots.confidence.normalizers.base  # flake8: noqa
 import cahoots.confidence.normalizers.character  # flake8: noqa
 import cahoots.confidence.normalizers.date  # flake8: noqa
+import cahoots.confidence.normalizers.equation  # flake8: noqa
 import cahoots.confidence.normalizers.number  # flake8: noqa
 import cahoots.config  # flake8: noqa
 import cahoots.parser  # flake8: noqa
@@ -62,6 +63,7 @@ from tests.confidence.normalizer import *  # flake8: noqa
 from tests.confidence.normalizers.base import *  # flake8: noqa
 from tests.confidence.normalizers.character import *  # flake8: noqa
 from tests.confidence.normalizers.date import *  # flake8: noqa
+from tests.confidence.normalizers.equation import *  # flake8: noqa
 from tests.confidence.normalizers.number import *  # flake8: noqa
 from tests.parser import *  # flake8: noqa
 from tests.parsers.base import *  # flake8: noqa
