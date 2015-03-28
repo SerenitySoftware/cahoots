@@ -54,5 +54,4 @@ class HierarchicalNormalizerChainTests(unittest.TestCase):
         results = hnc.normalize(res)
 
         self.assertEqual(1, len(results))
-        for res in results:
-            self.assertIsInstance(res, ParseResult)
+        self.assertIsInstance(results[0], ParseResult)
