@@ -31,6 +31,7 @@ sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 import cahoots  # flake8: noqa
 import cahoots.confidence.normalizer  # flake8: noqa
 import cahoots.confidence.normalizers.base  # flake8: noqa
+import cahoots.confidence.normalizers.character  # flake8: noqa
 import cahoots.confidence.normalizers.date  # flake8: noqa
 import cahoots.confidence.normalizers.number  # flake8: noqa
 import cahoots.config  # flake8: noqa
@@ -59,6 +60,7 @@ import cahoots.util  # flake8: noqa
 
 from tests.confidence.normalizer import *  # flake8: noqa
 from tests.confidence.normalizers.base import *  # flake8: noqa
+from tests.confidence.normalizers.character import *  # flake8: noqa
 from tests.confidence.normalizers.date import *  # flake8: noqa
 from tests.confidence.normalizers.number import *  # flake8: noqa
 from tests.parser import *  # flake8: noqa
