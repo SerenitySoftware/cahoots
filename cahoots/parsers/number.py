@@ -25,6 +25,7 @@ SOFTWARE.
 # pylint: disable=too-many-instance-attributes
 from cahoots.parsers.base import BaseParser
 from cahoots.parsers.equation import EquationParser
+from cahoots.result import ParseResult
 from binascii import unhexlify
 from pyparsing import\
     Or, \
@@ -35,8 +36,9 @@ from pyparsing import\
     ParseException, \
     replaceWith
 from operator import mul
+import functools
+import sys
 import re
-from cahoots.result import ParseResult
 
 
 class NumberParser(BaseParser):
@@ -128,7 +130,7 @@ class NumberParser(BaseParser):
             [convert_to_literal(s, v) for s, v in self.defined_majors]
         )
 
-        self.word_product = lambda t: reduce(mul, t)
+        self.word_product = lambda t: functools.reduce(mul, t)
         self.word_sum = lambda t: sum(t)
 
         self.number_partial = (
@@ -205,7 +207,12 @@ class NumberParser(BaseParser):
                 return False, 0
 
         try:
-            value = unicode(unhexlify('%x' % int(data, 2)))
+            if sys.version_info[0] < 3:  # pragma: no cover
+                # pylint: disable=undefined-variable
+                value = \
+                    unicode(unhexlify('%x' % int(data, 2)))  # flake8: noqa
+            else:  # pragma: no cover
+                value = unhexlify('%x' % int(data, 2))
         except (ValueError, TypeError):
             return False, 0
 

@@ -28,6 +28,7 @@ from tests.config import TestConfig
 from SereneRegistry import registry
 from cahoots.util import u
 import unittest
+import sys
 
 
 class CoordinateParserTests(unittest.TestCase):
@@ -103,16 +104,36 @@ class CoordinateParserTests(unittest.TestCase):
         for result in results:
             count += 1
             self.assertEqual(result.subtype, 'Degree/Minute/Second')
-            self.assertEqual(
-                result.result_value,
-                {'latitude': '40.4462666667', 'longitude': '-79.9824666667'}
-            )
-            self.assertEqual(
-                result.data,
-                {
-                    'map_url': 'https://www.google.com/maps?' +
-                               'q=40.4462666667,-79.9824666667'
-                }
-            )
+            # Python 2 vs 3 accomidations
+            if sys.version_info[0] < 3:
+                self.assertEqual(
+                    result.result_value,
+                    {
+                        'latitude': '40.4462666667',
+                        'longitude': '-79.9824666667'
+                    }
+                )
+                self.assertEqual(
+                    result.data,
+                    {
+                        'map_url': 'https://www.google.com/maps?' +
+                                   'q=40.4462666667,-79.9824666667'
+                    }
+                )
+            else:
+                self.assertEqual(
+                    result.result_value,
+                    {
+                        'latitude': '40.446266666666666',
+                        'longitude': '-79.98246666666667'
+                    }
+                )
+                self.assertEqual(
+                    result.data,
+                    {
+                        'map_url': 'https://www.google.com/maps?' +
+                                   'q=40.446266666666666,-79.98246666666667'
+                    }
+                )
             self.assertEqual(result.confidence, 100)
         self.assertEqual(1, count)

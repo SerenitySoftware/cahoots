@@ -79,6 +79,7 @@ class parserThreadTests(unittest.TestCase):
 
 
 class FakeDate(datetime.datetime):
+    # pylint: disable=arguments-differ
     def __new__(cls):
         return datetime.datetime.__new__(datetime.datetime)
 

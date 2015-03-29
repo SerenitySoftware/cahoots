@@ -26,7 +26,7 @@ from cahoots.parsers.programming.bayesian import \
     ProgrammingBayesianClassifier
 from SereneRegistry import registry
 from tests.config import TestConfig
-from inspect import ismethod
+from inspect import ismethod, isfunction
 import mock
 import unittest
 
@@ -103,7 +103,10 @@ class ProgrammingBayesianClassifierTests(unittest.TestCase):
             ]
         )
 
-        self.assertTrue(ismethod(SimpleBayesStub.Tokenizer))
+        self.assertTrue(
+            ismethod(SimpleBayesStub.Tokenizer) or
+            isfunction(SimpleBayesStub.Tokenizer)
+        )
         self.assertIsInstance(registry.get('PP_bayes'), SimpleBayesStub)
 
         self.assertEqual(
