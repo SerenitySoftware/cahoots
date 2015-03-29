@@ -2,6 +2,8 @@ system: Imperial
 type: Volume
 id: imperial_volume
 keywords:
+- cup
+- cups
 - fl oz
 - fluid oz
 - fluid ounces

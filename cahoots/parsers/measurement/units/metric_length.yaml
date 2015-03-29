@@ -4,8 +4,6 @@ id: metric_Length
 keywords:
 - meter
 - meters
-- metre
-- metres
 - nanometer
 - nanometers
 - micrometer
@@ -20,6 +18,22 @@ keywords:
 - hectometers
 - kilometer
 - kilometers
+- metre
+- metres
+- nanometre
+- nanometres
+- micrometre
+- micrometres
+- millimetre
+- millimetres
+- centimetre
+- centimetres
+- decimetre
+- decimetres
+- hectometre
+- hectometres
+- kilometre
+- kilometres
 - nm
 - mcm
 - mm
