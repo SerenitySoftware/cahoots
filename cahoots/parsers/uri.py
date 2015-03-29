@@ -25,11 +25,12 @@ from cahoots.parsers.base import BaseParser
 from cahoots.util import strings_intersect
 import string
 import socket
-try:
+try:  # pragma: no cover
     # This is for Python 2 & 3 support.
     # pylint: disable=no-name-in-module
     from urllib.parse import urlparse
-except ImportError:
+except ImportError:  # pragma: no cover
+    # pylint: disable=import-error
     from urlparse import urlparse
 
 

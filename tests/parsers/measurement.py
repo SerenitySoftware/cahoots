@@ -29,6 +29,13 @@ from SereneRegistry import registry
 import pyparsing
 import unittest
 import mock
+import sys
+
+
+if sys.version_info[0] < 3:
+    BUILTINS_NAME = '__builtin__.open'
+else:
+    BUILTINS_NAME = 'builtins.open'
 
 
 # pylint: disable=unused-argument
@@ -85,7 +92,7 @@ class MeasurementParserTests(unittest.TestCase):
     @mock.patch('os.path.abspath', mock_miscTextReturnSingleParameter)
     @mock.patch('os.path.join', mock_miscTextReturnDoubleParameter)
     @mock.patch('glob.glob', mock_globGlob)
-    @mock.patch('__builtin__.open', mock_open)
+    @mock.patch(BUILTINS_NAME, mock_open)
     @mock.patch.object(DataHandler, 'get_prepositions')
     def test_bootStrap(self, get_prepositions_mock):
         get_prepositions_mock.return_value = ['of']

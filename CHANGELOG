@@ -1,3 +1,8 @@
+0.3.2 - Beta
+------------
+- Updating all tests to work in both python2 and 3
+- Fixing a few missed python2->3 compatibility issues
+
 0.3.1 - Beta
 ------------
 - Fixing a setup script bug which caused a failure when installing for python3

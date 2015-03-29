@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from cahoots.config import BaseConfig
+import sys
 import os
 
 
@@ -37,5 +38,8 @@ class WSGIConfig(BaseConfig):
         'lookups': [
             os.path.dirname(os.path.realpath(__file__)) + '/templates/'
         ],
-        'modules': '/tmp/makocache/'
+        'modules':
+            '/tmp/makocache/'
+            if sys.version_info[0] < 3
+            else '/tmp/makocache3/'
     }

@@ -62,7 +62,6 @@ class ProgrammingBayesianClassifier(object):
     @staticmethod
     def bayes_tokenizer(text):
         """Breaks a string down into tokens for our classifier"""
-        text = str(text)
         text = text.replace('->', ' -> ')
         text = text.replace('.', ' . ')
         text = text.replace('){', ') {')

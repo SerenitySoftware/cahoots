@@ -54,7 +54,7 @@ class NumberParserTests(unittest.TestCase):
         self.assertEqual((False, 0), self.np.is_hex("123.123"))
 
     def test_is_binary(self):
-        self.assertEqual((True, "hello"), self.np.is_binary(
+        self.assertEqual((True, b'hello'), self.np.is_binary(
             "0110100001100101011011000110110001101111"
         ))
         self.assertEqual((False, 0), self.np.is_binary("1234"))
@@ -141,7 +141,7 @@ class NumberParserTests(unittest.TestCase):
         ):
             count += 1
             self.assertEqual(result.subtype, 'Binary')
-            self.assertEqual(result.result_value, 'hello')
+            self.assertEqual(result.result_value, b'hello')
             self.assertEqual(result.confidence, 100)
         self.assertEqual(count, 1)
 
