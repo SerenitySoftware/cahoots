@@ -4,15 +4,12 @@ id: metric_volume
 keywords:
 - liter
 - liters
-- litre
-- litres
 - nanoliter
 - nanoliters
 - microliter
 - microliters
 - milliliter
 - milliliters
-- ml
 - centiliter
 - centiliters
 - deciliter
@@ -21,3 +18,101 @@ keywords:
 - hectoliters
 - kiloliter
 - kiloliters
+- litre
+- litres
+- nanolitre
+- nanolitres
+- microlitre
+- microlitres
+- millilitre
+- millilitres
+- centilitre
+- centilitres
+- decilitre
+- decilitres
+- hectolitre
+- hectolitres
+- kilolitre
+- kilolitres
+- l
+- nl
+- mcl
+- ml
+- cl
+- dl
+- hl
+- kl
+- cubic meters
+- cubic nanometer
+- cubic nanometers
+- cubic micrometer
+- cubic micrometers
+- cubic millimeter
+- cubic millimeters
+- cubic centimeter
+- cubic centimeters
+- cubic decimeter
+- cubic decimeters
+- cubic hectometer
+- cubic hectometers
+- cubic kilometer
+- cubic kilometers
+- meters cubed
+- nanometer cubed
+- nanometers cubed
+- micrometer cubed
+- micrometers cubed
+- millimeter cubed
+- millimeters cubed
+- centimeter cubed
+- centimeters cubed
+- decimeter cubed
+- decimeters cubed
+- hectometer cubed
+- hectometers cubed
+- kilometer cubed
+- kilometers cubed
+- cubic metres
+- cubic nanometre
+- cubic nanometres
+- cubic micrometre
+- cubic micrometres
+- cubic millimetre
+- cubic millimetres
+- cubic centimetre
+- cubic centimetres
+- cubic decimetre
+- cubic decimetres
+- cubic hectometre
+- cubic hectometres
+- cubic kilometre
+- cubic kilometres
+- metres cubed
+- nanometre cubed
+- nanometres cubed
+- micrometre cubed
+- micrometres cubed
+- millimetre cubed
+- millimetres cubed
+- centimetre cubed
+- centimetres cubed
+- decimetre cubed
+- decimetres cubed
+- hectometre cubed
+- hectometres cubed
+- kilometre cubed
+- kilometres cubed
+- cubic nm
+- cubic mcm
+- cubic mm
+- cubic cm
+- cubic dm
+- cubic hm
+- cubic km
+- nm cubed
+- mcm cubed
+- mm cubed
+- cm cubed
+- dm cubed
+- hm cubed
+- km cubed

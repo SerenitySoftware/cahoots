@@ -135,7 +135,7 @@ setup (
         'install': cahoots_install
     },
     name = 'Cahoots',
-    version = '0.2.1',
+    version = '0.2.2',
     url = 'https://github.com/SerenitySoftwareLLC/cahoots',
     maintainer='Serenity Software',
     maintainer_email = 'hello@serenitysoftware.io',
@@ -177,6 +177,8 @@ setup (
     ],
     package_data = {
         'cahoots': [
+            # Cahoots Data
+            'data/*',
             # Location
             'parsers/location/data/*.sql',
             'parsers/location/data/*.bz2',
