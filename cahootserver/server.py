@@ -119,18 +119,18 @@ def view_api():
 
 def usage():
     """Cahoots Help"""
-    print
-    print "Cahoots Server Help:"
-    print
-    print "\t-h, --help"
-    print "\t\tShow this help"
-    print
-    print "\t-p [port], --port [port]"
-    print "\t\tSet the port the server should listen on"
-    print
-    print "\t-d, --debug"
-    print "\t\tRun the server in debug mode (errors displayed, debug output)"
-    print
+    print("")
+    print("Cahoots Server Help:")
+    print("")
+    print("\t-h, --help")
+    print("\t\tShow this help")
+    print("")
+    print("\t-p [port], --port [port]")
+    print("\t\tSet the port the server should listen on")
+    print("")
+    print("\t-d, --debug")
+    print("\t\tRun the server in debug mode (errors displayed, debug output)")
+    print("")
 
 
 def launch_server():
