@@ -1,3 +1,15 @@
+0.3.0 - Beta
+------------
+- Full conversion to support Python 2 & Python 3
+
+0.2.2 - Beta
+------------
+- Measurement Parser rewritten to use pyparsing instead of home-made parsing logic
+
+0.2.1 - Beta
+------------
+- Hotfix for missing modules
+
 0.2.0 - Beta
 ------------
 - Postprocessing now executes to alter the confidence values of specific results based on the presence/value of other parse results.
