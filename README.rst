@@ -29,6 +29,8 @@ Installation
 ::
 
     sudo pip install cahoots
+    # OR:
+    sudo pip3 install cahoots
 
 Basic Module Usage
 ------------------
