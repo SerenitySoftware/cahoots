@@ -113,7 +113,7 @@ class DateParser(BaseParser):
         punctuation = [c for c in data_string if
                        c in string.punctuation or
                        c in string.whitespace]
-        letters = [c for c in data_string if c in string.letters]
+        letters = [c for c in data_string if c in string.ascii_letters]
         digits = [c for c in data_string if c in string.digits]
 
         self.calculate_confidence(

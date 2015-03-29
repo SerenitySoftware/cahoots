@@ -119,18 +119,18 @@ def view_api():
 
 def usage():
     """Cahoots Help"""
-    print
-    print "Cahoots Server Help:"
-    print
-    print "\t-h, --help"
-    print "\t\tShow this help"
-    print
-    print "\t-p [port], --port [port]"
-    print "\t\tSet the port the server should listen on"
-    print
-    print "\t-d, --debug"
-    print "\t\tRun the server in debug mode (errors displayed, debug output)"
-    print
+    print("")
+    print("Cahoots Server Help:")
+    print("")
+    print("\t-h, --help")
+    print("\t\tShow this help")
+    print("")
+    print("\t-p [port], --port [port]")
+    print("\t\tSet the port the server should listen on")
+    print("")
+    print("\t-d, --debug")
+    print("\t\tRun the server in debug mode (errors displayed, debug output)")
+    print("")
 
 
 def launch_server():
@@ -144,7 +144,7 @@ def launch_server():
             ["help", "port=", "debug"]
         )
     except getopt.GetoptError as gerror:
-        print '\nError: ' + gerror.msg
+        print('\nError: ' + gerror.msg)
         usage()
         sys.exit(2)
 
@@ -160,7 +160,7 @@ def launch_server():
                 if WSGIConfig.web_port > 65535:
                     raise ValueError
             except ValueError:
-                print '\nError: Invalid port'
+                print('\nError: Invalid port')
                 usage()
                 sys.exit()
 

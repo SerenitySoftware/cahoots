@@ -25,6 +25,7 @@ SOFTWARE.
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.name import NameParser
 from tests.config import TestConfig
+from cahoots.util import u
 import unittest
 
 
@@ -116,6 +117,6 @@ class NameParserTests(unittest.TestCase):
 
     def test_parseYieldsNothingWithNonPrintableCharacters(self):
         count = 0
-        for _ in self.np.parse(u'40.244° N 79.123° W'):
+        for _ in self.np.parse(u('40.244° N 79.123° W')):
             count += 1
         self.assertEqual(count, 0)

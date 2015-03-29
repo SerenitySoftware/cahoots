@@ -131,8 +131,8 @@ class EquationParser(BaseParser):
         Any back to back parens/floats can be assumed to be
         multiplication. Adding * operator between them
         """
-        data = string.replace(data, ')float', ')*float')
-        data = string.replace(data, ')(', ')*(')
+        data = data.replace(')float', ')*float')
+        data = data.replace(')(', ')*(')
 
         return data
 
@@ -152,10 +152,10 @@ class EquationParser(BaseParser):
             ['math.sqrt', 'float', '(', ')', '*', '+', '-', '/', '.']
 
         for safe_string in safe_strings:
-            equation = string.replace(equation, safe_string, '')
+            equation = equation.replace(safe_string, '')
 
-        for num in xrange(10):
-            equation = string.replace(equation, str(num), '')
+        for num in range(10):
+            equation = equation.replace(str(num), '')
 
         equation = equation.strip()
 
@@ -194,9 +194,10 @@ class EquationParser(BaseParser):
     @classmethod
     def clean_data(cls, data):
         """Removes and replaces data in prep for equation parsing"""
-        clean_data = string.replace(data.upper(), 'X', '*')
-        clean_data = string.replace(clean_data, '^', '**')
-        clean_data = string.replace(clean_data, 'THE', '')
+        clean_data = data.upper()
+        clean_data = clean_data.replace('X', '*')
+        clean_data = clean_data.replace('^', '**')
+        clean_data = clean_data.replace('THE', '')
         clean_data = clean_data.strip()
         return clean_data
 

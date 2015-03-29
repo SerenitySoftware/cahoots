@@ -24,6 +24,7 @@ SOFTWARE.
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.character import CharacterParser
 from tests.config import TestConfig
+from cahoots.util import u
 import unittest
 
 
@@ -67,7 +68,8 @@ class CharacterParserTests(unittest.TestCase):
 
     def test_parseNonAsciiCharacterReturnNone(self):
         count = 0
-        for _ in self.cp.parse(u'\u0080'):
+        # pylint: disable=anomalous-unicode-escape-in-string
+        for _ in self.cp.parse(u('\u0080')):
             count += 1
         self.assertEqual(count, 0)
 

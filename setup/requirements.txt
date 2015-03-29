@@ -7,6 +7,6 @@ pyparsing
 phonenumbers
 simplejson
 SereneRegistry
-LatLon
+LatLon23
 simplebayes
 validate_email

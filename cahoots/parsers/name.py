@@ -110,7 +110,7 @@ class NameParser(BaseParser):
 
         # If we have a two - four word "name" here we boost its
         # confidence since this is something of a giveaway
-        if len(data) in xrange(2, 4):
+        if len(data) in range(2, 4):
             self.confidence += (5 * len(data))
 
         # Adding confidence for initials vs words,
