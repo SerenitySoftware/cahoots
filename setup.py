@@ -29,7 +29,7 @@ class cahoots_install(install):
         """Imports city data"""
         city_file = self.install_lib+'cahoots/parsers/location/data/city.txt'
         city_csv = csv.DictReader(
-            open(city_file, 'rb'),
+            open(city_file, 'r'),
             delimiter='\t',
             quotechar='"',
             fieldnames=['country', 'postal_code', 'city', 'state1', 'state2', 'province1', 'province2', 'community1', 'community2', 'latitude', 'longitude', 'coord_accuracy']
@@ -44,7 +44,7 @@ class cahoots_install(install):
         """Imports country data"""
         country_file = self.install_lib+'cahoots/parsers/location/data/country.csv'
         country_csv = csv.DictReader(
-            open(country_file, 'rb'),
+            open(country_file, 'r'),
             delimiter=',',
             quotechar='"',
             fieldnames=['abbreviation', 'name']
@@ -59,7 +59,7 @@ class cahoots_install(install):
         """Imports street_suffix data"""
         suffix_file = self.install_lib+'cahoots/parsers/location/data/street_suffix.csv'
         suffix_csv = csv.DictReader(
-            open(suffix_file, 'rb'),
+            open(suffix_file, 'r'),
             delimiter=',',
             quotechar='"',
             fieldnames=['suffix_name']
@@ -74,7 +74,7 @@ class cahoots_install(install):
         """Imports landmark data"""
         landmark_file = self.install_lib+'cahoots/parsers/location/data/landmark.csv'
         landmark_csv = csv.DictReader(
-            open(landmark_file, 'rb'),
+            open(landmark_file, 'r'),
             delimiter=',',
             quotechar='"',
             fieldnames=['resource', 'address', 'city', 'county', 'state', 'country']
@@ -135,7 +135,7 @@ setup (
         'install': cahoots_install
     },
     name = 'Cahoots',
-    version = '0.3.0',
+    version = '0.3.1',
     url = 'https://github.com/SerenitySoftwareLLC/cahoots',
     maintainer='Serenity Software',
     maintainer_email = 'hello@serenitysoftware.io',
