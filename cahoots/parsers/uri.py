@@ -23,9 +23,14 @@ SOFTWARE.
 """
 from cahoots.parsers.base import BaseParser
 from cahoots.util import strings_intersect
-import urlparse
 import string
 import socket
+try:
+    # This is for Python 2 & 3 support.
+    # pylint: disable=no-name-in-module
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 
 class URIParser(BaseParser):
@@ -59,13 +64,13 @@ class URIParser(BaseParser):
     @classmethod
     def is_valid_url(cls, url):
         """Tries to parse a URL to see if it's valid"""
-        pieces = urlparse.urlparse(url)
+        pieces = urlparse(url)
 
         if not all([pieces.scheme, pieces.netloc]):
             return False
 
         if not set(pieces.netloc) <=\
-                set(string.letters + string.digits + '-.'):
+                set(string.ascii_letters + string.digits + '-.'):
             return False
 
         return True
@@ -89,7 +94,7 @@ class URIParser(BaseParser):
             elif self.is_ipv6_address(data_string):
                 yield self.result("IP Address (v6)")
 
-        letters = [c for c in data_string if c in string.letters]
+        letters = [c for c in data_string if c in string.ascii_letters]
 
         if dot_count > 0 and len(letters) >= 4:
             if self.is_valid_url(data_string):

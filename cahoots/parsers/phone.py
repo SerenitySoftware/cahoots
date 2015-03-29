@@ -157,7 +157,7 @@ class PhoneParser(BaseParser):
 
         letter_set = set()
         self.letters = [c for c in data_string if
-                        c in string.letters and
+                        c in string.ascii_letters and
                         c not in letter_set and
                         not letter_set.add(c)]
 

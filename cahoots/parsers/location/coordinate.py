@@ -25,7 +25,8 @@ SOFTWARE.
 # pylint: disable=anomalous-backslash-in-string
 from cahoots.parsers.base import BaseParser
 from SereneRegistry import registry
-from LatLon import string2latlon, LatLon
+from LatLon23 import string2latlon, LatLon
+from cahoots.util import u
 import re
 
 
@@ -50,34 +51,34 @@ class CoordinateParser(BaseParser):
         # Will test if something matches degree coordinates
         # 40.244° N 79.123° W
         deg_regex = re.compile(
-            u'^(\d{1,3}\.\d+°?\s+[nNsS])' +
-            u'\s+' +
-            u'(\d{1,3}\.\d+°?\s+[wWeE])$'
+            u('^(\d{1,3}\.\d+°?\s+[nNsS])') +
+            u('\s+') +
+            u('(\d{1,3}\.\d+°?\s+[wWeE])$')
         )
         registry.set('CP_deg_regex', deg_regex)
 
         # Will test if something matches deg/min coordinates
         # 13° 34.425' N 45° 37.983' W
         deg_min_regex = re.compile(
-            u'^(\d{1,3}°?\s+\d{1,3}\.\d+\'?\s+[nNsS])' +
-            u'\s+' +
-            u'(\d{1,3}°?\s+\d{1,3}\.\d+\'?\s+[wWeE])$'
+            u('^(\d{1,3}°?\s+\d{1,3}\.\d+\'?\s+[nNsS])') +
+            u('\s+') +
+            u('(\d{1,3}°?\s+\d{1,3}\.\d+\'?\s+[wWeE])$')
         )
         registry.set('CP_deg_min_regex', deg_min_regex)
 
         # Will test if something matches deg/min/sec coordinates
         # 40° 26' 46.56" N 79° 58' 56.88" W
         deg_min_sec_regex = re.compile(
-            u'^(\d{1,3}°?\s+\d{1,3}\'?\s+\d{1,3}(?:\.\d+)?"?\s+[nNsS])' +
-            u'\s+' +
-            u'(\d{1,3}°?\s+\d{1,3}\'?\s+\d{1,3}(?:\.\d+)?"?\s+[wWeE])$'
+            u('^(\d{1,3}°?\s+\d{1,3}\'?\s+\d{1,3}(?:\.\d+)?"?\s+[nNsS])') +
+            u('\s+') +
+            u('(\d{1,3}°?\s+\d{1,3}\'?\s+\d{1,3}(?:\.\d+)?"?\s+[wWeE])$')
         )
         registry.set('CP_deg_min_sec_regex', deg_min_sec_regex)
 
     @classmethod
     def clean_dms_coords(cls, coord_string):
         """Removes items that the LatLon parser doesn't want"""
-        coord_string = coord_string.replace(u'°', '')
+        coord_string = coord_string.replace(u('°'), '')
         coord_string = coord_string.replace('\'', '')
         coord_string = coord_string.replace('"', '')
         return coord_string

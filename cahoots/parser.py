@@ -80,7 +80,7 @@ class CahootsParser(object):
             # If the module overrides the base bootstrap,
             # we output a message about it
             if module.bootstrap != BaseParser.bootstrap and config.debug:
-                print(' * ' + time.strftime('%X %x %Z') +\
+                print(' * ' + time.strftime('%X %x %Z') +
                       ' * Bootstrapping '+module.__name__)
 
             module.bootstrap(config)

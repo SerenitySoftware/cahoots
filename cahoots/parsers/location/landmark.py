@@ -79,7 +79,8 @@ class LandmarkParser(BaseParser):
         if not NameParser.basic_validation(data.split()):
             return
 
-        allowed_chars = string.whitespace + string.letters + string.digits
+        allowed_chars = \
+            string.whitespace + string.ascii_letters + string.digits
         allowed_chars += '.,-:'
 
         if [x for x in data if x not in allowed_chars]:
