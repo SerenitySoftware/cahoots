@@ -23,9 +23,8 @@ SOFTWARE.
 """
 from SereneRegistry import registry
 import simplebayes
-import os
-import string
 import zipfile
+import os
 
 
 class ProgrammingBayesianClassifier(object):
@@ -64,12 +63,16 @@ class ProgrammingBayesianClassifier(object):
         """Breaks a string down into tokens for our classifier"""
         text = text.replace('->', ' -> ')
         text = text.replace('.', ' . ')
-        text = text.replace('){', ') {')
-        text = text.replace('$', ' $')
-        text = text.replace(':', ' :')
+        text = text.replace(')', ' ) ')
+        text = text.replace('(', ' ( ')
+        text = text.replace('{', ' { ')
+        text = text.replace('}', ' } ')
+        text = text.replace('[', ' [ ')
+        text = text.replace(']', ' ] ')
+        text = text.replace('$', ' $ ')
+        text = text.replace(':', ' : ')
         text = text.replace('\\', ' \\ ')
-        words = text.split()
-        return [w for w in words if len(w) > 0 and w not in string.whitespace]
+        return text.split()
 
     @classmethod
     def classify(cls, data_string):
