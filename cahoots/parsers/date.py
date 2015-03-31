@@ -21,14 +21,86 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+from SereneRegistry import registry
 from cahoots.parsers.base import BaseParser
+from cahoots.data import DataHandler
 from datetime import date, timedelta
 import dateutil.parser as dateUtilParser
+from pyparsing import\
+    Or, \
+    OneOrMore, \
+    Optional, \
+    CaselessLiteral, \
+    StringEnd, \
+    ParseException, \
+    replaceWith, \
+    Word, \
+    originalTextFor, \
+    ZeroOrMore, \
+    nums, \
+    alphas
 import string
 
 
 class DateParser(BaseParser):
     '''Determines is given data is a date'''
+
+    @staticmethod
+    def bootstrap(config):
+
+        time_scales = [
+            'microseconds',
+            'milliseconds',
+            'seconds',
+            'minutes',
+            'hours',
+            'days',
+            'weeks'
+            'years',
+            'microsecond',
+            'millisecond',
+            'second',
+            'minute',
+            'hour',
+            'day',
+            'week',
+            'year',
+        ]
+
+        # <number> <timescale> <preposition>
+        # 3 seconds until / 50 seconds since
+        pre_timedeltas = Optional(Or(
+            [DateParser.create_pre_timedelta_literal(t) for t in time_scales]
+        ))
+
+    @staticmethod
+    def get_preposition_literals():
+        """Generates the prepositions parser and returns it"""
+        if registry.test('DP_prepositions'):
+            return registry.get('DP_prepositions')
+
+        prepositions = \
+            Or([CaselessLiteral(s) for s in DataHandler().get_prepositions()])
+
+        registry.set('DP_prepositions', prepositions)
+        return prepositions
+
+    @staticmethod
+    def create_pre_timedelta_literal(tok):
+        """Converts a value to pyparsing caselessliteral"""
+        timedelta = originalTextFor(
+            Word(nums) +
+            ZeroOrMore(',' + Word(nums+',')) +
+            ZeroOrMore('.' + Word(nums))
+        ) + CaselessLiteral(tok) + DateParser.get_preposition_literals()
+
+        timedelta.setName(tok).setParseAction(DateParser.generate_timedelta)
+
+        return timedelta
+
+    @staticmethod
+    def generate_timedelta(toks):
+        print(toks)
 
     def __init__(self, config):
         BaseParser.__init__(self, config, "Date", 0)
