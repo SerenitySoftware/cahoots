@@ -55,7 +55,7 @@ class DateParser(BaseParser):
             'minutes',
             'hours',
             'days',
-            'weeks'
+            'weeks',
             'years',
             'microsecond',
             'millisecond',
@@ -69,9 +69,9 @@ class DateParser(BaseParser):
 
         # <number> <timescale> <preposition>
         # 3 seconds until / 50 seconds since
-        pre_timedeltas = Optional(Or(
+        pre_timedeltas = Or(
             [DateParser.create_pre_timedelta_literal(t) for t in time_scales]
-        ))
+        )
 
         pre_timedelta_phrases = pre_timedeltas + Word(printables)
 
@@ -109,16 +109,33 @@ class DateParser(BaseParser):
             'from',
         ]
 
-        plus_prepositions = [
-            'after',
-            'behind',
-            'beyond',
-            'past',
-            'since',
-            'until',
-        ]
+        number, timescale, preposition = toks
 
-        print(toks)
+        number = int("".join([char for char in number if char in nums]))
+
+        if preposition in minus_prepositions:
+            number = number * -1
+
+        if timescale == 'microseconds':
+            delta = timedelta(microseconds=number)
+        elif timescale == 'milliseconds':
+            delta = timedelta(milliseconds=number)
+        elif timescale == 'seconds':
+            delta = timedelta(seconds=number)
+        elif timescale == 'minutes':
+            delta = timedelta(minutes=number)
+        elif timescale == 'hours':
+            delta = timedelta(hours=number)
+        elif timescale == 'days':
+            delta = timedelta(days=number)
+        elif timescale == 'weeks':
+            delta = timedelta(weeks=number)
+        elif timescale == 'years':
+            delta = timedelta(days=365*number)
+        else:
+            delta = timedelta()
+
+        return replaceWith(delta)
 
     def __init__(self, config):
         BaseParser.__init__(self, config, "Date", 0)
