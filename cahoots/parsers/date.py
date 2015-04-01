@@ -38,7 +38,7 @@ from pyparsing import\
     originalTextFor, \
     ZeroOrMore, \
     nums, \
-    alphas
+    alphas, printables
 import string
 
 
@@ -73,17 +73,7 @@ class DateParser(BaseParser):
             [DateParser.create_pre_timedelta_literal(t) for t in time_scales]
         ))
 
-    @staticmethod
-    def get_preposition_literals():
-        """Generates the prepositions parser and returns it"""
-        if registry.test('DP_prepositions'):
-            return registry.get('DP_prepositions')
-
-        prepositions = \
-            Or([CaselessLiteral(s) for s in DataHandler().get_prepositions()])
-
-        registry.set('DP_prepositions', prepositions)
-        return prepositions
+        pre_timedelta_phrases = pre_timedeltas + Word(printables)
 
     @staticmethod
     def create_pre_timedelta_literal(tok):
@@ -99,7 +89,35 @@ class DateParser(BaseParser):
         return timedelta
 
     @staticmethod
+    def get_preposition_literals():
+        """Generates the prepositions parser and returns it"""
+        if registry.test('DP_prepositions'):
+            return registry.get('DP_prepositions')
+
+        prepositions = \
+            Or([CaselessLiteral(s) for s in DataHandler().get_prepositions()])
+
+        registry.set('DP_prepositions', prepositions)
+        return prepositions
+
+    @staticmethod
     def generate_timedelta(toks):
+        minus_prepositions = [
+            'until',
+            'before',
+            'to',
+            'from',
+        ]
+
+        plus_prepositions = [
+            'after',
+            'behind',
+            'beyond',
+            'past',
+            'since',
+            'until',
+        ]
+
         print(toks)
 
     def __init__(self, config):
