@@ -24,7 +24,7 @@ SOFTWARE.
 from SereneRegistry import registry
 from cahoots.parsers.base import BaseParser
 from cahoots.data import DataHandler
-from datetime import date, timedelta
+from datetime import timedelta, datetime
 import dateutil.parser as dateUtilParser
 from pyparsing import\
     Or, \
@@ -74,6 +74,7 @@ class DateParser(BaseParser):
         )
 
         pre_timedelta_phrases = pre_timedeltas + Word(printables)
+        registry.set('DP_pre_timedelta_phrases', pre_timedelta_phrases)
 
     @staticmethod
     def create_pre_timedelta_literal(tok):
@@ -135,10 +136,7 @@ class DateParser(BaseParser):
         else:
             delta = timedelta()
 
-        return replaceWith(delta)
-
-    def __init__(self, config):
-        BaseParser.__init__(self, config, "Date", 0)
+        return delta
 
     @classmethod
     def natural_parse(cls, data_string):
@@ -146,7 +144,7 @@ class DateParser(BaseParser):
         Parse out natural-language strings like "yesterday", "next week", etc
         """
         data_string = data_string.lower()
-        today = date.today()
+        today = datetime.today()
 
         if data_string == "yesterday":
             return today - timedelta(1)
@@ -162,42 +160,8 @@ class DateParser(BaseParser):
 
         return False
 
-    @classmethod
-    def confidence_normalizer(cls, ds_length, punctuation, letters, digits):
-        """Generates a confidence normalizer for use in calculating conf"""
-        normalizer = 1.0
-
-        if ds_length > 4:
-            normalizer *= 1.05
-
-        if len(punctuation) <= 1:
-            normalizer *= 1.05
-
-        if '/' in punctuation and punctuation.count('/') < 3:
-            normalizer *= (1.0 + (.05 * punctuation.count('/')))
-
-        if len(letters) == 0 and len(digits) < 4:
-            normalizer *= 0.5
-
-        return normalizer
-
-    def calculate_confidence(self, ds_length, punctuation, letters, digits):
-        """Looks at various factors to see how sure we are this is a date"""
-        if ds_length == 4:
-            self.confidence += 10
-        elif ds_length <= 7:
-            self.confidence += 40
-        else:
-            self.confidence += 80
-
-        self.confidence = int(
-            round(
-                float(self.confidence) *
-                self.confidence_normalizer(
-                    ds_length, punctuation, letters, digits
-                )
-            )
-        )
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Date", 0)
 
     def parse(self, data_string):
         data_string = data_string.strip()
@@ -205,17 +169,23 @@ class DateParser(BaseParser):
         if len(data_string) < 4:
             return
 
-        # Checking for a natural language date
-        parsed_date = self.natural_parse(data_string)
-        if parsed_date:
-            yield self.result("Date", 100, parsed_date)
-            return
+        pre_timedelta_phrases = registry.get('DP_pre_timedelta_phrases')
+        pre_delta = pre_timedelta_phrases.parseString(data_string)
+        print(pre_delta)
 
+        if pre_delta:
+            parsed_date = self.natural_parse(pre_delta[1])
+            if parsed_date:
+                yield self.result("Date", 100, parsed_date + pre_delta[0])
+            else:
+                try:
+                    parsed_date = dateUtilParser.parse(pre_delta[1])
+                    yield self.result("Date", 100, parsed_date + pre_delta[0])
+                except (StopIteration, ValueError, OverflowError, TypeError) as e:
+                    pass
+
+        '''
         # Checking for other date standards
-        try:
-            parsed_date = dateUtilParser.parse(data_string)
-        except (StopIteration, ValueError, OverflowError, TypeError):
-            return
 
         punctuation = [c for c in data_string if
                        c in string.punctuation or
@@ -228,3 +198,4 @@ class DateParser(BaseParser):
         )
 
         yield self.result("Date", self.confidence, parsed_date)
+        '''
