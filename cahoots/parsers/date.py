@@ -112,7 +112,7 @@ class DateParser(BaseParser):
 
         number, timescale, preposition = toks
 
-        number = int("".join([char for char in number if char in nums]))
+        number = float("".join([char for char in number if char in nums+'.']))
 
         if preposition in minus_prepositions:
             number = number * -1
