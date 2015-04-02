@@ -28,18 +28,13 @@ from datetime import timedelta, datetime
 import dateutil.parser as dateUtilParser
 from pyparsing import\
     Or, \
-    OneOrMore, \
-    Optional, \
     CaselessLiteral, \
-    StringEnd, \
     ParseException, \
-    replaceWith, \
     Word, \
     originalTextFor, \
     ZeroOrMore, \
     nums, \
-    alphas, printables
-import string
+    alphas
 
 
 class DateParser(BaseParser):
@@ -79,11 +74,13 @@ class DateParser(BaseParser):
     @staticmethod
     def create_pre_timedelta_literal(tok):
         """Converts a value to pyparsing caselessliteral"""
-        timedelta = originalTextFor(
+        timedelta = originalTextFor(Or([
             Word(nums) +
             ZeroOrMore(',' + Word(nums+',')) +
-            ZeroOrMore('.' + Word(nums))
-        ) + CaselessLiteral(tok) + DateParser.get_preposition_literals()
+            ZeroOrMore('.' + Word(nums)),
+            CaselessLiteral('an'),
+            CaselessLiteral('a')
+        ])) + CaselessLiteral(tok) + DateParser.get_preposition_literals()
 
         timedelta.setName(tok).setParseAction(DateParser.generate_timedelta)
 
@@ -112,7 +109,10 @@ class DateParser(BaseParser):
 
         number, timescale, preposition = toks
 
-        number = float("".join([char for char in number if char in nums+'.']))
+        if number in ['a', 'an']:
+            number = 1
+        else:
+            number = float("".join([char for char in number if char in nums+'.']))
 
         if preposition in minus_prepositions:
             number = number * -1
@@ -138,30 +138,43 @@ class DateParser(BaseParser):
 
         return delta
 
+    def __init__(self, config):
+        BaseParser.__init__(self, config, "Date", 0)
+
     @classmethod
-    def natural_parse(cls, data_string):
+    def natural_parse(cls, data):
         """
         Parse out natural-language strings like "yesterday", "next week", etc
         """
-        data_string = data_string.lower()
-        today = datetime.today()
+        data = data.lower()
 
-        if data_string == "yesterday":
-            return today - timedelta(1)
-
-        if data_string == "tomorrow":
-            return today + timedelta(1)
-
-        if data_string == "next week":
-            return today + timedelta(days=6-today.weekday())
-
-        if data_string == "last week":
-            return today - timedelta(days=8+today.weekday())
+        if data in ['now', 'current time']:
+            return datetime.now()
+        if data  == 'today':
+            return datetime.today()
+        elif data == "yesterday":
+            return datetime.today() - timedelta(1)
+        elif data == "tomorrow":
+            return datetime.today() + timedelta(1)
+        elif data == "next week":
+            return datetime.today() + timedelta(days=6-today.weekday())
+        elif data == "last week":
+            return datetime.today() - timedelta(days=8+today.weekday())
 
         return False
 
-    def __init__(self, config):
-        BaseParser.__init__(self, config, "Date", 0)
+    def date_parse(self, data):
+
+        parsed_date = self.natural_parse(data)
+        if parsed_date:
+            return parsed_date
+        else:
+            try:
+                return dateUtilParser.parse(data)
+            except BaseException:
+                pass
+
+        return False
 
     def parse(self, data_string):
         data_string = data_string.strip()
@@ -175,15 +188,10 @@ class DateParser(BaseParser):
         except ParseException:
             pass
         else:
-            parsed_date = self.natural_parse(pre_delta[1])
+            parsed_date = self.date_parse(pre_delta[1])
             if parsed_date:
                 yield self.result("Date", 100, parsed_date + pre_delta[0])
-            else:
-                try:
-                    parsed_date = dateUtilParser.parse(pre_delta[1])
-                    yield self.result("Date", 100, parsed_date + pre_delta[0])
-                except (StopIteration, ValueError, OverflowError, TypeError) as e:
-                    pass
+
 
         '''
         # Checking for other date standards
