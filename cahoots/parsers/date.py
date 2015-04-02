@@ -73,7 +73,7 @@ class DateParser(BaseParser):
             [DateParser.create_pre_timedelta_literal(t) for t in time_scales]
         )
 
-        pre_timedelta_phrases = pre_timedeltas + Word(printables)
+        pre_timedelta_phrases = pre_timedeltas + Word(alphas + nums + " .,;-/'")
         registry.set('DP_pre_timedelta_phrases', pre_timedelta_phrases)
 
     @staticmethod
@@ -170,10 +170,11 @@ class DateParser(BaseParser):
             return
 
         pre_timedelta_phrases = registry.get('DP_pre_timedelta_phrases')
-        pre_delta = pre_timedelta_phrases.parseString(data_string)
-        print(pre_delta)
-
-        if pre_delta:
+        try:
+            pre_delta = pre_timedelta_phrases.parseString(data_string)
+        except ParseException:
+            pass
+        else:
             parsed_date = self.natural_parse(pre_delta[1])
             if parsed_date:
                 yield self.result("Date", 100, parsed_date + pre_delta[0])
