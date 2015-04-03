@@ -208,7 +208,7 @@ class DateParser(BaseParser):
 
         if data in ['now', 'current time']:
             value = today.now()
-        if data == 'today':
+        elif data == 'today':
             value = today
         elif data == "tomorrow":
             value = today + timedelta(1)
