@@ -35,7 +35,7 @@ from pyparsing import\
     ZeroOrMore, \
     nums, \
     alphas, \
-    OneOrMore, StringEnd
+    StringEnd
 
 
 class DateParser(BaseParser):
@@ -68,7 +68,8 @@ class DateParser(BaseParser):
         pre_timedeltas = Or(
             [DateParser.create_pre_timedelta_literal(t) for t in time_scales]
         )
-        pre_timedelta_phrases = pre_timedeltas + Word(alphas + nums + " .,;-/'")
+        pre_timedelta_phrases = \
+            pre_timedeltas + Word(alphas + nums + " .,;-/'")
         registry.set('DP_pre_timedelta_phrases', pre_timedelta_phrases)
 
         # <operator> <number> <timescale>
@@ -206,19 +207,25 @@ class DateParser(BaseParser):
         today = datetime.today()
 
         if data in ['now', 'current time']:
-            return datetime.now()
-        if data  == 'today':
-            return today
-        elif data == "yesterday":
-            return today - timedelta(1)
+            value = today.now()
+        if data == 'today':
+            value = today
         elif data == "tomorrow":
-            return today + timedelta(1)
+            value = today + timedelta(1)
+        elif data == "yesterday":
+            value = today + timedelta(-1)
         elif data == "next week":
-            return today + timedelta(days=6-today.weekday())
+            value = today + timedelta(7)
         elif data == "last week":
-            return today - timedelta(days=8+today.weekday())
+            value = today + timedelta(-7)
+        elif data == "next year":
+            value = today + timedelta(365)
+        elif data == "last year":
+            value = today + timedelta(-365)
+        else:
+            value = False
 
-        return False
+        return value
 
     def date_parse(self, data):
         """Uses the dateUtilParser to determine what our date is"""
@@ -259,7 +266,8 @@ class DateParser(BaseParser):
 
         # Looking for <datetime> <plus/minus> <number> <timescale>
         post_timedelta_phrases = registry.get('DP_post_timedelta_phrases')
-        post_deltas = [t for t in post_timedelta_phrases.scanString(data_string)]
+        post_deltas = \
+            [t for t in post_timedelta_phrases.scanString(data_string)]
         if len(post_deltas) == 1:
             for token, start, _ in post_deltas:
                 parsed_date = self.date_parse(data_string[0:start].strip())
