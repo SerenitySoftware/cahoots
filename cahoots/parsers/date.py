@@ -34,7 +34,8 @@ from pyparsing import\
     originalTextFor, \
     ZeroOrMore, \
     nums, \
-    alphas
+    alphas, \
+    OneOrMore, StringEnd
 
 
 class DateParser(BaseParser):
@@ -67,14 +68,20 @@ class DateParser(BaseParser):
         pre_timedeltas = Or(
             [DateParser.create_pre_timedelta_literal(t) for t in time_scales]
         )
-
         pre_timedelta_phrases = pre_timedeltas + Word(alphas + nums + " .,;-/'")
         registry.set('DP_pre_timedelta_phrases', pre_timedelta_phrases)
 
+        # <operator> <number> <timescale>
+        # plus 5 hours / - 17 days
+        post_timedelta_phrases = Or(
+            [DateParser.create_post_timedelta_literal(t) for t in time_scales]
+        )
+        registry.set('DP_post_timedelta_phrases', post_timedelta_phrases)
+
     @staticmethod
     def create_pre_timedelta_literal(tok):
-        """Converts a value to pyparsing caselessliteral"""
-        timedelta = originalTextFor(Or([
+        """Detects <number> <timescale> <preposition>"""
+        delta = originalTextFor(Or([
             Word(nums) +
             ZeroOrMore(',' + Word(nums+',')) +
             ZeroOrMore('.' + Word(nums)),
@@ -82,9 +89,61 @@ class DateParser(BaseParser):
             CaselessLiteral('a')
         ])) + CaselessLiteral(tok) + DateParser.get_preposition_literals()
 
-        timedelta.setName(tok).setParseAction(DateParser.generate_timedelta)
+        delta.setName('pre' + tok).\
+            setParseAction(DateParser.generate_pre_timedelta)
 
-        return timedelta
+        return delta
+
+    @staticmethod
+    def generate_pre_timedelta(toks):
+        """Generates a timedelta object for a delta-prefix match"""
+        minus_prepositions = [
+            'until',
+            'before',
+            'to',
+            'from',
+        ]
+
+        number, timescale, preposition = toks
+
+        number = DateParser.get_number_value(number)
+
+        if preposition in minus_prepositions:
+            number = number * -1
+
+        return DateParser.determine_timescale_delta(timescale, number)
+
+    @staticmethod
+    def create_post_timedelta_literal(tok):
+        """Detects <plus/minus> <number> <timescale>"""
+        delta = Or(
+            [CaselessLiteral(t) for t in ['+', '-', 'plus', 'minus']]
+        ) + originalTextFor(Or([
+            Word(nums) +
+            ZeroOrMore(',' + Word(nums+',')) +
+            ZeroOrMore('.' + Word(nums)),
+            CaselessLiteral('an'),
+            CaselessLiteral('a')
+        ])) + CaselessLiteral(tok) + StringEnd()
+
+        delta.setName('post' + tok).\
+            setParseAction(DateParser.generate_post_timedelta)
+
+        return delta
+
+    @staticmethod
+    def generate_post_timedelta(toks):
+        """Generates a timedelta object for a delta-suffix match"""
+        operator, number, timescale = toks
+
+        number = DateParser.get_number_value(number)
+
+        if operator in ['minus', '-']:
+            number = number * -1
+
+        delta = DateParser.determine_timescale_delta(timescale, number)
+
+        return delta
 
     @staticmethod
     def get_preposition_literals():
@@ -99,23 +158,21 @@ class DateParser(BaseParser):
         return prepositions
 
     @staticmethod
-    def generate_timedelta(toks):
-        minus_prepositions = [
-            'until',
-            'before',
-            'to',
-            'from',
-        ]
-
-        number, timescale, preposition = toks
-
+    def get_number_value(number):
+        """Turns a provided number into a proper float"""
         if number in ['a', 'an']:
-            number = 1
+            number = 1.0
         else:
-            number = float("".join([char for char in number if char in nums+'.']))
+            number = \
+                float("".join([char for char in number if char in nums+'.']))
 
-        if preposition in minus_prepositions:
-            number = number * -1
+        return number
+
+    @staticmethod
+    def determine_timescale_delta(timescale, number):
+        """Gets a timedelta representing the change desired"""
+        if timescale[-1:] != 's':
+            timescale += 's'
 
         if timescale == 'microseconds':
             delta = timedelta(microseconds=number)
@@ -135,7 +192,6 @@ class DateParser(BaseParser):
             delta = timedelta(days=365*number)
         else:
             delta = timedelta()
-
         return delta
 
     def __init__(self, config):
@@ -147,24 +203,25 @@ class DateParser(BaseParser):
         Parse out natural-language strings like "yesterday", "next week", etc
         """
         data = data.lower()
+        today = datetime.today()
 
         if data in ['now', 'current time']:
             return datetime.now()
         if data  == 'today':
-            return datetime.today()
+            return today
         elif data == "yesterday":
-            return datetime.today() - timedelta(1)
+            return today - timedelta(1)
         elif data == "tomorrow":
-            return datetime.today() + timedelta(1)
+            return today + timedelta(1)
         elif data == "next week":
-            return datetime.today() + timedelta(days=6-today.weekday())
+            return today + timedelta(days=6-today.weekday())
         elif data == "last week":
-            return datetime.today() - timedelta(days=8+today.weekday())
+            return today - timedelta(days=8+today.weekday())
 
         return False
 
     def date_parse(self, data):
-
+        """Uses the dateUtilParser to determine what our date is"""
         parsed_date = self.natural_parse(data)
         if parsed_date:
             return parsed_date
@@ -179,9 +236,16 @@ class DateParser(BaseParser):
     def parse(self, data_string):
         data_string = data_string.strip()
 
-        if len(data_string) < 4:
+        if len(data_string) < 3:
             return
 
+        # Just date detection
+        parsed_date = self.date_parse(data_string)
+        if parsed_date:
+            yield self.result("Date", 100, parsed_date)
+            return
+
+        # Looking for <number> <timescale> <prepositions> <datetime>
         pre_timedelta_phrases = registry.get('DP_pre_timedelta_phrases')
         try:
             pre_delta = pre_timedelta_phrases.parseString(data_string)
@@ -191,20 +255,14 @@ class DateParser(BaseParser):
             parsed_date = self.date_parse(pre_delta[1])
             if parsed_date:
                 yield self.result("Date", 100, parsed_date + pre_delta[0])
+                return
 
-
-        '''
-        # Checking for other date standards
-
-        punctuation = [c for c in data_string if
-                       c in string.punctuation or
-                       c in string.whitespace]
-        letters = [c for c in data_string if c in string.ascii_letters]
-        digits = [c for c in data_string if c in string.digits]
-
-        self.calculate_confidence(
-            len(data_string), punctuation, letters, digits
-        )
-
-        yield self.result("Date", self.confidence, parsed_date)
-        '''
+        # Looking for <datetime> <plus/minus> <number> <timescale>
+        post_timedelta_phrases = registry.get('DP_post_timedelta_phrases')
+        post_deltas = [t for t in post_timedelta_phrases.scanString(data_string)]
+        if len(post_deltas) == 1:
+            for token, start, _ in post_deltas:
+                parsed_date = self.date_parse(data_string[0:start].strip())
+                if parsed_date:
+                    yield self.result("Date", 100, parsed_date + token.pop())
+                    return
