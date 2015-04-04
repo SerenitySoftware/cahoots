@@ -29,8 +29,6 @@ Installation
 ::
 
     sudo pip install cahoots
-    # OR:
-    sudo pip3 install cahoots
 
 Basic Module Usage
 ------------------
@@ -74,22 +72,24 @@ Basic Server Usage
             Run the server in debug mode (errors displayed, debug output)
 
     $ sudo cahootserver --port 80 --debug
-     * 21:52:30 03/25/15 CDT * Bootstrapping AddressParser
-     * 21:52:30 03/25/15 CDT * Bootstrapping CoordinateParser
-     * 21:52:30 03/25/15 CDT * Bootstrapping EmailParser
-     * 21:52:30 03/25/15 CDT * Bootstrapping LandmarkParser
-     * 21:52:30 03/25/15 CDT * Bootstrapping MeasurementParser
-     * 21:52:30 03/25/15 CDT * Bootstrapping PostalCodeParser
-     * 21:52:30 03/25/15 CDT * Bootstrapping ProgrammingParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping AddressParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping CoordinateParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping DateParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping EmailParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping LandmarkParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping MeasurementParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping PostalCodeParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping ProgrammingParser
      * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
      * Restarting with reloader
-     * 21:52:34 03/25/15 CDT * Bootstrapping AddressParser
-     * 21:52:34 03/25/15 CDT * Bootstrapping CoordinateParser
-     * 21:52:34 03/25/15 CDT * Bootstrapping EmailParser
-     * 21:52:34 03/25/15 CDT * Bootstrapping LandmarkParser
-     * 21:52:34 03/25/15 CDT * Bootstrapping MeasurementParser
-     * 21:52:34 03/25/15 CDT * Bootstrapping PostalCodeParser
-     * 21:52:34 03/25/15 CDT * Bootstrapping ProgrammingParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping AddressParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping CoordinateParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping DateParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping EmailParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping LandmarkParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping MeasurementParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping PostalCodeParser
+     * 00:38:18 04/04/15 CDT * Bootstrapping ProgrammingParser
     # CTRL+C pressed
 
     $ sudo cahootserver --port 80
