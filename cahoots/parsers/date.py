@@ -243,7 +243,7 @@ class DateParser(BaseParser):
     def parse(self, data_string):
         data_string = data_string.strip()
 
-        if len(data_string) < 3:
+        if len(data_string) < 3 or len(data_string) > 50:
             return
 
         # Just date detection
@@ -261,11 +261,14 @@ class DateParser(BaseParser):
         else:
             parsed_date = self.date_parse(pre_delta[1])
             if parsed_date:
-                yield self.result(
-                    "Number Timescale Preposition Date",
-                    100,
-                    parsed_date[1] + pre_delta[0]
-                )
+                try:
+                    yield self.result(
+                        "Number Timescale Preposition Date",
+                        100,
+                        parsed_date[1] + pre_delta[0]
+                    )
+                except OverflowError:
+                    pass
                 return
 
         # Looking for <datetime> <plus/minus> <number> <timescale>
@@ -276,9 +279,12 @@ class DateParser(BaseParser):
             for token, start, _ in post_deltas:
                 parsed_date = self.date_parse(data_string[0:start].strip())
                 if parsed_date:
-                    yield self.result(
-                        "Date Operator Number Timescale",
-                        100,
-                        parsed_date[1] + token.pop()
-                    )
+                    try:
+                        yield self.result(
+                            "Date Operator Number Timescale",
+                            100,
+                            parsed_date[1] + token.pop()
+                        )
+                    except OverflowError:
+                        pass
                     return

@@ -84,6 +84,14 @@ class DateParserTests(unittest.TestCase):
             count += 1
         self.assertEqual(0, count)
 
+        results = self.dp.parse(
+            'NONONONONONONONONONONONONONONONONONONONONONONONONONO'
+        )
+        count = 0
+        for _ in results:
+            count += 1
+        self.assertEqual(0, count)
+
     def test_pre_timedelta_parse(self):
         results = self.dp.parse('300 seconds before 2012')
         count = 0
@@ -93,6 +101,14 @@ class DateParserTests(unittest.TestCase):
             self.assertEqual(res.subtype, 'Number Timescale Preposition Date')
             self.assertIsInstance(res.result_value, datetime)
         self.assertEqual(1, count)
+
+        # This will cause an overflow error so it returns nothing
+        results = \
+            self.dp.parse('300,345,234,999 seconds before January 30, 2015')
+        count = 0
+        for _ in results:
+            count += 1
+        self.assertEqual(0, count)
 
     def test_post_timedelta_parse(self):
         results = self.dp.parse('2012 plus 300 hours')
@@ -112,6 +128,14 @@ class DateParserTests(unittest.TestCase):
             self.assertEqual(res.subtype, 'Date Operator Number Timescale')
             self.assertIsInstance(res.result_value, datetime)
         self.assertEqual(1, count)
+
+        # This will cause an overflow error so it returns nothing
+        self.assertEqual(1, count)
+        results = self.dp.parse('2015 + 300,345,234,999 minutes')
+        count = 0
+        for _ in results:
+            count += 1
+        self.assertEqual(0, count)
 
     def test_determine_timescale_delta(self):
         results = [
