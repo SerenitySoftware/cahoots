@@ -1,3 +1,7 @@
+0.3.4 - Beta
+------------
+Fixing unhandled overflow error when date is too large for dateutil
+
 0.3.3 - Beta
 ------------
 - Full rewrite of the date parser to better support natural language options
