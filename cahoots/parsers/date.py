@@ -231,10 +231,10 @@ class DateParser(BaseParser):
         """Uses the dateUtilParser to determine what our date is"""
         parsed_date = self.natural_parse(data)
         if parsed_date:
-            return parsed_date
+            return ('Natural', parsed_date)
         else:
             try:
-                return dateUtilParser.parse(data)
+                return ('Standard', dateUtilParser.parse(data))
             except BaseException:
                 pass
 
@@ -249,7 +249,7 @@ class DateParser(BaseParser):
         # Just date detection
         parsed_date = self.date_parse(data_string)
         if parsed_date:
-            yield self.result("Date", 100, parsed_date)
+            yield self.result(parsed_date[0], 100, parsed_date[1])
             return
 
         # Looking for <number> <timescale> <prepositions> <datetime>
@@ -261,7 +261,11 @@ class DateParser(BaseParser):
         else:
             parsed_date = self.date_parse(pre_delta[1])
             if parsed_date:
-                yield self.result("Date", 100, parsed_date + pre_delta[0])
+                yield self.result(
+                    "Number Timescale Preposition Date",
+                    100,
+                    parsed_date[1] + pre_delta[0]
+                )
                 return
 
         # Looking for <datetime> <plus/minus> <number> <timescale>
@@ -272,5 +276,9 @@ class DateParser(BaseParser):
             for token, start, _ in post_deltas:
                 parsed_date = self.date_parse(data_string[0:start].strip())
                 if parsed_date:
-                    yield self.result("Date", 100, parsed_date + token.pop())
+                    yield self.result(
+                        "Date Operator Number Timescale",
+                        100,
+                        parsed_date[1] + token.pop()
+                    )
                     return
