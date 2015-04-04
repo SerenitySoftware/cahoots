@@ -1,3 +1,11 @@
+0.3.3 - Beta
+------------
+- Full rewrite of the date parser to better support natural language options
+
+0.3.2 - Beta
+------------
+- Adding better tokenization to the bayesian parser
+
 0.3.1 - Beta
 ------------
 - Fixing a setup script bug which caused a failure when installing for python3
@@ -18,6 +26,6 @@
 
 0.2.0 - Beta
 ------------
-- Postprocessing now executes to alter the confidence values of specific results based on the presence/value of other parse results.
-  This reduces complexity in the parsers as well as increases performance. Also removes some module interdependency.
-- Fixing some pylint bad names that for some reason the tester missed.
+- Postprocessing now executes to alter the confidence values of specific results based on the presence/value of other parse results
+  This reduces complexity in the parsers as well as increases performance. Also removes some module interdependency
+- Fixing some pylint bad names that for some reason the tester missed
