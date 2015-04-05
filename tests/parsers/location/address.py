@@ -24,6 +24,7 @@ SOFTWARE.
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
 from cahoots.parsers.location import StreetSuffixEntity
 from cahoots.parsers.location.address import AddressParser
+from cahoots.parsers.name import NameParser
 from cahoots.result import ParseResult
 from tests.config import TestConfig
 from tests.parsers.location import SQLite3Mock
@@ -38,6 +39,7 @@ class AddressParserTests(unittest.TestCase):
     ap = None
 
     def setUp(self):
+        NameParser.bootstrap(TestConfig())
         AddressParser.bootstrap(TestConfig())
         self.ap = AddressParser(TestConfig())
 

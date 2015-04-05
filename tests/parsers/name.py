@@ -26,6 +26,7 @@ SOFTWARE.
 from cahoots.parsers.name import NameParser
 from tests.config import TestConfig
 from cahoots.util import u
+from SereneRegistry import registry
 import unittest
 
 
@@ -35,9 +36,11 @@ class NameParserTests(unittest.TestCase):
     np = None
 
     def setUp(self):
+        NameParser.bootstrap(TestConfig())
         self.np = NameParser(TestConfig())
 
     def tearDown(self):
+        registry.flush()
         self.np = None
 
     def test_basic_validation(self):
