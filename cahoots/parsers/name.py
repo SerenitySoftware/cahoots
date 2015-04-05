@@ -23,6 +23,7 @@ SOFTWARE.
 """
 from cahoots.parsers.base import BaseParser
 from cahoots.parsers.number import NumberParser
+from SereneRegistry import registry
 import re
 import string
 
@@ -45,6 +46,11 @@ class NameParser(BaseParser):
                 '7TH', '8TH', '9TH', 'BT', 'BART', 'QC', 'MP', 'SSF', 'FRCP',
                 'FRSA', 'RAF', 'RN', 'RMP', 'FAIA', 'FRSE', 'SJ', 'OP',
                 'ICMA-CM', 'MBASW']
+
+    @staticmethod
+    def bootstrap(config):
+        upper_alpha = re.compile('[A-Z]')
+        registry.set('NP_upper_alpha_regex', upper_alpha)
 
     def __init__(self, config):
         BaseParser.__init__(self, config, "Name", 0)
@@ -134,7 +140,7 @@ class NameParser(BaseParser):
         """Determines if the data is a name or not"""
 
         # Making sure there are at least SOME uppercase letters in the phrase
-        if not re.search('[A-Z]', data):
+        if not registry.get('NP_upper_alpha_regex').search(data):
             return
 
         data = data.split()
