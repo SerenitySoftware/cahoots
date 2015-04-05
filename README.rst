@@ -138,6 +138,6 @@ License
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 
-Cahoots `integrates <https://github.com/hickeroar/cahoots/blob/master/cahoots/parsers/location/data/LICENSE>`_ location data provided by `GeoNames <http://www.geonames.org/>`_.
+Cahoots `integrates <https://github.com/SerenitySoftwareLLC/cahoots/blob/master/cahoots/parsers/location/data/LICENSE>`_ location data provided by `GeoNames <http://www.geonames.org/>`_.
 
-Cahoots uses many code samples for training a bayesian classifier. All code samples are from projects using either the BSD or MIT `licenses <https://github.com/hickeroar/cahoots/tree/master/cahoots/parsers/programming/LICENSES>`_. None of this code is executed at any time.
+Cahoots uses many code samples for training a bayesian classifier. All code samples are from projects using either the BSD or MIT `licenses <https://github.com/SerenitySoftwareLLC/cahoots/tree/master/cahoots/parsers/programming/LICENSES>`_. None of this code is executed at any time.
