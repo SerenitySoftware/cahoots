@@ -124,9 +124,9 @@ class ProgrammingParser(BaseParser):
             #     score = -25
             #     Therefore: score = 25
             if min_score < -90:
-                score = score + (-1 * min_score)
+                score = score + abs(min_score)
             else:
-                score = -1 * score
+                score = abs(score)
 
             # Example:
             #     spread > 90 example:
