@@ -78,6 +78,7 @@ Basic Server Usage
      * 00:38:18 04/04/15 CDT * Bootstrapping EmailParser
      * 00:38:18 04/04/15 CDT * Bootstrapping LandmarkParser
      * 00:38:18 04/04/15 CDT * Bootstrapping MeasurementParser
+     * 00:53:19 04/05/15 CDT * Bootstrapping NameParser
      * 00:38:18 04/04/15 CDT * Bootstrapping PostalCodeParser
      * 00:38:18 04/04/15 CDT * Bootstrapping ProgrammingParser
      * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
@@ -88,6 +89,7 @@ Basic Server Usage
      * 00:38:18 04/04/15 CDT * Bootstrapping EmailParser
      * 00:38:18 04/04/15 CDT * Bootstrapping LandmarkParser
      * 00:38:18 04/04/15 CDT * Bootstrapping MeasurementParser
+     * 00:53:19 04/05/15 CDT * Bootstrapping NameParser
      * 00:38:18 04/04/15 CDT * Bootstrapping PostalCodeParser
      * 00:38:18 04/04/15 CDT * Bootstrapping ProgrammingParser
     # CTRL+C pressed
