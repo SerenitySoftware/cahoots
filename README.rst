@@ -32,7 +32,7 @@ Installation
 
 Basic Module Usage
 ------------------
-::
+.. code-block:: python
 
     >>> from cahoots.parser import CahootsParser
     >>> cahoots = CahootsParser(bootstrap=True)
