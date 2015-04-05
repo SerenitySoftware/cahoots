@@ -59,9 +59,7 @@
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<div class="highlight highlight-bash"><pre>sudo pip install cahoots
-<span class="pl-c"># OR:</span>
-sudo pip3 install cahoots</pre></div>
+<div class="highlight highlight-bash"><pre>sudo pip install cahoots</pre></div>
 
 <h2>
 <a id="basic-module-usage" class="anchor" href="#basic-module-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic Module Usage</h2>
@@ -103,22 +101,26 @@ Cahoots Server Help:
         Run the server <span class="pl-k">in</span> debug mode (errors displayed, debug output)
 
 $ sudo cahootserver --port 80 --debug
- <span class="pl-k">*</span> 21:52:30 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping AddressParser
- <span class="pl-k">*</span> 21:52:30 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping CoordinateParser
- <span class="pl-k">*</span> 21:52:30 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping EmailParser
- <span class="pl-k">*</span> 21:52:30 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping LandmarkParser
- <span class="pl-k">*</span> 21:52:30 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping MeasurementParser
- <span class="pl-k">*</span> 21:52:30 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping PostalCodeParser
- <span class="pl-k">*</span> 21:52:30 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping ProgrammingParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping AddressParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping CoordinateParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping DateParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping EmailParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping LandmarkParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping MeasurementParser
+ <span class="pl-k">*</span> 00:53:19 04/05/15 CDT <span class="pl-k">*</span> Bootstrapping NameParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping PostalCodeParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping ProgrammingParser
  <span class="pl-k">*</span> Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
  <span class="pl-k">*</span> Restarting with reloader
- <span class="pl-k">*</span> 21:52:34 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping AddressParser
- <span class="pl-k">*</span> 21:52:34 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping CoordinateParser
- <span class="pl-k">*</span> 21:52:34 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping EmailParser
- <span class="pl-k">*</span> 21:52:34 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping LandmarkParser
- <span class="pl-k">*</span> 21:52:34 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping MeasurementParser
- <span class="pl-k">*</span> 21:52:34 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping PostalCodeParser
- <span class="pl-k">*</span> 21:52:34 03/25/15 CDT <span class="pl-k">*</span> Bootstrapping ProgrammingParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping AddressParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping CoordinateParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping DateParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping EmailParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping LandmarkParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping MeasurementParser
+ <span class="pl-k">*</span> 00:53:19 04/05/15 CDT <span class="pl-k">*</span> Bootstrapping NameParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping PostalCodeParser
+ <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping ProgrammingParser
 <span class="pl-c"># CTRL+C pressed</span>
 
 $ sudo cahootserver --port 80
@@ -178,9 +180,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 </code></pre>
 
-<p>Cahoots <a href="https://github.com/hickeroar/cahoots/blob/master/cahoots/parsers/location/data/LICENSE">integrates</a> location data provided by <a href="http://www.geonames.org/">GeoNames</a>.</p>
+<p>Cahoots <a href="https://github.com/SerenitySoftwareLLC/cahoots/blob/master/cahoots/parsers/location/data/LICENSE">integrates</a> location data provided by <a href="http://www.geonames.org/">GeoNames</a>.</p>
 
-<p>Cahoots uses many code samples for training a bayesian classifier. All code samples are from projects using either the BSD or MIT <a href="https://github.com/hickeroar/cahoots/tree/master/cahoots/parsers/programming/LICENSES">licenses</a>. None of this code is executed at any time.</p>
+<p>Cahoots uses many code samples for training a bayesian classifier. All code samples are from projects using either the BSD or MIT <a href="https://github.com/SerenitySoftwareLLC/cahoots/tree/master/cahoots/parsers/programming/LICENSES">licenses</a>. None of this code is executed at any time.</p>
         </section>
 
         <aside id="sidebar">
