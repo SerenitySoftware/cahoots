@@ -156,3 +156,19 @@ class ProgrammingParserTests(unittest.TestCase):
             self.assertIn(result.subtype, expected_types)
 
         self.smallSpreadClassifyMock.assert_called_once_with('with cout echo')
+
+    def test_calculate_confidence(self):
+        lex_languages = {
+            'foo': 12
+        }
+        bayes_languages = {
+            'foo': 150
+        }
+
+        result = \
+            ProgrammingParser.calculate_confidence(
+                lex_languages,
+                bayes_languages
+            )
+
+        self.assertEqual({'foo': 100}, result)

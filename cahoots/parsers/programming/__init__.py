@@ -89,14 +89,25 @@ class ProgrammingParser(BaseParser):
             scores[lang] = float(scr) / 100
 
         # Removing any scores that are less than 1% confidence
-        final_scores = {}
+        legit_scores = {}
         for lang, scr in scores.items():
             final_score = scr + bayes_languages.get(lang, 0)
             if final_score > 1:
                 # Rounding the result since it's a confidence value
-                final_scores[lang] = int(round(final_score))
+                legit_scores[lang] = int(round(final_score))
 
-        return final_scores
+        # If the classifier score is over 100
+        # we normalize all the scores appropriately
+        max_value = max(legit_scores.values())
+        if max_value > 100:
+            modifier = 100/float(max_value)
+            scores = {}
+            for lang, score in legit_scores.items():
+                scores[lang] = int(round(modifier * score))
+        else:
+            scores = legit_scores
+
+        return scores
 
     def get_possible_languages(self, dataset):
         """
