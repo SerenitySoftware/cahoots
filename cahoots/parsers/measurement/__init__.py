@@ -109,6 +109,9 @@ class MeasurementParser(BaseParser):
         return subtype, value
 
     def parse(self, data):
+        if len(data) > 100:
+            return
+
         matches = self.measurement_parser.searchString(data).asList()
 
         for match in matches:

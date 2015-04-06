@@ -129,39 +129,8 @@ class ProgrammingParserTests(unittest.TestCase):
         self.assertEqual(0, count)
 
     @mock.patch(pbcBootstrap, bootstrapMock)
-    @mock.patch(pbcClassify, bigSpreadClassifyMock)
-    def test_parseWithLargeDeepNegativeSpread(self):
-        '''tests parse with a large spread in bayesian match values'''
-        config = TestConfig()
-        ProgrammingParser.bootstrap(config)
-        self.bootstrapMock.assert_called_with(config)
-
-        parser = ProgrammingParser(config)
-
-        expected_types = (
-            'Visual Basic',
-            'JavaScript',
-            'ActionScript',
-            'Python',
-            'PHP'
-        )
-
-        results = []
-
-        for result in parser.parse('with cout echo'):
-            self.assertIsInstance(result, ParseResult)
-            results.append(result)
-
-        self.assertEqual(5, len(results))
-
-        for result in results:
-            self.assertIn(result.subtype, expected_types)
-
-        self.bigSpreadClassifyMock.assert_called_once_with('with cout echo')
-
-    @mock.patch(pbcBootstrap, bootstrapMock)
     @mock.patch(pbcClassify, smallSpreadClassifyMock)
-    def testParseWithSmallSpread(self):
+    def test_parse(self):
         '''tests parse with a small spread in bayesian match values'''
         config = TestConfig()
         ProgrammingParser.bootstrap(config)
@@ -169,13 +138,11 @@ class ProgrammingParserTests(unittest.TestCase):
 
         parser = ProgrammingParser(config)
 
-        expected_types = (
+        expected_types = [
             'Visual Basic',
-            'JavaScript',
-            'ActionScript',
             'Python',
             'PHP'
-        )
+        ]
 
         results = []
 
@@ -183,9 +150,25 @@ class ProgrammingParserTests(unittest.TestCase):
             self.assertIsInstance(result, ParseResult)
             results.append(result)
 
-        self.assertEqual(5, len(results))
+        self.assertEqual(3, len(results))
 
         for result in results:
             self.assertIn(result.subtype, expected_types)
 
         self.smallSpreadClassifyMock.assert_called_once_with('with cout echo')
+
+    def test_calculate_confidence(self):
+        lex_languages = {
+            'foo': 12
+        }
+        bayes_languages = {
+            'foo': 150
+        }
+
+        result = \
+            ProgrammingParser.calculate_confidence(
+                lex_languages,
+                bayes_languages
+            )
+
+        self.assertEqual({'foo': 100}, result)

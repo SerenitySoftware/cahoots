@@ -82,4 +82,6 @@ class ProgrammingBayesianClassifier(object):
         """
         classifier = registry.get('PP_bayes')
 
-        return classifier.score(data_string)
+        scores = classifier.score(data_string)
+
+        return scores
