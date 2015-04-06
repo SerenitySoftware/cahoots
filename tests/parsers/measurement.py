@@ -183,3 +183,11 @@ class MeasurementParserTests(unittest.TestCase):
                 })
             count += 1
         self.assertEqual(count, 2)
+
+    def test_parse_with_long_string_returns(self):
+        sample = 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' + \
+                 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+        count = 0
+        for _ in self.mp.parse(sample):
+            count += 1
+        self.assertEqual(count, 0)
