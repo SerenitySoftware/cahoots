@@ -135,7 +135,7 @@ setup (
         'install': cahoots_install
     },
     name = 'Cahoots',
-    version = '0.3.8',
+    version = '0.3.9',
     url = 'https://github.com/SerenitySoftwareLLC/cahoots',
     maintainer='Serenity Software',
     maintainer_email = 'hello@serenitysoftware.io',
