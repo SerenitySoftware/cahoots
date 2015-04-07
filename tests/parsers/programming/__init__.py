@@ -165,10 +165,21 @@ class ProgrammingParserTests(unittest.TestCase):
             'foo': 150
         }
 
+        pp = ProgrammingParser(TestConfig())
+
         result = \
-            ProgrammingParser.calculate_confidence(
+            pp.calculate_confidence(
                 lex_languages,
                 bayes_languages
             )
 
-        self.assertEqual({'foo': 100}, result)
+        self.assertEqual({
+            'foo': {
+                'confidence': 100,
+                'scores': {
+                    'bayes': 99.92,
+                    'final': 100.0,
+                    'lexer': 0.08
+                }
+            }
+        }, result)
