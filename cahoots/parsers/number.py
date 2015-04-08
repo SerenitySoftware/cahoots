@@ -303,7 +303,14 @@ class NumberParser(BaseParser):
         if data[0] == "-":
             data = data[1:]
 
-        return data.replace(",", "")
+        # This is a judgement call. If there's one comma, no decimal, and the
+        # the comma is not in a X,XXX position, we decide it's a comma locale
+        if '.' not in data and data.count(',') == 1 and data[-4:-3] != ',':
+            data = data.replace(",", ".")
+        else:
+            data = data.replace(",", "")
+
+        return data
 
     def parse_fraction(self, data):
         """finds and confidence scores a fraction"""
