@@ -46,7 +46,7 @@ class NameParser(BaseParser):
                 '7TH', '8TH', '9TH', 'BT', 'BART', 'QC', 'MP', 'SSF', 'FRCP',
                 'FRSA', 'RAF', 'RN', 'RMP', 'FAIA', 'FRSE', 'SJ', 'OP',
                 'ICMA-CM', 'MBASW']
-    name_parts = ['van', 'der', 'de', '\'t', 'het', 'in']
+    name_parts = ['van', 'der', 'de', '\'t', 'het', 'in', 'bin', 'al']
 
     @staticmethod
     def bootstrap(config):
