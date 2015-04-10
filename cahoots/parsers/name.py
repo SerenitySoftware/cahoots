@@ -46,6 +46,7 @@ class NameParser(BaseParser):
                 '7TH', '8TH', '9TH', 'BT', 'BART', 'QC', 'MP', 'SSF', 'FRCP',
                 'FRSA', 'RAF', 'RN', 'RMP', 'FAIA', 'FRSE', 'SJ', 'OP',
                 'ICMA-CM', 'MBASW']
+    name_parts = ['van', 'der', 'de', '\'t', 'het', 'in']
 
     @staticmethod
     def bootstrap(config):
@@ -55,21 +56,25 @@ class NameParser(BaseParser):
     def __init__(self, config):
         BaseParser.__init__(self, config, "Name", 0)
 
-    @classmethod
-    def basic_validation(cls, data):
+    def basic_validation(self, data):
         """
         Make sure every word in the phrase either
         starts with a Capital Letter or a Number
         """
-        return len(data) == len(
+        remainder = \
             [word for word in data if
-             # Has to start with a capital letter or digit
-             (word[0].isupper() or (len(data) > 1 and word[0].isdigit())) and
+             # Has to start with a caps letter or digit or word in name parts
+             (
+                 word[0].isupper() or
+                 (len(data) > 1 and word[0].isdigit()) or
+                 word in self.name_parts
+             ) and
              # Whole word can't be a digit
              not word.isdigit() and
              # Must contain only printable characters
              not [char for char in word if char not in string.printable]]
-        )
+
+        return len(data) == len(remainder)
 
     def is_prefix(self, word):
         """Checks to see if the word passed in is a name prefix"""

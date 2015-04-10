@@ -68,15 +68,15 @@ class LandmarkParser(BaseParser):
 
         return entities
 
-    @classmethod
-    def prepare_landmark_datastring(cls, data):
+    def prepare_landmark_datastring(self, data):
         """Cleans up and validates the datastring"""
         data = registry.get('LP_the_regex').sub('', data).strip()
 
         if len(data) > 75:
             return
 
-        if not NameParser.basic_validation(data.split()):
+        name_parser = NameParser(self.config)
+        if not name_parser.basic_validation(data.split()):
             return
 
         allowed_chars = \
