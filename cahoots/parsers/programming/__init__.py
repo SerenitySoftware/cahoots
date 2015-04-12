@@ -39,7 +39,12 @@ class ProgrammingParser(BaseParser):
 
     @staticmethod
     def bootstrap(config):
-        """Loads tokens from the yaml files on disk"""
+        """
+        This method is statically called to bootstrap a parser
+
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         all_keywords = []
         language_keywords = {}
 
@@ -58,6 +63,10 @@ class ProgrammingParser(BaseParser):
         ProgrammingBayesianClassifier.bootstrap(config)
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "Programming", 0)
         self.all_keywords = registry.get('PP_all_keywords')
         self.language_keywords = registry.get('PP_language_keywords')
@@ -161,6 +170,11 @@ class ProgrammingParser(BaseParser):
     def parse(self, data):
         """
         Determines if the data is an example of one of our trained languages
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
         """
         dataset = self.create_dataset(data)
 

@@ -38,7 +38,16 @@ else:  # pragma: no cover
 
 
 def truncate_text(text, limit=80):
-    '''truncates text to a provided length'''
+    """
+    truncates text to a provided length
+
+    :param text: text we want to truncate
+    :type text: str
+    :param limit: how long we want the resulting string to be
+    :type limit: int
+    :return: truncated string
+    :rtype: str
+    """
 
     if len(text) > limit:
         text = text[:limit-3] + "..."
@@ -46,7 +55,14 @@ def truncate_text(text, limit=80):
 
 
 def is_number(text):
-    """Checking if the text is a number"""
+    """
+    Checking if the text is a number
+
+    :param text: text we want to examine
+    :type text: str
+    :return: whether this is a number or not
+    :rtype: bool
+    """
 
     try:
         float(text.strip())
@@ -57,5 +73,14 @@ def is_number(text):
 
 
 def strings_intersect(s_one, s_two):
-    """Checks if two strings have any intersections"""
+    """
+    Checks if two strings have any intersections
+
+    :param s_one: first string
+    :type s_one: str
+    :param s_two: second string
+    :type s_two: str
+    :return: whether or not these strings intercept
+    :rtype: bool
+    """
     return not set(s_one).isdisjoint(s_two)

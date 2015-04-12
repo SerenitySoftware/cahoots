@@ -29,13 +29,29 @@ class NumberWithNonNumbers(BaseNormalizer):
 
     @staticmethod
     def test(types, _):
-        """We want to normalize if there are Numbers as well as non numbers"""
+        """
+        We want to normalize if there are Numbers as well as non numbers
+
+        :param types: list of result types
+        :type types: list
+        :param all_types: list of result types + subtypes
+        :type all_types: list
+        :return: if this normalizer should normalize this result set
+        :rtype: bool
+        """
         others = [t for t in types if t != 'Number']
         return len(others) > 0 and len(others) != len(types)
 
     @staticmethod
     def normalize(results):
-        """If we don't just have numbers, we cut our confidence in half."""
+        """
+        If we don't just have numbers, we cut our confidence in half.
+
+        :param results: list of results we want to normalize
+        :type results: list
+        :return: the normalized results
+        :rtype: list
+        """
         for result in [r for r in results if r.type == 'Number']:
             result.confidence = int(result.confidence * 0.5)
 
@@ -47,7 +63,16 @@ class IntOctWithPhoneDatePostalCode(BaseNormalizer):
 
     @staticmethod
     def test(_, types):
-        """We want to normalize if there are Numbers as well as non numbers"""
+        """
+        We want to normalize if there are Numbers as well as non numbers
+
+        :param types: list of result types
+        :type types: list
+        :param all_types: list of result types + subtypes
+        :type all_types: list
+        :return: if this normalizer should normalize this result set
+        :rtype: bool
+        """
         intersections = {
             'alter': ['Integer', 'Octal'],
             'search': ['Postal Code', 'Date', 'Phone']
@@ -60,8 +85,14 @@ class IntOctWithPhoneDatePostalCode(BaseNormalizer):
 
     @staticmethod
     def normalize(results):
-        """Significantly hitting items that qualify"""
+        """
+        Significantly hitting items that qualify
 
+        :param results: list of results we want to normalize
+        :type results: list
+        :return: the normalized results
+        :rtype: list
+        """
         for result in \
                 [r for r in results if r.subtype in ['Integer', 'Octal']]:
 

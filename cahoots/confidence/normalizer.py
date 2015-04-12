@@ -30,12 +30,27 @@ class HierarchicalNormalizerChain(object):
     """
 
     def __init__(self, config, types, all_types):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        :param types: list of result types
+        :type types: list
+        :param all_types: list of result types + subtypes
+        :type all_types: list
+        """
         self.config = config
         self.types = types
         self.all_types = all_types
 
     def normalize(self, results):
-        """Runs all normalizers against the result set"""
+        """
+        Runs all normalizers against the result set
+
+        :param results: list of the parse result objects
+        :type results: list
+        :return: the parse result list, normalized
+        :rtype: list
+        """
         for normalizer in \
                 [n for n in self.config.enabled_confidence_normalizers if
                  n.test(self.types, self.all_types)]:

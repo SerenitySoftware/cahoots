@@ -39,6 +39,9 @@ class ProgrammingBayesianClassifier(object):
         """
         Trains the bayes classifier with examples
         from various programming languages
+
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
         """
         classifier = simplebayes.SimpleBayes(
             ProgrammingBayesianClassifier.bayes_tokenizer

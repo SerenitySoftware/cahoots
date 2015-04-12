@@ -38,11 +38,20 @@ class LandmarkParser(BaseParser):
     """
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "Landmark", 100)
 
     @staticmethod
     def bootstrap(config):
-        """preps the address parser"""
+        """
+        This method is statically called to bootstrap a parser
+
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         the_regex = re.compile('^the ', re.IGNORECASE)
         registry.set('LP_the_regex', the_regex)
 
@@ -68,15 +77,15 @@ class LandmarkParser(BaseParser):
 
         return entities
 
-    @classmethod
-    def prepare_landmark_datastring(cls, data):
+    def prepare_landmark_datastring(self, data):
         """Cleans up and validates the datastring"""
         data = registry.get('LP_the_regex').sub('', data).strip()
 
         if len(data) > 75:
             return
 
-        if not NameParser.basic_validation(data.split()):
+        name_parser = NameParser(self.config)
+        if not name_parser.basic_validation(data.split()):
             return
 
         allowed_chars = \
@@ -89,7 +98,14 @@ class LandmarkParser(BaseParser):
         return data
 
     def parse(self, data):
-        """parses for landmarks"""
+        """
+        parses for landmarks
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
         data = self.prepare_landmark_datastring(data)
 
         if not data:

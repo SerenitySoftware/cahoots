@@ -33,11 +33,20 @@ class PostalCodeParser(BaseParser):
     """Detects if the data provided is a location"""
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "Postal Code", 100)
 
     @staticmethod
     def bootstrap(config):
-        """Bootstraps the location parser"""
+        """
+        This method is statically called to bootstrap a parser
+
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         # Will test if something matches 5 or 9 digit postalcode pattern
         postal_regex = re.compile(
             r'^' +
@@ -119,7 +128,14 @@ class PostalCodeParser(BaseParser):
             self.confidence -= (7 * len(results))
 
     def parse(self, data):
-        """parses data to determine if this is a location"""
+        """
+        parses data to determine if this is a location
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
         data = data.strip()
 
         if len(data) >= 20:

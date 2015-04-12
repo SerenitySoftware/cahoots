@@ -29,6 +29,10 @@ class CharacterParser(BaseParser):
     '''Determines if given data is a character'''
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "Character", 25)
 
     @classmethod
@@ -56,6 +60,14 @@ class CharacterParser(BaseParser):
         return False
 
     def parse(self, data):
+        """
+        parses for characters
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
         if len(data) != 1:
             return
 

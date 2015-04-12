@@ -33,12 +33,24 @@ class DataHandler(object):
         self.path = os.path.dirname(os.path.abspath(__file__)) + '/data/'
 
     def get_file_handle(self, filename):
-        """Gets a requested file handle"""
+        """
+        Gets a requested file handle
+
+        :param filename: The location of the file we want to load
+        :type filename: str
+        :return: file handle
+        :rtype: file
+        """
         file_handle = open(self.path + filename, 'r')
         return file_handle
 
     def get_prepositions(self):
-        """returns the list of prepositions"""
+        """
+        returns the list of prepositions
+
+        :return: list of prepositions
+        :rtype: list
+        """
         if registry.test('DATA_prepositions'):
             return registry.get('DATA_prepositions')
 

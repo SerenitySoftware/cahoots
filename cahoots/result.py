@@ -41,6 +41,20 @@ class ParseResult(object):
             value=None,
             additional_data=None
     ):
+        """
+        Sets up the parse result object with result data
+
+        :param p_type: Parse result type
+        :type p_type: str
+        :param subtype: Parse result subtype
+        :type subtype: str
+        :param confidence: How confidence we are in this result, 1-100
+        :type confidence: int
+        :param value: representation of the parsed data
+        :type value: mixed
+        :param additional_data: any additional data a parser wants to provide
+        :type additional_data: mixed
+        """
         if additional_data is None:
             additional_data = {}
 

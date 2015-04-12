@@ -38,6 +38,10 @@ class URIParser(BaseParser):
     """Determines if given data is a URI of some form"""
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "URI", 100)
 
     @classmethod
@@ -77,6 +81,14 @@ class URIParser(BaseParser):
         return True
 
     def parse(self, data_string):
+        """
+        parses for uris
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
         if len(data_string) < 4:
             return
 

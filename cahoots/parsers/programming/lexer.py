@@ -38,6 +38,14 @@ class ProgrammingLexerThread(threading.Thread):
     result = None
 
     def __init__(self, lexer_id, lexer, data_string):
+        """
+        :param lexer_id: the id of the lexer
+        :type lexer_id: str
+        :param lexer: The lexer this thread is going to use
+        :type lexer: pygments.lexer.Lexer
+        :param data_string: the string we're going to lex
+        :type data_string: str
+        """
         self.thread_id = lexer_id
         self.lexer = lexer
         self.data_string = data_string
@@ -89,8 +97,10 @@ class ProgrammingLexer(object):
         For every possible matched language, we run a lexer to see if we can
         eliminate it as a possible match. If we detect errors, or have no
         lexer matches, we remove it from the list.
-        """
 
+        :return: the list of lexer results
+        :rtype: list
+        """
         results = {}
         threads = []
 

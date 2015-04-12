@@ -46,30 +46,45 @@ class NameParser(BaseParser):
                 '7TH', '8TH', '9TH', 'BT', 'BART', 'QC', 'MP', 'SSF', 'FRCP',
                 'FRSA', 'RAF', 'RN', 'RMP', 'FAIA', 'FRSE', 'SJ', 'OP',
                 'ICMA-CM', 'MBASW']
+    name_parts = ['van', 'der', 'de', '\'t', 'het', 'in', 'bin', 'al']
 
     @staticmethod
     def bootstrap(config):
+        """
+        This method is statically called to bootstrap a parser
+
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         upper_alpha = re.compile('[A-Z]')
         registry.set('NP_upper_alpha_regex', upper_alpha)
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "Name", 0)
 
-    @classmethod
-    def basic_validation(cls, data):
+    def basic_validation(self, data):
         """
         Make sure every word in the phrase either
         starts with a Capital Letter or a Number
         """
-        return len(data) == len(
+        remainder = \
             [word for word in data if
-             # Has to start with a capital letter or digit
-             (word[0].isupper() or (len(data) > 1 and word[0].isdigit())) and
+             # Has to start with a caps letter or digit or word in name parts
+             (
+                 word[0].isupper() or
+                 (len(data) > 1 and word[0].isdigit()) or
+                 word in self.name_parts
+             ) and
              # Whole word can't be a digit
              not word.isdigit() and
              # Must contain only printable characters
              not [char for char in word if char not in string.printable]]
-        )
+
+        return len(data) == len(remainder)
 
     def is_prefix(self, word):
         """Checks to see if the word passed in is a name prefix"""
@@ -137,7 +152,14 @@ class NameParser(BaseParser):
             self.confidence -= (7*len(data))
 
     def parse(self, data):
-        """Determines if the data is a name or not"""
+        """
+        Determines if the data is a name or not
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
 
         # Making sure there are at least SOME uppercase letters in the phrase
         if not registry.get('NP_upper_alpha_regex').search(data):

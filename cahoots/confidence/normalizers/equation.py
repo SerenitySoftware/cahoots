@@ -31,6 +31,13 @@ class EquationWithPhonePostalCode(BaseNormalizer):
     def test(types, _):
         """
         We want to normalize if there is an equation and a phone/postal code
+
+        :param types: list of result types
+        :type types: list
+        :param all_types: list of result types + subtypes
+        :type all_types: list
+        :return: if this normalizer should normalize this result set
+        :rtype: bool
         """
         return 'Equation' in types and \
                ('Postal Code' in types or 'Phone' in types)
@@ -39,6 +46,11 @@ class EquationWithPhonePostalCode(BaseNormalizer):
     def normalize(results):
         """
         15 point confidence hit if this equation is also a phone/postal code
+
+        :param results: list of results we want to normalize
+        :type results: list
+        :return: the normalized results
+        :rtype: list
         """
         for result in [r for r in results if r.type == 'Equation']:
             result.confidence -= 15

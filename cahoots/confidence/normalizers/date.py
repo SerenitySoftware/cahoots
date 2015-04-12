@@ -30,12 +30,28 @@ class DateWithPostalCode(BaseNormalizer):
 
     @staticmethod
     def test(types, _):
-        """We want to normalize if there are Numbers as well as non numbers"""
+        """
+        We want to normalize if there are Numbers as well as non numbers
+
+        :param types: list of result types
+        :type types: list
+        :param all_types: list of result types + subtypes
+        :type all_types: list
+        :return: if this normalizer should normalize this result set
+        :rtype: bool
+        """
         return 'Date' in types and 'Postal Code' in types
 
     @staticmethod
     def normalize(results):
-        """If we don't just have numbers, we cut our confidence in half."""
+        """
+        If we don't just have numbers, we cut our confidence in half.
+
+        :param results: list of results we want to normalize
+        :type results: list
+        :return: the normalized results
+        :rtype: list
+        """
         postal_code = None
         date = None
 
