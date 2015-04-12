@@ -43,7 +43,12 @@ class DateParser(BaseParser):
 
     @staticmethod
     def bootstrap(config):
+        """
+        This method is statically called to bootstrap a parser
 
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         time_scales = [
             'microseconds',
             'milliseconds',
@@ -196,6 +201,10 @@ class DateParser(BaseParser):
         return delta
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "Date", 0)
 
     @classmethod
@@ -241,6 +250,14 @@ class DateParser(BaseParser):
         return False
 
     def parse(self, data_string):
+        """
+        parses for dates
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
         data_string = data_string.strip()
 
         if len(data_string) < 3 or len(data_string) > 50:

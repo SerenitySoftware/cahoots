@@ -31,15 +31,32 @@ class EmailParser(BaseParser):
     '''Determines if given data is an email address'''
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "Email", 100)
 
     @staticmethod
     def bootstrap(config):
-        """Bootstraps the email parser"""
+        """
+        This method is statically called to bootstrap a parser
+
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         email_regex = re.compile(VALID_ADDRESS_REGEXP)
         registry.set('EP_valid_regex', email_regex)
 
     def parse(self, data_string):
+        """
+        parses for email addresses
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
         if len(data_string) > 254 or '@' not in data_string:
             return
 

@@ -32,21 +32,54 @@ class BaseParser(object):
     confidence = 10
 
     def __init__(self, config, p_type="Base", confidence=10):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        :param p_type: parser type
+        :type p_type: str
+        :param confidence: result confidence default
+        :type confidence: int
+        """
         self.config = config
         self.type = p_type
         self.confidence = confidence
 
     @staticmethod
     def bootstrap(config):
-        '''This method can be statically called to bootstrap a parser'''
+        """
+        This method is statically called to bootstrap a parser
+
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         pass
 
     def parse(self, data):
-        """Base parse method"""
+        """
+        Base parse method
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
         raise NotImplementedError("Class must override the parse() method")
 
     def result(self, subtype="Unknown", confidence=0, value=None, data=None):
-        """Returns a ParseResult object detailing the results of parsing"""
+        """
+        Returns a ParseResult object detailing the results of parsing
+
+        :param subtype: parse result subtype
+        :type subtype: str
+        :param confidence: how confident we are in this result (1-100)
+        :type confidence: int
+        :param value: representation of the parsed data
+        :type value: mixed
+        :param additional_data: any additional data a parser wants to provide
+        :type additional_data: mixed
+        :return: parse result
+        :rtype: ParseResult
+        """
         if confidence == 0:
             confidence = self.confidence
 

@@ -48,6 +48,9 @@ class MeasurementParser(BaseParser):
     def bootstrap(config):
         """
         Loads unit lists for use in this instance of the measurement parser
+
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
         """
         units = {}
         systems = {}
@@ -83,6 +86,10 @@ class MeasurementParser(BaseParser):
         registry.set('MP_measurement_parser', measurement_parser)
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "Measurement", 100)
         self.units = registry.get('MP_units')
         self.systems = registry.get('MP_systems')
@@ -109,6 +116,14 @@ class MeasurementParser(BaseParser):
         return subtype, value
 
     def parse(self, data):
+        """
+        Parses for measurements
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
         if len(data) > 100:
             return
 

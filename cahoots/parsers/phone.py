@@ -36,6 +36,10 @@ class PhoneParser(BaseParser):
     digits = None
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "Phone", 100)
 
     def get_phone_number_object(self, data_string):
@@ -143,6 +147,14 @@ class PhoneParser(BaseParser):
             self.confidence += (5 * len(set(self.punctuation)))
 
     def parse(self, data_string):
+        """
+        parses for phone numbers
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
         data_string = data_string.strip()
 
         # 30 is a stretch...

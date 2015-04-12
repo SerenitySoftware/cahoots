@@ -45,17 +45,33 @@ class AddressParser(BaseParser):
     subtype = "Without Addressee"
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "Address", 0)
 
     @staticmethod
     def bootstrap(config):
-        """preps the address parser"""
+        """
+        This method is statically called to bootstrap a parser
+
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         split_regex = re.compile(r"[\s#`'?.;,-/]")
         registry.set('AP_split_regex', split_regex)
 
     @classmethod
     def get_street_suffix(cls, data_set):
-        """Looks at our data for a street suffix and returns the entity"""
+        """
+        Looks at our data for a street suffix and returns the entity
+
+        :param data_set: the list of parts of address data
+        :type data_set: list
+        :return: the street suffix if one was found
+        :rtype: list
+        """
         sql_items = []
 
         for _ in data_set:
@@ -79,7 +95,14 @@ class AddressParser(BaseParser):
 
     @classmethod
     def separate_suspected_name(cls, data_set):
-        """Separates a suspected name from the beginning of an address"""
+        """
+        Separates a suspected name from the beginning of an address
+
+        :param data_set: words from the address that might contain a name
+        :type data_set: list
+        :return: name parts
+        :rtype: tuple
+        """
         name_elems = []
         work_data = list(data_set)
         conjunctions = ['and', 'but', 'or', 'yet', 'for', 'nor', 'so']
@@ -95,7 +118,14 @@ class AddressParser(BaseParser):
         return (list(work_data), " ".join(name_elems))
 
     def is_address_name(self, suspected_name):
-        """Checking if the start of an address bears a name"""
+        """
+        Checking if the start of an address bears a name
+
+        :param suspected_name: the text we think is a name
+        :type suspected_name: str
+        :return: if this is an address
+        :rtype: str
+        """
         name_parser = NameParser(self.config)
         for _ in name_parser.parse(suspected_name):
             return True
@@ -114,7 +144,16 @@ class AddressParser(BaseParser):
             return False
 
     def find_address_tokens(self, data, results):
-        """Looking for known city or country, zip, etc."""
+        """
+        Looking for known city or country, zip, etc.
+
+        :param data: list of address related tokens we want to check
+        :type data: list
+        :param results: the address result dict
+        :type results: dict
+        :return: the address result dict
+        :rtype: dict
+        """
         tokens = 0
         working_data = list(data)
 
@@ -160,6 +199,13 @@ class AddressParser(BaseParser):
         """
         Examines the data_set and generates a result
         dict, or returns nothing if there's a failure
+
+        :param data: data string we're parsing
+        :type data: str
+        :param data_set: tokenized data string
+        :type data_set: list
+        :return: the results of our address parsing
+        :rtype: dict
         """
         results = {
             'street_suffix': None,
@@ -204,7 +250,14 @@ class AddressParser(BaseParser):
         return (results, token_count, data_set)
 
     def parse(self, data):
-        """parses for address"""
+        """
+        parses for potential address
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
         data = data.strip()
 
         # If invalid length or there are no digits, we return.

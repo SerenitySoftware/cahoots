@@ -45,6 +45,10 @@ class NumberParser(BaseParser):
     """determines if given data is one of many types of numbers"""
 
     def __init__(self, config):
+        """
+        :param config: cahoots config
+        :type config: cahoots.config.BaseConfig
+        """
         BaseParser.__init__(self, config, "Number", 100)
 
         def convert_to_literal(tok, val):
@@ -384,6 +388,14 @@ class NumberParser(BaseParser):
             return self.result("Word Number", 100, value)
 
     def parse(self, data):
+        """
+        parses for various types of numbers
+
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: ParseResult
+        """
         data = self.prep_data(data)
 
         if not data:

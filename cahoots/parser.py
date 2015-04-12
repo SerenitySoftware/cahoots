@@ -103,8 +103,8 @@ class CahootsParser(object):
 
         :param data_string: the string we want to parse
         :type data_string: str
-        :return: yields parse result(s) if there are any
-        :rtype: cahoots.result.ParseResult
+        :return: yields parse result data if there is any
+        :rtype: dict
         """
         start_time = time.time()
         results = []
