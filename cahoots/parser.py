@@ -33,6 +33,7 @@ import inspect
 
 class ParserThread(threading.Thread):
     """Represents a thread that will handle one parser parsing request"""
+
     config = None
     data_string = None
     results = []
@@ -49,15 +50,21 @@ class ParserThread(threading.Thread):
 
 
 class CahootsParser(object):
-    '''Kicks off the parsing process'''
+    """Kicks off the parsing process"""
 
     config = None
 
-    # The 'config' variable, if set, needs to be a class that extends
-    # BaseConfig, or an instance of a class that does.
-    # In the case that it's a class, we will instantiate the class.
     def __init__(self, config=None, bootstrap=False):
+        """
+        The 'config' variable, if set, needs to be a class that extends
+        BaseConfig, or an instance of a class that does.
+        In the case that it's a class, we will instantiate the class.
 
+        :param config: cahoots config
+        :type config: BaseConfig
+        :param bootstrap: Whether we want to auto-bootstrap cahoots
+        :type bootstrap: boolean
+        """
         if config is not None:
             if inspect.isclass(config) and issubclass(config, BaseConfig):
                 self.config = config()
@@ -75,7 +82,12 @@ class CahootsParser(object):
 
     @classmethod
     def bootstrap(cls, config):
-        """Bootstraps each parser. Can be used for cache warming, etc."""
+        """
+        Bootstraps each parser. Can be used for cache warming, etc.
+
+        :param config: cahoots config
+        :type config: BaseConfig
+        """
         for module in config.enabled_modules:
             # If the module overrides the base bootstrap,
             # we output a message about it
@@ -86,8 +98,14 @@ class CahootsParser(object):
             module.bootstrap(config)
 
     def parse(self, data_string):
-        """Parses input data and returns a dict of result data"""
+        """
+        Parses input data and returns a dict of result data
 
+        :param data_string: the string we want to parse
+        :type data_string: str
+        :return: yields parse result(s) if there are any
+        :rtype: cahoots.result.ParseResult
+        """
         start_time = time.time()
         results = []
         threads = []

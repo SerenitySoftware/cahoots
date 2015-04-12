@@ -28,12 +28,28 @@ class BaseNormalizer(object):
 
     @staticmethod
     def test(types, all_types):
-        """Tests if we should attempt to normalize/alter this value"""
+        """
+        Tests if we should attempt to normalize/alter this value
+
+        :param types: list of result types
+        :type types: list
+        :param all_types: list of result types + subtypes
+        :type all_types: list
+        :return: if this normalizer should normalize this result set
+        :rtype: bool
+        """
         raise NotImplementedError("Class must override the test() method")
 
     @staticmethod
     def normalize(results):
-        """Normalizes confidence based on various other results"""
+        """
+        Normalizes confidence based on various other results
+
+        :param results: list of results we want to normalize
+        :type results: list
+        :return: the normalized results
+        :rtype: list
+        """
         raise NotImplementedError(
             "Class must override the normalize() method"
         )

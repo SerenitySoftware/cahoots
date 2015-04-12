@@ -29,12 +29,28 @@ class PhoneWithUri(BaseNormalizer):
 
     @staticmethod
     def test(types, _):
-        """We want to normalize if there is an phone and a uri"""
+        """
+        We want to normalize if there is an phone and a uri
+
+        :param types: list of result types
+        :type types: list
+        :param all_types: list of result types + subtypes
+        :type all_types: list
+        :return: if this normalizer should normalize this result set
+        :rtype: bool
+        """
         return 'Phone' in types and 'URI' in types
 
     @staticmethod
     def normalize(results):
-        """25 point confidence hit if this phone is also a uri"""
+        """
+        25 point confidence hit if this phone is also a uri
+
+        :param results: list of results we want to normalize
+        :type results: list
+        :return: the normalized results
+        :rtype: list
+        """
         for result in [r for r in results if r.type == 'Phone']:
             result.confidence -= 25
 

@@ -29,12 +29,28 @@ class CharacterWithoutBoolean(BaseNormalizer):
 
     @staticmethod
     def test(types, _):
-        """We want to normalize if there is a character and not a boolean"""
+        """
+        We want to normalize if there is a character and not a boolean
+
+        :param types: list of result types
+        :type types: list
+        :param all_types: list of result types + subtypes
+        :type all_types: list
+        :return: if this normalizer should normalize this result set
+        :rtype: bool
+        """
         return 'Character' in types and 'Boolean' not in types
 
     @staticmethod
     def normalize(results):
-        """setting char confidence to 100% if there's no boolean result"""
+        """
+        setting char confidence to 100% if there's no boolean result
+
+        :param results: list of results we want to normalize
+        :type results: list
+        :return: the normalized results
+        :rtype: list
+        """
         for result in [r for r in results if r.type == 'Character']:
             result.confidence = 100
 

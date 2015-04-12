@@ -45,7 +45,12 @@ class DataHandler(object):
         return file_handle
 
     def get_prepositions(self):
-        """returns the list of prepositions"""
+        """
+        returns the list of prepositions
+
+        :return: list of prepositions
+        :rtype: list
+        """
         if registry.test('DATA_prepositions'):
             return registry.get('DATA_prepositions')
 
