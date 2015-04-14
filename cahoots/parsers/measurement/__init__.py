@@ -97,7 +97,14 @@ class MeasurementParser(BaseParser):
         self.measurement_parser = registry.get('MP_measurement_parser')
 
     def prepare_match(self, result):
-        """sets up value and subtype data"""
+        """
+        sets up value and subtype data
+
+        :param result: the match data from pyparsing
+        :type result: list
+        :return: the subtype and value of the result
+        :rtype: tuple
+        """
         amount = \
             result.pop(0).strip() if result[0] is not None else result.pop(0)
         value = {
@@ -119,8 +126,8 @@ class MeasurementParser(BaseParser):
         """
         Parses for measurements
 
-        :param data_string: the string we want to parse
-        :type data_string: str
+        :param data: the string we want to parse
+        :type data: str
         :return: yields parse result(s) if there are any
         :rtype: ParseResult
         """
