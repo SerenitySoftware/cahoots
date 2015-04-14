@@ -57,7 +57,14 @@ class LandmarkParser(BaseParser):
 
     @classmethod
     def find_matching_landmarks(cls, data):
-        """Looks in the database for landmarks matching datastring"""
+        """
+        Looks in the database for landmarks matching datastring
+
+        :param data: string we want to check against landmarks
+        :type data: str
+        :return: list of landmarks
+        :rtype: list
+        """
         database = LocationDatabase.get_database()
         cursor = database.cursor()
 
@@ -78,7 +85,14 @@ class LandmarkParser(BaseParser):
         return entities
 
     def prepare_landmark_datastring(self, data):
-        """Cleans up and validates the datastring"""
+        """
+        Cleans up and validates the datastring
+
+        :param data: data we want to check for being a location
+        :type data: str
+        :return: the cleaned up datastring
+        :rtype: str
+        """
         data = registry.get('LP_the_regex').sub('', data).strip()
 
         if len(data) > 75:
@@ -101,8 +115,8 @@ class LandmarkParser(BaseParser):
         """
         parses for landmarks
 
-        :param data_string: the string we want to parse
-        :type data_string: str
+        :param data: the string we want to parse
+        :type data: str
         :return: yields parse result(s) if there are any
         :rtype: ParseResult
         """

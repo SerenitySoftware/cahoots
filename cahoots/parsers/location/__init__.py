@@ -30,14 +30,31 @@ class LocationDatabase(object):
 
     @classmethod
     def get_database(cls):
-        """Gets a sqlite database connection to the location database"""
+        """
+        Gets a sqlite database connection to the location database
+
+        :return: sqlite3 connection
+        :rtype: _sqlite3.Connection
+        """
         data_dir = os.path.dirname(os.path.realpath(__file__))
         database = sqlite3.connect(data_dir + '/data/location.sqlite')
+        print(type(database))
         database.cursor().execute('PRAGMA temp_store = 2')
         return database
 
     def single_select(self, sql, params, prototype):
-        """Executes a statement (assumed to be a select) against the db"""
+        """
+        Executes a statement (assumed to be a select) against the db
+
+        :param sql: the sql select that we want to execute
+        :type sql: str
+        :param params: the sql parameters to inject into the provided sql
+        :type params: tuple
+        :param prototype: The class we want to hydrate with results
+        :type prototype: mixed
+        :return: the hydrated prototype
+        :rtype: mixed
+        """
         if not isinstance(params, tuple):
             raise TypeError(
                 'LocationDatabase.select requires params to be a tuple.'
@@ -61,7 +78,16 @@ class LocationDatabase(object):
 
     @classmethod
     def hydrate(cls, data, prototype):
-        """hydrates a set of entities"""
+        """
+        hydrates a set of entities
+
+        :param data: the data retrieved from a select
+        :type data: tuple
+        :param prototype: the class we want to hydrate with the data
+        :type prototype: mixed
+        :return: hydrated prototype
+        :rtype: mixed
+        """
         if isinstance(data, list):
             entities = []
             for row in data:
@@ -76,7 +102,16 @@ class LocationDatabase(object):
 
     @classmethod
     def substitute_country_data(cls, entities, cursor):
-        """Preps our entity objects with country data and converts dicts"""
+        """
+        Preps our entity objects with country data and converts dicts
+
+        :param entities: list of city entities to map country data to
+        :type entities: list
+        :param cursor: sqlite3 database cursor
+        :type cursor: _sqlite3.Cursor
+        :return: list of results with subbed country data
+        :rtype: list
+        """
         results = []
 
         for result in entities:
@@ -105,6 +140,10 @@ class CityEntity(object):
     """Represents a city database entity"""
 
     def __init__(self, data):
+        """
+        :param data: data we want to hydrate this entity with
+        :type data: tuple
+        """
         self.country,\
             self.postal_code,\
             self.city,\
@@ -123,6 +162,10 @@ class LandmarkEntity(object):
     """Represents a landmark database entity"""
 
     def __init__(self, data):
+        """
+        :param data: data we want to hydrate this entity with
+        :type data: tuple
+        """
         self.resource,\
             self.address,\
             self.city,\
@@ -135,6 +178,10 @@ class CountryEntity(object):
     """Represents a country database entity"""
 
     def __init__(self, data):
+        """
+        :param data: data we want to hydrate this entity with
+        :type data: tuple
+        """
         self.abbreviation,\
             self.name = data
 
@@ -143,4 +190,8 @@ class StreetSuffixEntity(object):
     """Represents a street suffix entity"""
 
     def __init__(self, data):
+        """
+        :param data: data we want to hydrate this entity with
+        :type data: tuple
+        """
         self.suffix_name = data[0]

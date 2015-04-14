@@ -86,7 +86,14 @@ class CoordinateParser(BaseParser):
 
     @classmethod
     def clean_dms_coords(cls, coord_string):
-        """Removes items that the LatLon parser doesn't want"""
+        """
+        Removes items that the LatLon parser doesn't want
+
+        :param coord_string: coordinate string we want to clean up
+        :type coord_string: str
+        :return: the cleaned coordinate string
+        :rtype: str
+        """
         coord_string = coord_string.replace(u('°'), '')
         coord_string = coord_string.replace('\'', '')
         coord_string = coord_string.replace('"', '')
@@ -94,7 +101,14 @@ class CoordinateParser(BaseParser):
 
     @classmethod
     def get_standard_coord_data(cls, match):
-        """Creates LatLon from regular coords"""
+        """
+        Creates LatLon from regular coords
+
+        :param match: the regex match for a standard coord set
+        :type match: re.MatchObject
+        :return: latlon object
+        :rtype: LatLon
+        """
         lat_lon = LatLon(
             float(match.group(1)),
             float(match.group(2))
@@ -102,7 +116,16 @@ class CoordinateParser(BaseParser):
         return lat_lon
 
     def get_degree_based_coord_data(self, match, pattern):
-        """Takes degree based coords and turns them into LatLon object"""
+        """
+        Takes degree based coords and turns them into LatLon object
+
+        :param match: the regex match for a degree coord set
+        :type match: re.MatchObject
+        :param pattern: the degree pattern we detected
+        :type pattern: str
+        :return: latlon object
+        :rtype: LatLon
+        """
         lat_lon = string2latlon(
             self.clean_dms_coords(match.group(1)),
             self.clean_dms_coords(match.group(2)),
@@ -112,7 +135,14 @@ class CoordinateParser(BaseParser):
 
     @classmethod
     def generate_result_data(cls, result):
-        """Adds a google map link to the result data"""
+        """
+        Adds a google map link to the result data
+
+        :param result: list of string latitudes and longitudes
+        :type result: list
+        :return: formatted result data
+        :rtype: tuple
+        """
         result_dict = {
             'latitude': result[0],
             'longitude': result[1]
@@ -167,8 +197,8 @@ class CoordinateParser(BaseParser):
         """
         parses data to determine if this is a location
 
-        :param data_string: the string we want to parse
-        :type data_string: str
+        :param data: the string we want to parse
+        :type data: str
         :return: yields parse result(s) if there are any
         :rtype: ParseResult
         """

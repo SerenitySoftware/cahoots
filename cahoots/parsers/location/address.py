@@ -133,7 +133,14 @@ class AddressParser(BaseParser):
 
     @classmethod
     def is_invalid_int(cls, word):
-        """Looking for ints that are to short (less than 5 chars)"""
+        """
+        Looking for ints that are to short (less than 5 chars)
+
+        :param word: word that we want to check for proper length int
+        :type word: str
+        :return: is this int is too short
+        :rtype: bool
+        """
         try:
             int(word)
             if len(word) < 5:
@@ -253,8 +260,8 @@ class AddressParser(BaseParser):
         """
         parses for potential address
 
-        :param data_string: the string we want to parse
-        :type data_string: str
+        :param data: the string we want to parse
+        :type data: str
         :return: yields parse result(s) if there are any
         :rtype: ParseResult
         """

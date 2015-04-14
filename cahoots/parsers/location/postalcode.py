@@ -77,7 +77,14 @@ class PostalCodeParser(BaseParser):
 
     @classmethod
     def get_postal_code_data(cls, data):
-        """If this looks like a postal code, we try to get its info"""
+        """
+        If this looks like a postal code, we try to get its info
+
+        :param data: a possibly detected zip code
+        :type data: str
+        :return: possible locations for this zip code
+        :rtype: list
+        """
         plus_postal_code = '-' in data
 
         if plus_postal_code:
@@ -119,8 +126,14 @@ class PostalCodeParser(BaseParser):
         return entities
 
     def calculate_confidence(self, data, results):
-        """calculates the confidence that this is a postal code"""
+        """
+        calculates the confidence that this is a postal code
 
+        :param data: the data we checked for being a location
+        :type data: str
+        :param results: list of result landmarks
+        :type results: list
+        """
         # The longer the data string, the higher the confidence
         self.confidence -= (40-(2*len(data)))
 
@@ -131,8 +144,8 @@ class PostalCodeParser(BaseParser):
         """
         parses data to determine if this is a location
 
-        :param data_string: the string we want to parse
-        :type data_string: str
+        :param data: the string we want to parse
+        :type data: str
         :return: yields parse result(s) if there are any
         :rtype: ParseResult
         """
