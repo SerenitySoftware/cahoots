@@ -73,12 +73,28 @@ class ProgrammingParser(BaseParser):
 
     # finding common words/phrases in programming languages
     def find_common_tokens(self, dataset):
-        """Looking for any programming language keywords in the data"""
+        """
+        Looking for any programming language keywords in the data
+
+        :param dataset: tokenized sample data
+        :type dataset: list
+        :return: tokens that match existing keywords
+        :rtype: list
+        """
         return [keyword for keyword in dataset if keyword in self.all_keywords]
 
     @classmethod
     def basic_language_heuristic(cls, language_data, dataset):
-        """Looking for specific programming language keywords in the data"""
+        """
+        Looking for specific programming language keywords in the data
+
+        :param language_data: the keywords for a specific programming lang
+        :type language_data: dict
+        :param dataset: tokenized sample data
+        :type dataset: list
+        :return: tokens that match existing keywords
+        :rtype: list
+        """
         return [keyword for keyword in
                 dataset if keyword in language_data['keywords']]
 
@@ -160,6 +176,11 @@ class ProgrammingParser(BaseParser):
         """
         Goes through each language's keywords and finds
         languages that share keywords with the provided data set
+
+        :param dataset: tokenized sample data
+        :type dataset: list
+        :return: languages that we've found tokens for
+        :rtype: list
         """
         return [language for language, language_data in
                 self.language_keywords.items() if
@@ -171,8 +192,8 @@ class ProgrammingParser(BaseParser):
         """
         Determines if the data is an example of one of our trained languages
 
-        :param data_string: the string we want to parse
-        :type data_string: str
+        :param data: the string we want to parse
+        :type data: str
         :return: yields parse result(s) if there are any
         :rtype: ParseResult
         """
