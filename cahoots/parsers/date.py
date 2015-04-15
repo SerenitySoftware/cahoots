@@ -86,7 +86,14 @@ class DateParser(BaseParser):
 
     @staticmethod
     def create_pre_timedelta_literal(tok):
-        """Detects <number> <timescale> <preposition>"""
+        """
+        Detects <number> <timescale> <preposition>
+
+        :param tok: the token we want to produce a detector for
+        :type tok: str
+        :return: the caseless literal
+        :rtype: pyparsing.And
+        """
         delta = originalTextFor(Or([
             Word(nums) +
             ZeroOrMore(',' + Word(nums+',')) +
@@ -102,7 +109,14 @@ class DateParser(BaseParser):
 
     @staticmethod
     def generate_pre_timedelta(toks):
-        """Generates a timedelta object for a delta-prefix match"""
+        """
+        Generates a timedelta object for a delta-prefix match
+
+        :param tok: the tokens we want to produce detectors for
+        :type tok: str
+        :return: the caseless literal
+        :rtype: pyparsing.And
+        """
         minus_prepositions = [
             'until',
             'before',
@@ -121,7 +135,14 @@ class DateParser(BaseParser):
 
     @staticmethod
     def create_post_timedelta_literal(tok):
-        """Detects <plus/minus> <number> <timescale>"""
+        """
+        Detects <plus/minus> <number> <timescale>
+
+        :param tok: the token we want to produce a detector for
+        :type tok: str
+        :return: the caseless literal
+        :rtype: pyparsing.Or
+        """
         delta = Or(
             [CaselessLiteral(t) for t in ['+', '-', 'plus', 'minus']]
         ) + originalTextFor(Or([
@@ -139,7 +160,14 @@ class DateParser(BaseParser):
 
     @staticmethod
     def generate_post_timedelta(toks):
-        """Generates a timedelta object for a delta-suffix match"""
+        """
+        Generates a timedelta object for a delta-suffix match
+
+        :param tok: the tokens we want to produce detectors for
+        :type tok: str
+        :return: the caseless literal
+        :rtype: pyparsing.Or
+        """
         operator, number, timescale = toks
 
         number = DateParser.get_number_value(number)
@@ -153,7 +181,12 @@ class DateParser(BaseParser):
 
     @staticmethod
     def get_preposition_literals():
-        """Generates the prepositions parser and returns it"""
+        """
+        Generates the prepositions parser and returns it
+
+        :return: the parser for prepositions
+        :rtype: pyparsing.Or
+        """
         if registry.test('DP_prepositions'):
             return registry.get('DP_prepositions')
 
@@ -165,7 +198,14 @@ class DateParser(BaseParser):
 
     @staticmethod
     def get_number_value(number):
-        """Turns a provided number into a proper float"""
+        """
+        Turns a provided number into a proper float
+
+        :param number: number as string
+        :type number: str
+        :return: the number in numeric form
+        :rtype: float
+        """
         if number in ['a', 'an']:
             number = 1.0
         else:
@@ -176,7 +216,16 @@ class DateParser(BaseParser):
 
     @staticmethod
     def determine_timescale_delta(timescale, number):
-        """Gets a timedelta representing the change desired"""
+        """
+        Gets a timedelta representing the change desired
+
+        :param timescale: natural language timescale
+        :type timescale: str
+        :param number: number of "timescales"
+        :type number: float
+        :return: the timedelta for this timescale
+        :rtype: timedelta
+        """
         if timescale[-1:] != 's':
             timescale += 's'
 
@@ -211,6 +260,11 @@ class DateParser(BaseParser):
     def natural_parse(cls, data):
         """
         Parse out natural-language strings like "yesterday", "next week", etc
+
+        :param data: potential natural language value
+        :type data: str
+        :return: the value of the language string
+        :rtype: datetime
         """
         data = data.lower()
         today = datetime.today()
@@ -237,7 +291,14 @@ class DateParser(BaseParser):
         return value
 
     def date_parse(self, data):
-        """Uses the dateUtilParser to determine what our date is"""
+        """
+        Uses the dateUtilParser to determine what our date is
+
+        :param data: string that might be a date
+        :type data: str
+        :return: parsed date or false
+        :rtype: datetime
+        """
         parsed_date = self.natural_parse(data)
         if parsed_date:
             return ('Natural', parsed_date)

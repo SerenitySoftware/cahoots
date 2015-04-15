@@ -37,7 +37,14 @@ class CharacterParser(BaseParser):
 
     @classmethod
     def is_letter(cls, data):
-        """Checks if input is a letter"""
+        """
+        Checks if input is a letter
+
+        :param data: data that might be a letter
+        :type data: str
+        :return: if it's a letter or not
+        :rtype: bool
+        """
         if data in string.ascii_letters:
             return True
 
@@ -45,7 +52,14 @@ class CharacterParser(BaseParser):
 
     @classmethod
     def is_punctuation(cls, data):
-        """Checks if input is punctuation"""
+        """
+        Checks if input is punctuation
+
+        :param data: data that might be punctuation
+        :type data: str
+        :return: if it's punctuation or not
+        :rtype: bool
+        """
         if data in string.punctuation:
             return True
 
@@ -53,7 +67,14 @@ class CharacterParser(BaseParser):
 
     @classmethod
     def is_whitespace(cls, data):
-        """Checks if input is whitespace"""
+        """
+        Checks if input is whitespace
+
+        :param data: data that might be whitespace
+        :type data: str
+        :return: if it's whitespace or not
+        :rtype: bool
+        """
         if data in string.whitespace:
             return True
 

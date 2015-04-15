@@ -44,7 +44,14 @@ class BooleanParser(BaseParser):
 
     @classmethod
     def is_true(cls, data):
-        """Checks if a value is true"""
+        """
+        Checks if a value is true
+
+        :param data: potential true value
+        :type data: str
+        :return: if it's true or not
+        :rtype: bool
+        """
         if data in cls.strongTrue:
             return 100
         elif data in cls.mediumTrue:
@@ -55,7 +62,14 @@ class BooleanParser(BaseParser):
 
     @classmethod
     def is_false(cls, data):
-        """Checks if a value is false"""
+        """
+        Checks if a value is false
+
+        :param data: potential false value
+        :type data: str
+        :return: if it's false or not
+        :rtype: bool
+        """
         if data in cls.strongFalse:
             return 100
         elif data in cls.mediumFalse:
