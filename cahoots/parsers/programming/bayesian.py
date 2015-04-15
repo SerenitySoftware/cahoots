@@ -63,7 +63,14 @@ class ProgrammingBayesianClassifier(object):
 
     @staticmethod
     def bayes_tokenizer(text):
-        """Breaks a string down into tokens for our classifier"""
+        """
+        Breaks a string down into tokens for our classifier
+
+        :param text: text we want to tokenize
+        :type text: str
+        :return: tokenized text
+        :rtype: list
+        """
         text = text.replace('->', ' -> ')
         text = text.replace('.', ' . ')
         text = text.replace(')', ' ) ')
@@ -82,6 +89,11 @@ class ProgrammingBayesianClassifier(object):
         """
         Takes an string and creates a dict of
         programming language match probabilities
+
+        :param data_string: the string we want to classify
+        :type data_string: str
+        :return: bayesian probabilities
+        :rtype: dict
         """
         classifier = registry.get('PP_bayes')
 

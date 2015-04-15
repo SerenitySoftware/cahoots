@@ -89,6 +89,12 @@ class ProgrammingLexer(object):
     data = None
 
     def __init__(self, matched_langs, data_string):
+        """
+        :param matched_langs: languages that we've detected tokens for
+        :type matched_langs: list
+        :param data_string: the data we want to lex for possible langs
+        :type data_string: str
+        """
         self.matched_languages = matched_langs
         self.data = data_string
 
