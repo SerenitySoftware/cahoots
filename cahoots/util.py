@@ -48,7 +48,6 @@ def truncate_text(text, limit=80):
     :return: truncated string
     :rtype: str
     """
-
     if len(text) > limit:
         text = text[:limit-3] + "..."
     return text
@@ -63,7 +62,6 @@ def is_number(text):
     :return: whether this is a number or not
     :rtype: bool
     """
-
     try:
         float(text.strip())
     except ValueError:

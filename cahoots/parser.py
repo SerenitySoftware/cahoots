@@ -39,12 +39,23 @@ class ParserThread(threading.Thread):
     results = []
 
     def __init__(self, config, module, data_string):
+        """
+        :param config: cahoots config
+        :type config: BaseConfig
+        :param module: the module this thread will be parsing with
+        :type module: BaseParser
+        :param data_string: data that we want to parse
+        :type data_string: str
+        """
         self.config = config
         self.thread_id = module
         self.data_string = data_string
         threading.Thread.__init__(self)
 
     def run(self):
+        """
+        Executes this parser thread.
+        """
         parser = self.thread_id(self.config)
         self.results = parser.parse(self.data_string) or []
 

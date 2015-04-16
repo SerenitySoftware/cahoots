@@ -84,8 +84,8 @@ class CharacterParser(BaseParser):
         """
         parses for characters
 
-        :param data_string: the string we want to parse
-        :type data_string: str
+        :param data: the string we want to parse
+        :type data: str
         :return: yields parse result(s) if there are any
         :rtype: ParseResult
         """
