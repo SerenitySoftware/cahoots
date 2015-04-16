@@ -1,3 +1,21 @@
+0.3.11 - Beta
+-------------
+- Adding sphinx compatible docstrings to all of the code
+
+0.3.10 - Beta
+-------------
+- Adding code to allow detection of comma = decimal in certain cases.
+- Changing example of uk phone number.
+
+0.3.9 - Beta
+------------
+- Enriching programming parser result set and refactoring code a bit
+
+0.3.8 - Beta
+------------
+- Adding score normalization to programming results and updating tests.
+- Updating programming parser for changes in simplebayes module.
+
 0.3.7 - Beta
 ------------
 - Updating readme with a few fixes.
