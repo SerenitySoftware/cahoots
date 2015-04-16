@@ -47,8 +47,14 @@ class EquationParser(BaseParser):
         BaseParser.__init__(self, config, "Equation", 100)
 
     def is_simple_equation(self, data):
-        """checking if only has symbols found in simple math equations"""
+        """
+        checking if only has symbols found in simple math equations
 
+        :param data: potential equation text
+        :type data: str
+        :return: if this is a simple equation
+        :rtype: bool
+        """
         rgx = re.compile(r"""^
            ([()*.\-+0-9^/ ])*
            $""", re.VERBOSE)
@@ -61,8 +67,14 @@ class EquationParser(BaseParser):
         return False
 
     def is_text_equation(self, data):
-        """Searching for specific textual markers that can be converted"""
+        """
+        Searching for specific textual markers that can be converted
 
+        :param data: potential equation text
+        :type data: str
+        :return: if this is a text equation
+        :rtype: bool
+        """
         # SQUARE ROOTS
         parsed_data = re.compile(
             r'SQUARE[ ]{1,}ROOT[ ]{1,}OF[ ]{1,}\d+(\.\d+)?'
@@ -89,8 +101,14 @@ class EquationParser(BaseParser):
 
     @classmethod
     def simple_power_replace(cls, match):
-        """Converts "SQUARED" and "CUBED" to their proper exponent form"""
+        """
+        Converts "SQUARED" and "CUBED" to their proper exponent form
 
+        :param match: regex match of power text
+        :type match: re.MatchObject
+        :return: power text for equation
+        :rtype: str
+        """
         my_string = match.group()
 
         if my_string.find('SQUARED') != -1:
@@ -102,8 +120,14 @@ class EquationParser(BaseParser):
 
     @classmethod
     def square_root_text_replace(cls, match):
-        """Replaces square root references with math.sqrt"""
+        """
+        Replaces square root references with math.sqrt
 
+        :param match: regex match of square root text
+        :type match: re.MatchObject
+        :return: square root text for equation
+        :rtype: str
+        """
         my_string = match.group().replace('SQUARE', '')
         my_string = my_string.replace('ROOT', '')
         my_string = my_string.replace('OF', '')
@@ -114,17 +138,26 @@ class EquationParser(BaseParser):
         return my_string
 
     def auto_float(self, data):
-        """Makes all digits/decimals into floats to prevent auto-rounding"""
+        """
+        Makes all digits/decimals into floats to prevent auto-rounding
 
-        data = re.compile(r'\d+(\.\d+)?').sub(self.float_replace, data)
-
-        return data
+        :param data: replacing digits with float code
+        :type data: str
+        :return: regex pattern
+        :rtype: _sre.SRE_Pattern
+        """
+        return re.compile(r'\d+(\.\d+)?').sub(self.float_replace, data)
 
     @classmethod
     def float_replace(cls, match):
         """
         This turns our numbers into floats before we eval the equation.
-        This is because 4/5 comes out at 0, etc. Python is strongly typed...
+        This is because 4/5 comes out at 0 in python 2
+
+        :param match: matching equation part
+        :type match: re.MatchObject
+        :return: prepped float string
+        :rtype: str
         """
         result = 'float('+match.group()+')'
         return result
@@ -134,6 +167,11 @@ class EquationParser(BaseParser):
         """
         Any back to back parens/floats can be assumed to be
         multiplication. Adding * operator between them
+
+        :param data: potential equation that we want to prep
+        :type data: str
+        :return: prepped data
+        :rtype: str
         """
         data = data.replace(')float', ')*float')
         data = data.replace(')(', ')*(')
@@ -143,14 +181,16 @@ class EquationParser(BaseParser):
     @classmethod
     def check_for_safe_equation_string(cls, equation):
         """
-        Checks to make sure that the equation
-        doesn't contain any unexpected characters
-
+        Making sure that the equation doesn't have unexpected characters
         This is pseudo-sanitization. We just make sure that the string has
         only "safe" characters. we do this by removing all expected strings,
         and seeing if we have nothing left.
-        """
 
+        :param equation: the potential equation we want to sanitize
+        :type equation: str
+        :return: if the equation is clean
+        :rtype: bool
+        """
         # These are characters or strings that we can use in an equation
         safe_strings = \
             ['math.sqrt', 'float', '(', ')', '*', '+', '-', '/', '.']
@@ -166,8 +206,14 @@ class EquationParser(BaseParser):
         return '' == equation
 
     def solve_equation(self, equation):
-        """Sanitizes and Evaluates the equation to see if it's solve-able"""
+        """
+        Sanitizes and Evaluates the equation to see if it's solve-able
 
+        :param equation: potential equation
+        :type equation: str
+        :return: solved equation
+        :type: float
+        """
         if not self.check_for_safe_equation_string(equation):
             return False
 
@@ -179,7 +225,14 @@ class EquationParser(BaseParser):
 
     @classmethod
     def calculate_confidence(cls, data):
-        """Calculates a confidence rating for this (possible) equation"""
+        """
+        Calculates a confidence rating for this (possible) equation
+
+        :param data: Data we want to get the confidence for
+        :type data: str
+        :return: the confidence
+        :rtype: int
+        """
         # We start with 100% confidence, and
         # then lower our confidence if needed.
         confidence = 100
@@ -197,7 +250,14 @@ class EquationParser(BaseParser):
 
     @classmethod
     def clean_data(cls, data):
-        """Removes and replaces data in prep for equation parsing"""
+        """
+        Removes and replaces data in prep for equation parsing
+
+        :param data: potential equation we want to clean
+        :type data: str
+        :return: cleaned data
+        :rtype: str
+        """
         clean_data = data.upper()
         clean_data = clean_data.replace('X', '*')
         clean_data = clean_data.replace('^', '**')
