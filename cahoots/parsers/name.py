@@ -70,6 +70,11 @@ class NameParser(BaseParser):
         """
         Make sure every word in the phrase either
         starts with a Capital Letter or a Number
+
+        :param data: tokenized data we want to check
+        :type data: list
+        :return: if this could be a name
+        :rtype: bool
         """
         remainder = \
             [word for word in data if
@@ -87,12 +92,26 @@ class NameParser(BaseParser):
         return len(data) == len(remainder)
 
     def is_prefix(self, word):
-        """Checks to see if the word passed in is a name prefix"""
+        """
+        Checks to see if the word passed in is a name prefix
+
+        :param word: word we want to check for being a prefix
+        :type word: str
+        :return: if this is a prefix or not
+        :rtype: bool
+        """
         word = word.replace('.', '').upper()
         return word in self.prefixes
 
     def is_suffix(self, word):
-        """Checks to see if the word passed in is a name suffix"""
+        """
+        Checks to see if the word passed in is a name suffix
+
+        :param word: word we want to check for being a suffix
+        :type word: str
+        :return: if this is a suffix or not
+        :rtype: bool
+        """
         if NumberParser in self.config.enabled_modules:
             nump = NumberParser(self.config)
             if nump.is_roman_numeral(word) != (False, 0):
@@ -103,7 +122,14 @@ class NameParser(BaseParser):
 
     @classmethod
     def is_initial(cls, word):
-        """Checks to see if the word passed in is an initial"""
+        """
+        Checks to see if the word passed in is an initial
+
+        :param word: word we want to check for being an initial
+        :type word: str
+        :return: if this is an initial or not
+        :rtype: bool
+        """
         if len(word) > 2:
             return False
 
@@ -117,6 +143,9 @@ class NameParser(BaseParser):
         """
         Checking for things like Mr. or Jr. Big boost for these values.
         If found, we remove them from the list of words
+
+        :param data: tokenized names
+        :type data: list
         """
         if len(data) > 2:
             if self.is_prefix(data[0]):
@@ -127,8 +156,12 @@ class NameParser(BaseParser):
                 self.confidence += 20
 
     def calculate_confidence(self, data):
-        '''Calculates confidence based on various attributes of the data'''
+        """
+        Calculates confidence based on various attributes of the data
 
+        :param data: tokenized names
+        :type data: list
+        """
         # If we have a two - four word "name" here we boost its
         # confidence since this is something of a giveaway
         if len(data) in range(2, 4):
@@ -155,12 +188,11 @@ class NameParser(BaseParser):
         """
         Determines if the data is a name or not
 
-        :param data_string: the string we want to parse
-        :type data_string: str
+        :param data: the string we want to parse
+        :type data: str
         :return: yields parse result(s) if there are any
         :rtype: ParseResult
         """
-
         # Making sure there are at least SOME uppercase letters in the phrase
         if not registry.get('NP_upper_alpha_regex').search(data):
             return

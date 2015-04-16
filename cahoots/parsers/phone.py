@@ -43,8 +43,14 @@ class PhoneParser(BaseParser):
         BaseParser.__init__(self, config, "Phone", 100)
 
     def get_phone_number_object(self, data_string):
-        """Takes the data_string and tries to parse a phone number out of it"""
+        """
+        Takes the data_string and tries to parse a phone number out of it
 
+        :param data_string: data that might be a phone number
+        :type data_string: str
+        :return: phone number data if it's a phone number
+        :rtype: dict
+        """
         try:
             check_region = (data_string[0] == "+")
 
@@ -99,7 +105,18 @@ class PhoneParser(BaseParser):
 
     @classmethod
     def build_phone_number_dict(cls, num_obj, num_desc, num_region):
-        """Erase the contents of the object"""
+        """
+        Builds phone number data
+
+        :param num_obj: phone number data
+        :type num_obj: phonenumbers.phonenumber.PhoneNumber
+        :param num_desc: phone number description
+        :type num_desc: str
+        :param num_region: region code for this phone number
+        :type num_region: str
+        :return: phonenumber data
+        :rtype: dict
+        """
         return {
             'countryCode': num_obj.country_code,
             'countryCodeSource': num_obj.country_code_source,
@@ -114,6 +131,7 @@ class PhoneParser(BaseParser):
     def calculate_confidence(self, data_string, phone_number_data):
         """
         Various confidence calculations
+
         :param data_string: the data passed to the parser
         :type data_string: string
         :param phone_number_data: data that the phone number parsing produced

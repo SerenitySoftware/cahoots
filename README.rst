@@ -56,7 +56,7 @@ Basic Module Usage
 
 Basic Server Usage
 ------------------
-::
+.. code-block:: bash
 
     $ cahootserver --help
 
@@ -111,6 +111,8 @@ Documentation
 `Using Cahoots In Your Application » <https://github.com/SerenitySoftwareLLC/cahoots/wiki/Using-Cahoots-In-Your-Application>`_
 
 `Demo of Cahoots Web Server » <http://cahoots.rwven.com/>`_
+
+`API Documentation » <http://serenitysoftwarellc.github.io/cahoots/>`_
 
 License
 -------

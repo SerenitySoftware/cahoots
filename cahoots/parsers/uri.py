@@ -46,7 +46,14 @@ class URIParser(BaseParser):
 
     @classmethod
     def is_ipv6_address(cls, address):
-        """Checks if the data is an ipv6 address"""
+        """
+        Checks if the data is an ipv6 address
+
+        :param address: potential ip address
+        :type address: str
+        :return: if this is an ip addr or not
+        :rtype: bool
+        """
         try:
             socket.inet_pton(socket.AF_INET6, address)
             return True
@@ -57,7 +64,14 @@ class URIParser(BaseParser):
 
     @classmethod
     def is_ipv4_address(cls, address):
-        """checks if the data is an ipv4 address"""
+        """
+        checks if the data is an ipv4 address
+
+        :param address: potential ip address
+        :type address: str
+        :return: if this is an ip addr or not
+        :rtype: bool
+        """
         try:
             socket.inet_aton(address)
             return True
@@ -68,7 +82,14 @@ class URIParser(BaseParser):
 
     @classmethod
     def is_valid_url(cls, url):
-        """Tries to parse a URL to see if it's valid"""
+        """
+        Tries to parse a URL to see if it's valid
+
+        :param url: text that might be a url
+        :type url: str
+        :return: if this is a valid url or not
+        :rtype: bool
+        """
         pieces = urlparse(url)
 
         if not all([pieces.scheme, pieces.netloc]):
