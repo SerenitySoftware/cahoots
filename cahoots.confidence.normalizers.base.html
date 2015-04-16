@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>cahoots.confidence.normalizers.base module &mdash; cahoots  documentation</title>
+
+
+
+
+
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+
+
+
+
+
+    <link rel="top" title="cahoots  documentation" href="index.html"/>
+        <link rel="up" title="cahoots.confidence.normalizers package" href="cahoots.confidence.normalizers.html"/>
+        <link rel="next" title="cahoots.confidence.normalizers.character module" href="cahoots.confidence.normalizers.character.html"/>
+        <link rel="prev" title="cahoots.confidence.normalizers package" href="cahoots.confidence.normalizers.html"/>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+
+          <a href="index.html" class="fa fa-home"> cahoots</a>
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+
+
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cahoots.html">cahoots package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cahoots.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#module-cahoots">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">cahoots</a>
+      </nav>
+
+
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+
+          <li><a href="cahoots.html">cahoots package</a> &raquo;</li>
+
+          <li><a href="cahoots.confidence.html">cahoots.confidence package</a> &raquo;</li>
+
+          <li><a href="cahoots.confidence.normalizers.html">cahoots.confidence.normalizers package</a> &raquo;</li>
+
+    <li>cahoots.confidence.normalizers.base module</li>
+      <li class="wy-breadcrumbs-aside">
+
+          <a href="sources/cahoots.confidence.normalizers.base.txt" rel="nofollow"> View page source</a>
+
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+
+  <div class="section" id="module-cahoots.confidence.normalizers.base">
+<span id="cahoots-confidence-normalizers-base-module"></span><h1>cahoots.confidence.normalizers.base module<a class="headerlink" href="#module-cahoots.confidence.normalizers.base" title="Permalink to this headline">¶</a></h1>
+<p>The MIT License (MIT)</p>
+<p>Copyright (c) Serenity Software, LLC</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &#8220;Software&#8221;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED &#8220;AS IS&#8221;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+<dl class="class">
+<dt id="cahoots.confidence.normalizers.base.BaseNormalizer">
+<em class="property">class </em><code class="descclassname">cahoots.confidence.normalizers.base.</code><code class="descname">BaseNormalizer</code><a class="reference internal" href="modules/cahoots/confidence/normalizers/base.html#BaseNormalizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.confidence.normalizers.base.BaseNormalizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Interface for Normalizer classes</p>
+<dl class="staticmethod">
+<dt id="cahoots.confidence.normalizers.base.BaseNormalizer.normalize">
+<em class="property">static </em><code class="descname">normalize</code><span class="sig-paren">(</span><em>results</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/confidence/normalizers/base.html#BaseNormalizer.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.confidence.normalizers.base.BaseNormalizer.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalizes confidence based on various other results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>results</strong> (<em>list</em>) &#8211; list of results we want to normalize</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the normalized results</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="cahoots.confidence.normalizers.base.BaseNormalizer.test">
+<em class="property">static </em><code class="descname">test</code><span class="sig-paren">(</span><em>types</em>, <em>all_types</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/confidence/normalizers/base.html#BaseNormalizer.test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.confidence.normalizers.base.BaseNormalizer.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if we should attempt to normalize/alter this value</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>types</strong> (<em>list</em>) &#8211; list of result types</li>
+<li><strong>all_types</strong> (<em>list</em>) &#8211; list of result types + subtypes</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">if this normalizer should normalize this result set</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+
+        <a href="cahoots.confidence.normalizers.character.html" class="btn btn-neutral float-right" title="cahoots.confidence.normalizers.character module">Next <span class="fa fa-arrow-circle-right"></span></a>
+
+
+        <a href="cahoots.confidence.normalizers.html" class="btn btn-neutral" title="cahoots.confidence.normalizers package"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+
+    </div>
+
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Serenity Software LLC.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+
+
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="static/jquery.js"></script>
+      <script type="text/javascript" src="static/underscore.js"></script>
+      <script type="text/javascript" src="static/doctools.js"></script>
+
+
+
+
+
+    <script type="text/javascript" src="static/js/theme.js"></script>
+
+
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+
+</body>
+</html>

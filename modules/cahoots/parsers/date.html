@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>cahoots.parsers.date &mdash; cahoots  documentation</title>
+
+
+
+
+
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="../../../static/css/theme.css" type="text/css" />
+
+
+
+
+
+    <link rel="top" title="cahoots  documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+
+          <a href="../../../index.html" class="fa fa-home"> cahoots</a>
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+
+
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cahoots.html">cahoots package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cahoots.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cahoots.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cahoots.html#module-cahoots">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">cahoots</a>
+      </nav>
+
+
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+
+    <li>cahoots.parsers.date</li>
+      <li class="wy-breadcrumbs-aside">
+
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+
+  <h1>Source code for cahoots.parsers.date</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The MIT License (MIT)</span>
+
+<span class="sd">Copyright (c) Serenity Software, LLC</span>
+
+<span class="sd">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="sd">of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="sd">in the Software without restriction, including without limitation the rights</span>
+<span class="sd">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="sd">copies of the Software, and to permit persons to whom the Software is</span>
+<span class="sd">furnished to do so, subject to the following conditions:</span>
+
+<span class="sd">The above copyright notice and this permission notice shall be included in all</span>
+<span class="sd">copies or substantial portions of the Software.</span>
+
+<span class="sd">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="sd">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="sd">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="sd">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="sd">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="sd">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="sd">SOFTWARE.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">SereneRegistry</span> <span class="kn">import</span> <span class="n">registry</span>
+<span class="kn">from</span> <span class="nn">cahoots.parsers.base</span> <span class="kn">import</span> <span class="n">BaseParser</span>
+<span class="kn">from</span> <span class="nn">cahoots.data</span> <span class="kn">import</span> <span class="n">DataHandler</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">dateutil.parser</span> <span class="kn">as</span> <span class="nn">dateUtilParser</span>
+<span class="kn">from</span> <span class="nn">pyparsing</span> <span class="kn">import</span>\
+    <span class="n">Or</span><span class="p">,</span> \
+    <span class="n">CaselessLiteral</span><span class="p">,</span> \
+    <span class="n">ParseException</span><span class="p">,</span> \
+    <span class="n">Word</span><span class="p">,</span> \
+    <span class="n">originalTextFor</span><span class="p">,</span> \
+    <span class="n">ZeroOrMore</span><span class="p">,</span> \
+    <span class="n">nums</span><span class="p">,</span> \
+    <span class="n">alphas</span><span class="p">,</span> \
+    <span class="n">StringEnd</span>
+
+
+<div class="viewcode-block" id="DateParser"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser">[docs]</a><span class="k">class</span> <span class="nc">DateParser</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Determines is given data is a date&#39;&#39;&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="DateParser.bootstrap"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser.bootstrap">[docs]</a>    <span class="k">def</span> <span class="nf">bootstrap</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is statically called to bootstrap a parser</span>
+
+<span class="sd">        :param config: cahoots config</span>
+<span class="sd">        :type config: cahoots.config.BaseConfig</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">time_scales</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">&#39;microseconds&#39;</span><span class="p">,</span>
+            <span class="s">&#39;milliseconds&#39;</span><span class="p">,</span>
+            <span class="s">&#39;seconds&#39;</span><span class="p">,</span>
+            <span class="s">&#39;minutes&#39;</span><span class="p">,</span>
+            <span class="s">&#39;hours&#39;</span><span class="p">,</span>
+            <span class="s">&#39;days&#39;</span><span class="p">,</span>
+            <span class="s">&#39;weeks&#39;</span><span class="p">,</span>
+            <span class="s">&#39;years&#39;</span><span class="p">,</span>
+            <span class="s">&#39;microsecond&#39;</span><span class="p">,</span>
+            <span class="s">&#39;millisecond&#39;</span><span class="p">,</span>
+            <span class="s">&#39;second&#39;</span><span class="p">,</span>
+            <span class="s">&#39;minute&#39;</span><span class="p">,</span>
+            <span class="s">&#39;hour&#39;</span><span class="p">,</span>
+            <span class="s">&#39;day&#39;</span><span class="p">,</span>
+            <span class="s">&#39;week&#39;</span><span class="p">,</span>
+            <span class="s">&#39;year&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="c"># &lt;number&gt; &lt;timescale&gt; &lt;preposition&gt;</span>
+        <span class="c"># 3 seconds until / 50 seconds since</span>
+        <span class="n">pre_timedeltas</span> <span class="o">=</span> <span class="n">Or</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">DateParser</span><span class="o">.</span><span class="n">create_pre_timedelta_literal</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time_scales</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">pre_timedelta_phrases</span> <span class="o">=</span> \
+            <span class="n">pre_timedeltas</span> <span class="o">+</span> <span class="n">Word</span><span class="p">(</span><span class="n">alphas</span> <span class="o">+</span> <span class="n">nums</span> <span class="o">+</span> <span class="s">&quot; .,;-/&#39;&quot;</span><span class="p">)</span>
+        <span class="n">registry</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;DP_pre_timedelta_phrases&#39;</span><span class="p">,</span> <span class="n">pre_timedelta_phrases</span><span class="p">)</span>
+
+        <span class="c"># &lt;operator&gt; &lt;number&gt; &lt;timescale&gt;</span>
+        <span class="c"># plus 5 hours / - 17 days</span>
+        <span class="n">post_timedelta_phrases</span> <span class="o">=</span> <span class="n">Or</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">DateParser</span><span class="o">.</span><span class="n">create_post_timedelta_literal</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">time_scales</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">registry</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;DP_post_timedelta_phrases&#39;</span><span class="p">,</span> <span class="n">post_timedelta_phrases</span><span class="p">)</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="DateParser.create_pre_timedelta_literal"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser.create_pre_timedelta_literal">[docs]</a>    <span class="k">def</span> <span class="nf">create_pre_timedelta_literal</span><span class="p">(</span><span class="n">tok</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Detects &lt;number&gt; &lt;timescale&gt; &lt;preposition&gt;</span>
+
+<span class="sd">        :param tok: the token we want to produce a detector for</span>
+<span class="sd">        :type tok: str</span>
+<span class="sd">        :return: the caseless literal</span>
+<span class="sd">        :rtype: pyparsing.And</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">originalTextFor</span><span class="p">(</span><span class="n">Or</span><span class="p">([</span>
+            <span class="n">Word</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">ZeroOrMore</span><span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="o">+</span> <span class="n">Word</span><span class="p">(</span><span class="n">nums</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="p">))</span> <span class="o">+</span>
+            <span class="n">ZeroOrMore</span><span class="p">(</span><span class="s">&#39;.&#39;</span> <span class="o">+</span> <span class="n">Word</span><span class="p">(</span><span class="n">nums</span><span class="p">)),</span>
+            <span class="n">CaselessLiteral</span><span class="p">(</span><span class="s">&#39;an&#39;</span><span class="p">),</span>
+            <span class="n">CaselessLiteral</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+        <span class="p">]))</span> <span class="o">+</span> <span class="n">CaselessLiteral</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span> <span class="o">+</span> <span class="n">DateParser</span><span class="o">.</span><span class="n">get_preposition_literals</span><span class="p">()</span>
+
+        <span class="n">delta</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s">&#39;pre&#39;</span> <span class="o">+</span> <span class="n">tok</span><span class="p">)</span><span class="o">.</span>\
+            <span class="n">setParseAction</span><span class="p">(</span><span class="n">DateParser</span><span class="o">.</span><span class="n">generate_pre_timedelta</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">delta</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="DateParser.generate_pre_timedelta"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser.generate_pre_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">generate_pre_timedelta</span><span class="p">(</span><span class="n">toks</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a timedelta object for a delta-prefix match</span>
+
+<span class="sd">        :param tok: the tokens we want to produce detectors for</span>
+<span class="sd">        :type tok: str</span>
+<span class="sd">        :return: the caseless literal</span>
+<span class="sd">        :rtype: pyparsing.And</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">minus_prepositions</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">&#39;until&#39;</span><span class="p">,</span>
+            <span class="s">&#39;before&#39;</span><span class="p">,</span>
+            <span class="s">&#39;to&#39;</span><span class="p">,</span>
+            <span class="s">&#39;from&#39;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="n">number</span><span class="p">,</span> <span class="n">timescale</span><span class="p">,</span> <span class="n">preposition</span> <span class="o">=</span> <span class="n">toks</span>
+
+        <span class="n">number</span> <span class="o">=</span> <span class="n">DateParser</span><span class="o">.</span><span class="n">get_number_value</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">preposition</span> <span class="ow">in</span> <span class="n">minus_prepositions</span><span class="p">:</span>
+            <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">DateParser</span><span class="o">.</span><span class="n">determine_timescale_delta</span><span class="p">(</span><span class="n">timescale</span><span class="p">,</span> <span class="n">number</span><span class="p">)</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="DateParser.create_post_timedelta_literal"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser.create_post_timedelta_literal">[docs]</a>    <span class="k">def</span> <span class="nf">create_post_timedelta_literal</span><span class="p">(</span><span class="n">tok</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Detects &lt;plus/minus&gt; &lt;number&gt; &lt;timescale&gt;</span>
+
+<span class="sd">        :param tok: the token we want to produce a detector for</span>
+<span class="sd">        :type tok: str</span>
+<span class="sd">        :return: the caseless literal</span>
+<span class="sd">        :rtype: pyparsing.Or</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">Or</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">CaselessLiteral</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;+&#39;</span><span class="p">,</span> <span class="s">&#39;-&#39;</span><span class="p">,</span> <span class="s">&#39;plus&#39;</span><span class="p">,</span> <span class="s">&#39;minus&#39;</span><span class="p">]]</span>
+        <span class="p">)</span> <span class="o">+</span> <span class="n">originalTextFor</span><span class="p">(</span><span class="n">Or</span><span class="p">([</span>
+            <span class="n">Word</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span> <span class="o">+</span>
+            <span class="n">ZeroOrMore</span><span class="p">(</span><span class="s">&#39;,&#39;</span> <span class="o">+</span> <span class="n">Word</span><span class="p">(</span><span class="n">nums</span><span class="o">+</span><span class="s">&#39;,&#39;</span><span class="p">))</span> <span class="o">+</span>
+            <span class="n">ZeroOrMore</span><span class="p">(</span><span class="s">&#39;.&#39;</span> <span class="o">+</span> <span class="n">Word</span><span class="p">(</span><span class="n">nums</span><span class="p">)),</span>
+            <span class="n">CaselessLiteral</span><span class="p">(</span><span class="s">&#39;an&#39;</span><span class="p">),</span>
+            <span class="n">CaselessLiteral</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+        <span class="p">]))</span> <span class="o">+</span> <span class="n">CaselessLiteral</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span> <span class="o">+</span> <span class="n">StringEnd</span><span class="p">()</span>
+
+        <span class="n">delta</span><span class="o">.</span><span class="n">setName</span><span class="p">(</span><span class="s">&#39;post&#39;</span> <span class="o">+</span> <span class="n">tok</span><span class="p">)</span><span class="o">.</span>\
+            <span class="n">setParseAction</span><span class="p">(</span><span class="n">DateParser</span><span class="o">.</span><span class="n">generate_post_timedelta</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">delta</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="DateParser.generate_post_timedelta"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser.generate_post_timedelta">[docs]</a>    <span class="k">def</span> <span class="nf">generate_post_timedelta</span><span class="p">(</span><span class="n">toks</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates a timedelta object for a delta-suffix match</span>
+
+<span class="sd">        :param tok: the tokens we want to produce detectors for</span>
+<span class="sd">        :type tok: str</span>
+<span class="sd">        :return: the caseless literal</span>
+<span class="sd">        :rtype: pyparsing.Or</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">operator</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">timescale</span> <span class="o">=</span> <span class="n">toks</span>
+
+        <span class="n">number</span> <span class="o">=</span> <span class="n">DateParser</span><span class="o">.</span><span class="n">get_number_value</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">operator</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;minus&#39;</span><span class="p">,</span> <span class="s">&#39;-&#39;</span><span class="p">]:</span>
+            <span class="n">number</span> <span class="o">=</span> <span class="n">number</span> <span class="o">*</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="n">delta</span> <span class="o">=</span> <span class="n">DateParser</span><span class="o">.</span><span class="n">determine_timescale_delta</span><span class="p">(</span><span class="n">timescale</span><span class="p">,</span> <span class="n">number</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">delta</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="DateParser.get_preposition_literals"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser.get_preposition_literals">[docs]</a>    <span class="k">def</span> <span class="nf">get_preposition_literals</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Generates the prepositions parser and returns it</span>
+
+<span class="sd">        :return: the parser for prepositions</span>
+<span class="sd">        :rtype: pyparsing.Or</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">registry</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="s">&#39;DP_prepositions&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;DP_prepositions&#39;</span><span class="p">)</span>
+
+        <span class="n">prepositions</span> <span class="o">=</span> \
+            <span class="n">Or</span><span class="p">([</span><span class="n">CaselessLiteral</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">DataHandler</span><span class="p">()</span><span class="o">.</span><span class="n">get_prepositions</span><span class="p">()])</span>
+
+        <span class="n">registry</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;DP_prepositions&#39;</span><span class="p">,</span> <span class="n">prepositions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">prepositions</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="DateParser.get_number_value"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser.get_number_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_number_value</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Turns a provided number into a proper float</span>
+
+<span class="sd">        :param number: number as string</span>
+<span class="sd">        :type number: str</span>
+<span class="sd">        :return: the number in numeric form</span>
+<span class="sd">        :rtype: float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">number</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;a&#39;</span><span class="p">,</span> <span class="s">&#39;an&#39;</span><span class="p">]:</span>
+            <span class="n">number</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">number</span> <span class="o">=</span> \
+                <span class="nb">float</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">char</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">number</span> <span class="k">if</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">nums</span><span class="o">+</span><span class="s">&#39;.&#39;</span><span class="p">]))</span>
+
+        <span class="k">return</span> <span class="n">number</span>
+</div>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="DateParser.determine_timescale_delta"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser.determine_timescale_delta">[docs]</a>    <span class="k">def</span> <span class="nf">determine_timescale_delta</span><span class="p">(</span><span class="n">timescale</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets a timedelta representing the change desired</span>
+
+<span class="sd">        :param timescale: natural language timescale</span>
+<span class="sd">        :type timescale: str</span>
+<span class="sd">        :param number: number of &quot;timescales&quot;</span>
+<span class="sd">        :type number: float</span>
+<span class="sd">        :return: the timedelta for this timescale</span>
+<span class="sd">        :rtype: timedelta</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">timescale</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="s">&#39;s&#39;</span><span class="p">:</span>
+            <span class="n">timescale</span> <span class="o">+=</span> <span class="s">&#39;s&#39;</span>
+
+        <span class="k">if</span> <span class="n">timescale</span> <span class="o">==</span> <span class="s">&#39;microseconds&#39;</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">microseconds</span><span class="o">=</span><span class="n">number</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">timescale</span> <span class="o">==</span> <span class="s">&#39;milliseconds&#39;</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">milliseconds</span><span class="o">=</span><span class="n">number</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">timescale</span> <span class="o">==</span> <span class="s">&#39;seconds&#39;</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">number</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">timescale</span> <span class="o">==</span> <span class="s">&#39;minutes&#39;</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">number</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">timescale</span> <span class="o">==</span> <span class="s">&#39;hours&#39;</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="n">number</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">timescale</span> <span class="o">==</span> <span class="s">&#39;days&#39;</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">number</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">timescale</span> <span class="o">==</span> <span class="s">&#39;weeks&#39;</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">weeks</span><span class="o">=</span><span class="n">number</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">timescale</span> <span class="o">==</span> <span class="s">&#39;years&#39;</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">365</span><span class="o">*</span><span class="n">number</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">delta</span>
+</div>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param config: cahoots config</span>
+<span class="sd">        :type config: cahoots.config.BaseConfig</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">BaseParser</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="s">&quot;Date&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="DateParser.natural_parse"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser.natural_parse">[docs]</a>    <span class="k">def</span> <span class="nf">natural_parse</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse out natural-language strings like &quot;yesterday&quot;, &quot;next week&quot;, etc</span>
+
+<span class="sd">        :param data: potential natural language value</span>
+<span class="sd">        :type data: str</span>
+<span class="sd">        :return: the value of the language string</span>
+<span class="sd">        :rtype: datetime</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">in</span> <span class="p">[</span><span class="s">&#39;now&#39;</span><span class="p">,</span> <span class="s">&#39;current time&#39;</span><span class="p">]:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&#39;today&#39;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">today</span>
+        <span class="k">elif</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&quot;tomorrow&quot;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&quot;yesterday&quot;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&quot;next week&quot;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&quot;last week&quot;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&quot;next year&quot;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="mi">365</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data</span> <span class="o">==</span> <span class="s">&quot;last year&quot;</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">today</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="o">-</span><span class="mi">365</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="k">return</span> <span class="n">value</span>
+</div>
+<div class="viewcode-block" id="DateParser.date_parse"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser.date_parse">[docs]</a>    <span class="k">def</span> <span class="nf">date_parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses the dateUtilParser to determine what our date is</span>
+
+<span class="sd">        :param data: string that might be a date</span>
+<span class="sd">        :type data: str</span>
+<span class="sd">        :return: parsed date or false</span>
+<span class="sd">        :rtype: datetime</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parsed_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">natural_parse</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parsed_date</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="s">&#39;Natural&#39;</span><span class="p">,</span> <span class="n">parsed_date</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">(</span><span class="s">&#39;Standard&#39;</span><span class="p">,</span> <span class="n">dateUtilParser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="DateParser.parse"><a class="viewcode-back" href="../../../cahoots.parsers.date.html#cahoots.parsers.date.DateParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        parses for dates</span>
+
+<span class="sd">        :param data_string: the string we want to parse</span>
+<span class="sd">        :type data_string: str</span>
+<span class="sd">        :return: yields parse result(s) if there are any</span>
+<span class="sd">        :rtype: ParseResult</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_string</span> <span class="o">=</span> <span class="n">data_string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_string</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_string</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c"># Just date detection</span>
+        <span class="n">parsed_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">date_parse</span><span class="p">(</span><span class="n">data_string</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parsed_date</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="n">parsed_date</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">100</span><span class="p">,</span> <span class="n">parsed_date</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">return</span>
+
+        <span class="c"># Looking for &lt;number&gt; &lt;timescale&gt; &lt;prepositions&gt; &lt;datetime&gt;</span>
+        <span class="n">pre_timedelta_phrases</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;DP_pre_timedelta_phrases&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pre_delta</span> <span class="o">=</span> <span class="n">pre_timedelta_phrases</span><span class="o">.</span><span class="n">parseString</span><span class="p">(</span><span class="n">data_string</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ParseException</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parsed_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">date_parse</span><span class="p">(</span><span class="n">pre_delta</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">parsed_date</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span>
+                        <span class="s">&quot;Number Timescale Preposition Date&quot;</span><span class="p">,</span>
+                        <span class="mi">100</span><span class="p">,</span>
+                        <span class="n">parsed_date</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">pre_delta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+                <span class="k">return</span>
+
+        <span class="c"># Looking for &lt;datetime&gt; &lt;plus/minus&gt; &lt;number&gt; &lt;timescale&gt;</span>
+        <span class="n">post_timedelta_phrases</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;DP_post_timedelta_phrases&#39;</span><span class="p">)</span>
+        <span class="n">post_deltas</span> <span class="o">=</span> \
+            <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">post_timedelta_phrases</span><span class="o">.</span><span class="n">scanString</span><span class="p">(</span><span class="n">data_string</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">post_deltas</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">token</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">post_deltas</span><span class="p">:</span>
+                <span class="n">parsed_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">date_parse</span><span class="p">(</span><span class="n">data_string</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">start</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="k">if</span> <span class="n">parsed_date</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span>
+                            <span class="s">&quot;Date Operator Number Timescale&quot;</span><span class="p">,</span>
+                            <span class="mi">100</span><span class="p">,</span>
+                            <span class="n">parsed_date</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">token</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                        <span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">OverflowError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+                    <span class="k">return</span></div></div>
+</pre></div>
+
+          </div>
+          <footer>
+
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Serenity Software LLC.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+
+
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../static/jquery.js"></script>
+      <script type="text/javascript" src="../../../static/underscore.js"></script>
+      <script type="text/javascript" src="../../../static/doctools.js"></script>
+
+
+
+
+
+    <script type="text/javascript" src="../../../static/js/theme.js"></script>
+
+
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+
+</body>
+</html>

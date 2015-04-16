@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>cahoots.parsers.location.address &mdash; cahoots  documentation</title>
+
+
+
+
+
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="../../../../static/css/theme.css" type="text/css" />
+
+
+
+
+
+    <link rel="top" title="cahoots  documentation" href="../../../../index.html"/>
+        <link rel="up" title="cahoots.parsers.location" href="../location.html"/>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+
+          <a href="../../../../index.html" class="fa fa-home"> cahoots</a>
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+
+
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../cahoots.html">cahoots package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cahoots.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cahoots.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cahoots.html#module-cahoots">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../../index.html">cahoots</a>
+      </nav>
+
+
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+
+          <li><a href="../location.html">cahoots.parsers.location</a> &raquo;</li>
+
+    <li>cahoots.parsers.location.address</li>
+      <li class="wy-breadcrumbs-aside">
+
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+
+  <h1>Source code for cahoots.parsers.location.address</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The MIT License (MIT)</span>
+
+<span class="sd">Copyright (c) Serenity Software, LLC</span>
+
+<span class="sd">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="sd">of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="sd">in the Software without restriction, including without limitation the rights</span>
+<span class="sd">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="sd">copies of the Software, and to permit persons to whom the Software is</span>
+<span class="sd">furnished to do so, subject to the following conditions:</span>
+
+<span class="sd">The above copyright notice and this permission notice shall be included in all</span>
+<span class="sd">copies or substantial portions of the Software.</span>
+
+<span class="sd">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="sd">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="sd">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="sd">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="sd">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="sd">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="sd">SOFTWARE.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">cahoots.parsers.base</span> <span class="kn">import</span> <span class="n">BaseParser</span>
+<span class="kn">from</span> <span class="nn">cahoots.parsers.name</span> <span class="kn">import</span> <span class="n">NameParser</span>
+<span class="kn">from</span> <span class="nn">cahoots.parsers.location</span> <span class="kn">import</span> \
+    <span class="n">LocationDatabase</span><span class="p">,</span> <span class="n">StreetSuffixEntity</span>
+<span class="kn">from</span> <span class="nn">SereneRegistry</span> <span class="kn">import</span> <span class="n">registry</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+
+
+<div class="viewcode-block" id="AddressParser"><a class="viewcode-back" href="../../../../cahoots.parsers.location.address.html#cahoots.parsers.location.address.AddressParser">[docs]</a><span class="k">class</span> <span class="nc">AddressParser</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determines if given data is an address</span>
+
+<span class="sd">    We don&#39;t use regex to find addresses because it&#39;s pretty much</span>
+<span class="sd">    impossible to match all the possible (infinite) combinations.</span>
+
+<span class="sd">    Instead, we look for elements that addresses have, or don&#39;t have,</span>
+<span class="sd">    and determine if it&#39;s likely that this is an address or not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">subtype</span> <span class="o">=</span> <span class="s">&quot;Without Addressee&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param config: cahoots config</span>
+<span class="sd">        :type config: cahoots.config.BaseConfig</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">BaseParser</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="s">&quot;Address&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="AddressParser.bootstrap"><a class="viewcode-back" href="../../../../cahoots.parsers.location.address.html#cahoots.parsers.location.address.AddressParser.bootstrap">[docs]</a>    <span class="k">def</span> <span class="nf">bootstrap</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is statically called to bootstrap a parser</span>
+
+<span class="sd">        :param config: cahoots config</span>
+<span class="sd">        :type config: cahoots.config.BaseConfig</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">split_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">r&quot;[\s#`&#39;?.;,-/]&quot;</span><span class="p">)</span>
+        <span class="n">registry</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;AP_split_regex&#39;</span><span class="p">,</span> <span class="n">split_regex</span><span class="p">)</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="AddressParser.get_street_suffix"><a class="viewcode-back" href="../../../../cahoots.parsers.location.address.html#cahoots.parsers.location.address.AddressParser.get_street_suffix">[docs]</a>    <span class="k">def</span> <span class="nf">get_street_suffix</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data_set</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Looks at our data for a street suffix and returns the entity</span>
+
+<span class="sd">        :param data_set: the list of parts of address data</span>
+<span class="sd">        :type data_set: list</span>
+<span class="sd">        :return: the street suffix if one was found</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sql_items</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">data_set</span><span class="p">:</span>
+            <span class="n">sql_items</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;suffix_name = ?&#39;</span><span class="p">)</span>
+
+        <span class="n">database</span> <span class="o">=</span> <span class="n">LocationDatabase</span><span class="o">.</span><span class="n">get_database</span><span class="p">()</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s">&#39;SELECT * FROM street_suffix WHERE &#39;</span> <span class="o">+</span> <span class="s">&quot; or &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sql_items</span><span class="p">),</span>
+                <span class="nb">tuple</span><span class="p">(</span><span class="n">data_set</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="n">database</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+            <span class="n">database</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">None</span>
+
+        <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LocationDatabase</span><span class="o">.</span><span class="n">hydrate</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">StreetSuffixEntity</span><span class="p">)</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="AddressParser.separate_suspected_name"><a class="viewcode-back" href="../../../../cahoots.parsers.location.address.html#cahoots.parsers.location.address.AddressParser.separate_suspected_name">[docs]</a>    <span class="k">def</span> <span class="nf">separate_suspected_name</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">data_set</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Separates a suspected name from the beginning of an address</span>
+
+<span class="sd">        :param data_set: words from the address that might contain a name</span>
+<span class="sd">        :type data_set: list</span>
+<span class="sd">        :return: name parts</span>
+<span class="sd">        :rtype: tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name_elems</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">work_data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_set</span><span class="p">)</span>
+        <span class="n">conjunctions</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;and&#39;</span><span class="p">,</span> <span class="s">&#39;but&#39;</span><span class="p">,</span> <span class="s">&#39;or&#39;</span><span class="p">,</span> <span class="s">&#39;yet&#39;</span><span class="p">,</span> <span class="s">&#39;for&#39;</span><span class="p">,</span> <span class="s">&#39;nor&#39;</span><span class="p">,</span> <span class="s">&#39;so&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">data_set</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">word</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+                <span class="n">work_data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="c"># skipping conjunctions, ex: Alice and Bob Saget</span>
+                <span class="k">if</span> <span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">conjunctions</span><span class="p">:</span>
+                    <span class="n">name_elems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">work_data</span><span class="p">),</span> <span class="s">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">name_elems</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="AddressParser.is_address_name"><a class="viewcode-back" href="../../../../cahoots.parsers.location.address.html#cahoots.parsers.location.address.AddressParser.is_address_name">[docs]</a>    <span class="k">def</span> <span class="nf">is_address_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">suspected_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checking if the start of an address bears a name</span>
+
+<span class="sd">        :param suspected_name: the text we think is a name</span>
+<span class="sd">        :type suspected_name: str</span>
+<span class="sd">        :return: if this is an address</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">name_parser</span> <span class="o">=</span> <span class="n">NameParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">name_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">suspected_name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">return</span> <span class="bp">False</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="AddressParser.is_invalid_int"><a class="viewcode-back" href="../../../../cahoots.parsers.location.address.html#cahoots.parsers.location.address.AddressParser.is_invalid_int">[docs]</a>    <span class="k">def</span> <span class="nf">is_invalid_int</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Looking for ints that are to short (less than 5 chars)</span>
+
+<span class="sd">        :param word: word that we want to check for proper length int</span>
+<span class="sd">        :type word: str</span>
+<span class="sd">        :return: is this int is too short</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">word</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+</div>
+<div class="viewcode-block" id="AddressParser.find_address_tokens"><a class="viewcode-back" href="../../../../cahoots.parsers.location.address.html#cahoots.parsers.location.address.AddressParser.find_address_tokens">[docs]</a>    <span class="k">def</span> <span class="nf">find_address_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Looking for known city or country, zip, etc.</span>
+
+<span class="sd">        :param data: list of address related tokens we want to check</span>
+<span class="sd">        :type data: list</span>
+<span class="sd">        :param results: the address result dict</span>
+<span class="sd">        :type results: dict</span>
+<span class="sd">        :return: the address result dict</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">working_data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="n">data_combinations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">combinations</span><span class="p">(</span><span class="n">working_data</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">data_combinations</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data_combinations</span><span class="p">]</span>
+
+        <span class="n">working_data</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">data_combinations</span><span class="p">)</span>
+
+        <span class="n">database</span> <span class="o">=</span> <span class="n">LocationDatabase</span><span class="o">.</span><span class="n">get_database</span><span class="p">()</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">database</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">test</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">working_data</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_invalid_int</span><span class="p">(</span><span class="n">x</span><span class="p">)]:</span>
+
+            <span class="n">params</span> <span class="o">=</span> <span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span>
+
+            <span class="n">sql</span> <span class="o">=</span> <span class="s">&#39;SELECT count(*) FROM city WHERE &#39;</span> <span class="o">+</span>\
+                  <span class="s">&#39;country = ? OR &#39;</span> <span class="o">+</span>\
+                  <span class="s">&#39;postal_code = ? OR &#39;</span> <span class="o">+</span>\
+                  <span class="s">&#39;city = ? OR &#39;</span> <span class="o">+</span>\
+                  <span class="s">&#39;state1 = ? OR &#39;</span> <span class="o">+</span>\
+                  <span class="s">&#39;state2 = ?&#39;</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+                <span class="n">database</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">results</span>
+
+            <span class="k">if</span> <span class="n">row</span><span class="p">:</span>
+                <span class="n">entity</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">entity</span><span class="p">[</span><span class="s">&#39;token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test</span>
+                <span class="n">entity</span><span class="p">[</span><span class="s">&#39;matches&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span>
+                <span class="n">results</span><span class="p">[</span><span class="s">&#39;address_tokens&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+                <span class="n">tokens</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">+=</span> <span class="mi">20</span>
+
+        <span class="n">database</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">tokens</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AddressParser.generate_result_data"><a class="viewcode-back" href="../../../../cahoots.parsers.location.address.html#cahoots.parsers.location.address.AddressParser.generate_result_data">[docs]</a>    <span class="k">def</span> <span class="nf">generate_result_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_set</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Examines the data_set and generates a result</span>
+<span class="sd">        dict, or returns nothing if there&#39;s a failure</span>
+
+<span class="sd">        :param data: data string we&#39;re parsing</span>
+<span class="sd">        :type data: str</span>
+<span class="sd">        :param data_set: tokenized data string</span>
+<span class="sd">        :type data_set: list</span>
+<span class="sd">        :return: the results of our address parsing</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;street_suffix&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;addressed_to&#39;</span><span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;address_tokens&#39;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
+
+        <span class="c"># With no street suffix, we don&#39;t consider this an address</span>
+        <span class="n">suffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_street_suffix</span><span class="p">(</span><span class="n">data_set</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">suffix</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">suffix_test</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data_set</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c"># removing the suffix from the list of working data</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">suffix_test</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">suffix</span><span class="o">.</span><span class="n">suffix_name</span><span class="p">)</span>
+            <span class="n">data_set</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c"># if for some reason we found an invalid suffix, we probably cry</span>
+            <span class="k">return</span>
+
+        <span class="n">results</span><span class="p">[</span><span class="s">&#39;street_suffix&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suffix</span><span class="o">.</span><span class="n">suffix_name</span>
+
+        <span class="c"># Looking to see if this address starts with a name, since no digit</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+            <span class="n">data_set</span><span class="p">,</span> <span class="n">suspected_name</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">separate_suspected_name</span><span class="p">(</span><span class="n">data_set</span><span class="p">)</span>
+
+            <span class="n">results</span><span class="p">[</span><span class="s">&#39;addressed_to&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">suspected_name</span>
+
+            <span class="k">if</span> <span class="n">NameParser</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">enabled_modules</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_address_name</span><span class="p">(</span><span class="n">suspected_name</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">subtype</span> <span class="o">=</span> <span class="s">&quot;With Addressee&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">+=</span> <span class="mi">25</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c"># If it starts with non-name text, not an address</span>
+                    <span class="k">return</span>
+
+        <span class="c"># Looking for items in the city database that match words in the data</span>
+        <span class="n">token_count</span><span class="p">,</span> <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_address_tokens</span><span class="p">(</span><span class="n">data_set</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">token_count</span><span class="p">,</span> <span class="n">data_set</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="AddressParser.parse"><a class="viewcode-back" href="../../../../cahoots.parsers.location.address.html#cahoots.parsers.location.address.AddressParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        parses for potential address</span>
+
+<span class="sd">        :param data: the string we want to parse</span>
+<span class="sd">        :type data: str</span>
+<span class="sd">        :return: yields parse result(s) if there are any</span>
+<span class="sd">        :rtype: ParseResult</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="c"># If invalid length or there are no digits, we return.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]:</span>
+            <span class="k">return</span>
+
+        <span class="n">split_regex</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;AP_split_regex&#39;</span><span class="p">)</span>
+        <span class="c"># splitting the data string and removing empty values</span>
+        <span class="n">data_set</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">split_regex</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="p">]</span>
+
+        <span class="c"># At least 4 words and one of the words should start with a number</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_set</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data_set</span> <span class="k">if</span> <span class="n">x</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]:</span>
+            <span class="k">return</span>
+
+        <span class="n">results</span><span class="p">,</span> <span class="n">token_count</span><span class="p">,</span> <span class="n">data_set</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">generate_result_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data_set</span><span class="p">)</span> \
+            <span class="ow">or</span> <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">token_count</span><span class="p">:</span>
+            <span class="c"># Subtracting a little confidence for each token that wasn&#39;t found</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">-=</span> <span class="mi">5</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_set</span><span class="p">)</span><span class="o">-</span><span class="n">token_count</span><span class="p">)</span>
+
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subtype</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">),</span> <span class="n">results</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          <footer>
+
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Serenity Software LLC.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+
+
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../../static/jquery.js"></script>
+      <script type="text/javascript" src="../../../../static/underscore.js"></script>
+      <script type="text/javascript" src="../../../../static/doctools.js"></script>
+
+
+
+
+
+    <script type="text/javascript" src="../../../../static/js/theme.js"></script>
+
+
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+
+</body>
+</html>

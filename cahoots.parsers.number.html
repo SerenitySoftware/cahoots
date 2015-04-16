@@ -1,0 +1,513 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>cahoots.parsers.number module &mdash; cahoots  documentation</title>
+
+
+
+
+
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+
+
+
+
+
+    <link rel="top" title="cahoots  documentation" href="index.html"/>
+        <link rel="up" title="cahoots.parsers package" href="cahoots.parsers.html"/>
+        <link rel="next" title="cahoots.parsers.phone module" href="cahoots.parsers.phone.html"/>
+        <link rel="prev" title="cahoots.parsers.name module" href="cahoots.parsers.name.html"/>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+
+          <a href="index.html" class="fa fa-home"> cahoots</a>
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+
+
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cahoots.html">cahoots package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cahoots.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#module-cahoots">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">cahoots</a>
+      </nav>
+
+
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+
+          <li><a href="cahoots.html">cahoots package</a> &raquo;</li>
+
+          <li><a href="cahoots.parsers.html">cahoots.parsers package</a> &raquo;</li>
+
+    <li>cahoots.parsers.number module</li>
+      <li class="wy-breadcrumbs-aside">
+
+          <a href="sources/cahoots.parsers.number.txt" rel="nofollow"> View page source</a>
+
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+
+  <div class="section" id="module-cahoots.parsers.number">
+<span id="cahoots-parsers-number-module"></span><h1>cahoots.parsers.number module<a class="headerlink" href="#module-cahoots.parsers.number" title="Permalink to this headline">¶</a></h1>
+<p>The MIT License (MIT)</p>
+<p>Copyright (c) Serenity Software, LLC</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &#8220;Software&#8221;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED &#8220;AS IS&#8221;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+<dl class="class">
+<dt id="cahoots.parsers.number.NumberParser">
+<em class="property">class </em><code class="descclassname">cahoots.parsers.number.</code><code class="descname">NumberParser</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="cahoots.parsers.base.html#cahoots.parsers.base.BaseParser" title="cahoots.parsers.base.BaseParser"><code class="xref py py-class docutils literal"><span class="pre">cahoots.parsers.base.BaseParser</span></code></a></p>
+<p>determines if given data is one of many types of numbers</p>
+<dl class="classmethod">
+<dt id="cahoots.parsers.number.NumberParser.is_binary">
+<em class="property">classmethod </em><code class="descname">is_binary</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.is_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.is_binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see if the value looks like a binary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; potential binary</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">data confirming or denying this is a binary</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="cahoots.parsers.number.NumberParser.is_float">
+<em class="property">classmethod </em><code class="descname">is_float</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.is_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.is_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see if the value is a float</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; potential float</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">data confirming or denying this is a float</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.number.NumberParser.is_fraction">
+<code class="descname">is_fraction</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.is_fraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.is_fraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detects if input is a fraction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; potential fraction</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">data confirming or denying this is a fraction</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="cahoots.parsers.number.NumberParser.is_hex">
+<em class="property">classmethod </em><code class="descname">is_hex</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.is_hex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.is_hex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see if the value is hexidecimal</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; potential hexidecimal</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">data confirming or denying this is a hexidecimal</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="cahoots.parsers.number.NumberParser.is_integer">
+<em class="property">classmethod </em><code class="descname">is_integer</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.is_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.is_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see if the value is an integer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; potential integer</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">data confirming or denying this is a integer</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="cahoots.parsers.number.NumberParser.is_octal">
+<em class="property">classmethod </em><code class="descname">is_octal</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.is_octal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.is_octal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see if the value is octal</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; potential octal</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">data confirming or denying this is a octal</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.number.NumberParser.is_roman_numeral">
+<code class="descname">is_roman_numeral</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.is_roman_numeral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.is_roman_numeral" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks to see if the value is a roman numeral</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; potential roman numeral</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">data confirming or denying this is a roman numeral</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.number.NumberParser.is_words">
+<code class="descname">is_words</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.is_words"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.is_words" title="Permalink to this definition">¶</a></dt>
+<dd><p>determines if the data is textual numbers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; potential textual numbers</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">data confirming or denying this is a textual numbers</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.number.NumberParser.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>parses for various types of numbers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; the string we want to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">yields parse result(s) if there are any</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="cahoots.result.html#cahoots.result.ParseResult" title="cahoots.result.ParseResult">ParseResult</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.number.NumberParser.parse_binary">
+<code class="descname">parse_binary</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.parse_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.parse_binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>finds and confidence scores a binary</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; data we&#8217;re testing</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">results if this proper type</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="cahoots.result.html#cahoots.result.ParseResult" title="cahoots.result.ParseResult">ParseResult</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.number.NumberParser.parse_float">
+<code class="descname">parse_float</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.parse_float"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.parse_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>finds and confidence scores a float</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; data we&#8217;re testing</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">results if this proper type</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="cahoots.result.html#cahoots.result.ParseResult" title="cahoots.result.ParseResult">ParseResult</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.number.NumberParser.parse_fraction">
+<code class="descname">parse_fraction</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.parse_fraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.parse_fraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>finds and confidence scores a fraction</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; data we&#8217;re testing</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">results if this proper type</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="cahoots.result.html#cahoots.result.ParseResult" title="cahoots.result.ParseResult">ParseResult</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.number.NumberParser.parse_hex">
+<code class="descname">parse_hex</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.parse_hex"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.parse_hex" title="Permalink to this definition">¶</a></dt>
+<dd><p>finds and confidence scores a hex number</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; data we&#8217;re testing</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">results if this proper type</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="cahoots.result.html#cahoots.result.ParseResult" title="cahoots.result.ParseResult">ParseResult</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.number.NumberParser.parse_integer">
+<code class="descname">parse_integer</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.parse_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.parse_integer" title="Permalink to this definition">¶</a></dt>
+<dd><p>finds and confidence scores a integer</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; data we&#8217;re testing</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">results if this proper type</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="cahoots.result.html#cahoots.result.ParseResult" title="cahoots.result.ParseResult">ParseResult</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.number.NumberParser.parse_roman_numeral">
+<code class="descname">parse_roman_numeral</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.parse_roman_numeral"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.parse_roman_numeral" title="Permalink to this definition">¶</a></dt>
+<dd><p>finds and confidence scores a roman numeral</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; data we&#8217;re testing</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">results if this proper type</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="cahoots.result.html#cahoots.result.ParseResult" title="cahoots.result.ParseResult">ParseResult</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.number.NumberParser.parse_word_number">
+<code class="descname">parse_word_number</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.parse_word_number"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.parse_word_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>finds and confidence scores a word-number</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; data we&#8217;re testing</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">results if this proper type</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="cahoots.result.html#cahoots.result.ParseResult" title="cahoots.result.ParseResult">ParseResult</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="cahoots.parsers.number.NumberParser.prep_data">
+<em class="property">classmethod </em><code class="descname">prep_data</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/number.html#NumberParser.prep_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.number.NumberParser.prep_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes unwanted stuff from data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; data to prep</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">prepped data</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+
+        <a href="cahoots.parsers.phone.html" class="btn btn-neutral float-right" title="cahoots.parsers.phone module">Next <span class="fa fa-arrow-circle-right"></span></a>
+
+
+        <a href="cahoots.parsers.name.html" class="btn btn-neutral" title="cahoots.parsers.name module"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+
+    </div>
+
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Serenity Software LLC.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+
+
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="static/jquery.js"></script>
+      <script type="text/javascript" src="static/underscore.js"></script>
+      <script type="text/javascript" src="static/doctools.js"></script>
+
+
+
+
+
+    <script type="text/javascript" src="static/js/theme.js"></script>
+
+
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+
+</body>
+</html>

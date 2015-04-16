@@ -1,0 +1,228 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>cahoots.config module &mdash; cahoots  documentation</title>
+
+
+
+
+
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+
+
+
+
+
+    <link rel="top" title="cahoots  documentation" href="index.html"/>
+        <link rel="up" title="cahoots package" href="cahoots.html"/>
+        <link rel="next" title="cahoots.data module" href="cahoots.data.html"/>
+        <link rel="prev" title="cahoots.parsers.uri module" href="cahoots.parsers.uri.html"/>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+
+          <a href="index.html" class="fa fa-home"> cahoots</a>
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+
+
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cahoots.html">cahoots package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cahoots.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#module-cahoots">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">cahoots</a>
+      </nav>
+
+
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+
+          <li><a href="cahoots.html">cahoots package</a> &raquo;</li>
+
+    <li>cahoots.config module</li>
+      <li class="wy-breadcrumbs-aside">
+
+          <a href="sources/cahoots.config.txt" rel="nofollow"> View page source</a>
+
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+
+  <div class="section" id="module-cahoots.config">
+<span id="cahoots-config-module"></span><h1>cahoots.config module<a class="headerlink" href="#module-cahoots.config" title="Permalink to this headline">¶</a></h1>
+<p>The MIT License (MIT)</p>
+<p>Copyright (c) Serenity Software, LLC</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &#8220;Software&#8221;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED &#8220;AS IS&#8221;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+<dl class="class">
+<dt id="cahoots.config.BaseConfig">
+<em class="property">class </em><code class="descclassname">cahoots.config.</code><code class="descname">BaseConfig</code><a class="reference internal" href="modules/cahoots/config.html#BaseConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.config.BaseConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Cahoots Configuration
+Change this file to suit your installation&#8217;s needs.</p>
+<dl class="attribute">
+<dt id="cahoots.config.BaseConfig.debug">
+<code class="descname">debug</code><em class="property"> = False</em><a class="headerlink" href="#cahoots.config.BaseConfig.debug" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>To disable a module, simply comment it out of this list.</dt>
+<dd>Be aware that modules may have soft-dependencies on one another,
+and a disabled module may impact results results from other
+modules which seek its &#8220;council.&#8221; This may result in unexpected
+confidence scores, a change in result determination, etc.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="cahoots.config.BaseConfig.enabled_confidence_normalizers">
+<code class="descname">enabled_confidence_normalizers</code><em class="property"> = [&lt;class 'cahoots.confidence.normalizers.character.CharacterWithoutBoolean'&gt;, &lt;class 'cahoots.confidence.normalizers.date.DateWithPostalCode'&gt;, &lt;class 'cahoots.confidence.normalizers.equation.EquationWithPhonePostalCode'&gt;, &lt;class 'cahoots.confidence.normalizers.number.IntOctWithPhoneDatePostalCode'&gt;, &lt;class 'cahoots.confidence.normalizers.number.NumberWithNonNumbers'&gt;, &lt;class 'cahoots.confidence.normalizers.phone.PhoneWithUri'&gt;]</em><a class="headerlink" href="#cahoots.config.BaseConfig.enabled_confidence_normalizers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cahoots.config.BaseConfig.enabled_modules">
+<code class="descname">enabled_modules</code><em class="property"> = [&lt;class 'cahoots.parsers.location.address.AddressParser'&gt;, &lt;class 'cahoots.parsers.boolean.BooleanParser'&gt;, &lt;class 'cahoots.parsers.character.CharacterParser'&gt;, &lt;class 'cahoots.parsers.location.coordinate.CoordinateParser'&gt;, &lt;class 'cahoots.parsers.date.DateParser'&gt;, &lt;class 'cahoots.parsers.email.EmailParser'&gt;, &lt;class 'cahoots.parsers.equation.EquationParser'&gt;, &lt;class 'cahoots.parsers.location.landmark.LandmarkParser'&gt;, &lt;class 'cahoots.parsers.measurement.MeasurementParser'&gt;, &lt;class 'cahoots.parsers.name.NameParser'&gt;, &lt;class 'cahoots.parsers.number.NumberParser'&gt;, &lt;class 'cahoots.parsers.phone.PhoneParser'&gt;, &lt;class 'cahoots.parsers.location.postalcode.PostalCodeParser'&gt;, &lt;class 'cahoots.parsers.programming.ProgrammingParser'&gt;, &lt;class 'cahoots.parsers.uri.URIParser'&gt;]</em><a class="headerlink" href="#cahoots.config.BaseConfig.enabled_modules" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+
+        <a href="cahoots.data.html" class="btn btn-neutral float-right" title="cahoots.data module">Next <span class="fa fa-arrow-circle-right"></span></a>
+
+
+        <a href="cahoots.parsers.uri.html" class="btn btn-neutral" title="cahoots.parsers.uri module"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+
+    </div>
+
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Serenity Software LLC.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+
+
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="static/jquery.js"></script>
+      <script type="text/javascript" src="static/underscore.js"></script>
+      <script type="text/javascript" src="static/doctools.js"></script>
+
+
+
+
+
+    <script type="text/javascript" src="static/js/theme.js"></script>
+
+
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+
+</body>
+</html>

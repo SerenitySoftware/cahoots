@@ -1,207 +1,215 @@
+
+
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+  <title>Welcome to cahoots’s documentation! &mdash; cahoots  documentation</title>
 
-    <title>Cahoots by SerenitySoftwareLLC</title>
-  </head>
 
-  <body>
-    <header>
-      <div class="inner">
-        <h1>Cahoots</h1>
-        <h2>A Text Comprehension Engine in Python</h2>
-        <a href="https://github.com/SerenitySoftwareLLC/cahoots" class="button"><small>View project on</small> GitHub</a>
+
+
+
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+
+
+
+
+
+    <link rel="top" title="cahoots  documentation" href="#"/>
+        <link rel="next" title="cahoots package" href="cahoots.html"/>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+
+          <a href="#" class="fa fa-home"> cahoots</a>
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
       </div>
-    </header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
-<a id="cahoots" class="anchor" href="#cahoots" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cahoots</h1>
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
 
-<h2>
-<a id="a-text-comprehension-engine-in-python" class="anchor" href="#a-text-comprehension-engine-in-python" aria-hidden="true"><span class="octicon octicon-link"></span></a>A Text Comprehension Engine in Python</h2>
 
-<h2>
-<a id="build-status" class="anchor" href="#build-status" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build Status</h2>
 
-<p><a href="https://travis-ci.org/SerenitySoftwareLLC/cahoots"><img src="https://travis-ci.org/SerenitySoftwareLLC/cahoots.svg?branch=master" alt="Build Status"></a>
-<a href="https://travis-ci.org/SerenitySoftwareLLC/cahoots"><img src="https://img.shields.io/badge/coverage-100%-brightgreen.svg?style=flat" alt="Build Status"></a>
-<a href="https://travis-ci.org/SerenitySoftwareLLC/cahoots"><img src="https://img.shields.io/badge/pylint-10.00/10-brightgreen.svg?style=flat" alt="Build Status"></a>
-<a href="https://travis-ci.org/SerenitySoftwareLLC/cahoots"><img src="https://img.shields.io/badge/flake8-passing-brightgreen.svg?style=flat" alt="Build Status"></a></p>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="cahoots.html">cahoots package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#module-cahoots">Module contents</a></li>
+</ul>
+</li>
+</ul>
 
-<h2>
-<a id="what-is-cahoots" class="anchor" href="#what-is-cahoots" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Cahoots?</h2>
 
-<p>Cahoots is software that attempts to categorize snippets of text into one of several categories. It runs a series of parsers, and returns a list of potential datatypes and interpretations with confidence values. In short, it attempts to "comprehend" the snippet you provide.</p>
 
-<p>Its ideal use is within a daemon or service with a long life/execution time. It can also be run as a standalone Cahoots server (detailed <a href="https://github.com/SerenitySoftwareLLC/cahoots/wiki/Cahoots-Server-Setup">here</a>).</p>
-
-<h2>
-<a id="what-is-cahoots-not" class="anchor" href="#what-is-cahoots-not" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Cahoots NOT?</h2>
-
-<p>Cahoots is not meant for diagramming and mining large sets of text. While a text mining engine could utilize Cahoots in order to target specific snippets that it mined out of a large set of text, Cahoots is not meant to mine text.</p>
-
-<p>Cahoots is not software that you would integrate into a non-daemon web app that would bootstrap and instantiate it on every page view. The bootstrap process can be somewhat intensive and should only run once (during an application's launch process).</p>
-
-<h2>
-<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
-
-<div class="highlight highlight-bash"><pre>sudo pip install cahoots</pre></div>
-
-<h2>
-<a id="basic-module-usage" class="anchor" href="#basic-module-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic Module Usage</h2>
-
-<div class="highlight highlight-python"><pre><span class="pl-k">&gt;&gt;&gt;</span> <span class="pl-k">from</span> cahoots.parser <span class="pl-k">import</span> CahootsParser
-<span class="pl-k">&gt;&gt;&gt;</span> cahoots <span class="pl-k">=</span> CahootsParser(<span class="pl-smi">bootstrap</span><span class="pl-k">=</span><span class="pl-c1">True</span>)
-<span class="pl-k">&gt;&gt;&gt;</span> results <span class="pl-k">=</span> cahoots.parse(<span class="pl-s"><span class="pl-pds">'</span>http://www.google.com/<span class="pl-pds">'</span></span>)
-<span class="pl-k">&gt;&gt;&gt;</span> results
-{
-    <span class="pl-s"><span class="pl-pds">'</span>date<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>2015-03-22T23:47:36.340187<span class="pl-pds">'</span></span>,
-    <span class="pl-s"><span class="pl-pds">'</span>query<span class="pl-pds">'</span></span>: <span class="pl-s"><span class="pl-pds">'</span>http://www.google.com/<span class="pl-pds">'</span></span>,
-    <span class="pl-s"><span class="pl-pds">'</span>top<span class="pl-pds">'</span></span>: <span class="pl-k">&lt;</span>cahoots.result.ParseResult <span class="pl-c1">object</span><span class="pl-k">&gt;</span>,
-    <span class="pl-s"><span class="pl-pds">'</span>results<span class="pl-pds">'</span></span>: {
-        <span class="pl-s"><span class="pl-pds">'</span>count<span class="pl-pds">'</span></span>: <span class="pl-c1">1</span>,
-        <span class="pl-s"><span class="pl-pds">'</span>matches<span class="pl-pds">'</span></span>: [
-            <span class="pl-k">&lt;</span>cahoots.result.ParseResult <span class="pl-c1">object</span><span class="pl-k">&gt;</span>
-        ],
-        <span class="pl-s"><span class="pl-pds">'</span>types<span class="pl-pds">'</span></span>: [
-            <span class="pl-s"><span class="pl-pds">"</span>URI<span class="pl-pds">"</span></span>
-        ]
-    },
-    <span class="pl-s"><span class="pl-pds">'</span>execution_seconds<span class="pl-pds">'</span></span>: <span class="pl-c1">0.006306886672973633</span>
-}</pre></div>
-
-<h2>
-<a id="basic-server-usage" class="anchor" href="#basic-server-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic Server Usage</h2>
-
-<div class="highlight highlight-bash"><pre>$ cahootserver --help
-
-Cahoots Server Help:
-
-    -h, --help
-        Show this <span class="pl-c1">help</span>
-
-    -p [port], --port [port]
-        Set the port the server should listen on
-
-    -d, --debug
-        Run the server <span class="pl-k">in</span> debug mode (errors displayed, debug output)
-
-$ sudo cahootserver --port 80 --debug
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping AddressParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping CoordinateParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping DateParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping EmailParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping LandmarkParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping MeasurementParser
- <span class="pl-k">*</span> 00:53:19 04/05/15 CDT <span class="pl-k">*</span> Bootstrapping NameParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping PostalCodeParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping ProgrammingParser
- <span class="pl-k">*</span> Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
- <span class="pl-k">*</span> Restarting with reloader
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping AddressParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping CoordinateParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping DateParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping EmailParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping LandmarkParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping MeasurementParser
- <span class="pl-k">*</span> 00:53:19 04/05/15 CDT <span class="pl-k">*</span> Bootstrapping NameParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping PostalCodeParser
- <span class="pl-k">*</span> 00:38:18 04/04/15 CDT <span class="pl-k">*</span> Bootstrapping ProgrammingParser
-<span class="pl-c"># CTRL+C pressed</span>
-
-$ sudo cahootserver --port 80
-$ ./cahootserver/server.py
- <span class="pl-k">*</span> Running on http://0.0.0.0:80/ (Press CTRL+C to quit)</pre></div>
-
-<h2>
-<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
-
-<h4>
-<a id="what-is-cahoots-what-is-cahoots-not-" class="anchor" href="#what-is-cahoots-what-is-cahoots-not-" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/SerenitySoftwareLLC/cahoots/wiki">What Is Cahoots? What Is Cahoots NOT? »</a>
-</h4>
-
-<h4>
-<a id="requirements-and-dependencies-" class="anchor" href="#requirements-and-dependencies-" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/SerenitySoftwareLLC/cahoots/wiki/Requirements-and-Dependencies">Requirements and Dependencies »</a>
-</h4>
-
-<h4>
-<a id="development-environment-setup-" class="anchor" href="#development-environment-setup-" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/SerenitySoftwareLLC/cahoots/wiki/Development-Environment-Setup">Development Environment Setup »</a>
-</h4>
-
-<h4>
-<a id="cahoots-server-setup-" class="anchor" href="#cahoots-server-setup-" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/SerenitySoftwareLLC/cahoots/wiki/Cahoots-Server-Setup">Cahoots Server Setup »</a>
-</h4>
-
-<h4>
-<a id="using-cahoots-in-your-application-" class="anchor" href="#using-cahoots-in-your-application-" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://github.com/SerenitySoftwareLLC/cahoots/wiki/Using-Cahoots-In-Your-Application">Using Cahoots In Your Application »</a>
-</h4>
-
-<h4>
-<a id="demo-of-cahoots-web-server-" class="anchor" href="#demo-of-cahoots-web-server-" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="http://cahoots.rwven.com/">Demo of Cahoots Web Server »</a>
-</h4>
-
-<h2>
-<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
-
-<pre><code>The MIT License (MIT)
-
-Copyright (c) 2012-2015 Serenity Software, LLC
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-</code></pre>
-
-<p>Cahoots <a href="https://github.com/SerenitySoftwareLLC/cahoots/blob/master/cahoots/parsers/location/data/LICENSE">integrates</a> location data provided by <a href="http://www.geonames.org/">GeoNames</a>.</p>
-
-<p>Cahoots uses many code samples for training a bayesian classifier. All code samples are from projects using either the BSD or MIT <a href="https://github.com/SerenitySoftwareLLC/cahoots/tree/master/cahoots/parsers/programming/LICENSES">licenses</a>. None of this code is executed at any time.</p>
-        </section>
-
-        <aside id="sidebar">
-          <a href="https://github.com/SerenitySoftwareLLC/cahoots/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/SerenitySoftwareLLC/cahoots/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/SerenitySoftwareLLC/cahoots"></a> is maintained by <a href="https://github.com/SerenitySoftwareLLC">SerenitySoftwareLLC</a>.</p>
-
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
       </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="#">cahoots</a>
+      </nav>
+
+
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+
+    <li>Welcome to cahoots&#8217;s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+
+          <a href="sources/index.txt" rel="nofollow"> View page source</a>
+
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+
+  <div class="section" id="welcome-to-cahoots-s-documentation">
+<h1>Welcome to cahoots&#8217;s documentation!<a class="headerlink" href="#welcome-to-cahoots-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cahoots.html">cahoots package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cahoots.confidence.html">cahoots.confidence package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cahoots.confidence.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cahoots.confidence.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cahoots.confidence.html#module-cahoots.confidence">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="cahoots.parsers.html">cahoots.parsers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cahoots.parsers.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cahoots.parsers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cahoots.parsers.html#module-cahoots.parsers">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cahoots.config.html">cahoots.config module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cahoots.data.html">cahoots.data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cahoots.parser.html">cahoots.parser module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cahoots.result.html">cahoots.result module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cahoots.util.html">cahoots.util module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#module-cahoots">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+          <footer>
+
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+
+        <a href="cahoots.html" class="btn btn-neutral float-right" title="cahoots package">Next <span class="fa fa-arrow-circle-right"></span></a>
+
+
     </div>
 
-  
-  </body>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Serenity Software LLC.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+
+
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="static/jquery.js"></script>
+      <script type="text/javascript" src="static/underscore.js"></script>
+      <script type="text/javascript" src="static/doctools.js"></script>
+
+
+
+
+
+    <script type="text/javascript" src="static/js/theme.js"></script>
+
+
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+
+</body>
 </html>

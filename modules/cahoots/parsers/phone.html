@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>cahoots.parsers.phone &mdash; cahoots  documentation</title>
+
+
+
+
+
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="../../../static/css/theme.css" type="text/css" />
+
+
+
+
+
+    <link rel="top" title="cahoots  documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+
+          <a href="../../../index.html" class="fa fa-home"> cahoots</a>
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+
+
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cahoots.html">cahoots package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cahoots.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cahoots.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cahoots.html#module-cahoots">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">cahoots</a>
+      </nav>
+
+
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+
+    <li>cahoots.parsers.phone</li>
+      <li class="wy-breadcrumbs-aside">
+
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+
+  <h1>Source code for cahoots.parsers.phone</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The MIT License (MIT)</span>
+
+<span class="sd">Copyright (c) Serenity Software, LLC</span>
+
+<span class="sd">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="sd">of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="sd">in the Software without restriction, including without limitation the rights</span>
+<span class="sd">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="sd">copies of the Software, and to permit persons to whom the Software is</span>
+<span class="sd">furnished to do so, subject to the following conditions:</span>
+
+<span class="sd">The above copyright notice and this permission notice shall be included in all</span>
+<span class="sd">copies or substantial portions of the Software.</span>
+
+<span class="sd">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="sd">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="sd">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="sd">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="sd">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="sd">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="sd">SOFTWARE.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">phonenumbers.phonenumberutil</span> <span class="kn">import</span> <span class="n">NumberParseException</span>
+<span class="kn">from</span> <span class="nn">phonenumbers</span> <span class="kn">import</span> <span class="n">phonenumberutil</span>
+<span class="kn">from</span> <span class="nn">phonenumbers</span> <span class="kn">import</span> <span class="n">geocoder</span>
+<span class="kn">from</span> <span class="nn">cahoots.parsers.base</span> <span class="kn">import</span> <span class="n">BaseParser</span>
+<span class="kn">import</span> <span class="nn">string</span>
+
+
+<div class="viewcode-block" id="PhoneParser"><a class="viewcode-back" href="../../../cahoots.parsers.phone.html#cahoots.parsers.phone.PhoneParser">[docs]</a><span class="k">class</span> <span class="nc">PhoneParser</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determines if given data is a phone number&quot;&quot;&quot;</span>
+
+    <span class="n">punctuation</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">letters</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">digits</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param config: cahoots config</span>
+<span class="sd">        :type config: cahoots.config.BaseConfig</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">BaseParser</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="s">&quot;Phone&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PhoneParser.get_phone_number_object"><a class="viewcode-back" href="../../../cahoots.parsers.phone.html#cahoots.parsers.phone.PhoneParser.get_phone_number_object">[docs]</a>    <span class="k">def</span> <span class="nf">get_phone_number_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes the data_string and tries to parse a phone number out of it</span>
+
+<span class="sd">        :param data_string: data that might be a phone number</span>
+<span class="sd">        :type data_string: str</span>
+<span class="sd">        :return: phone number data if it&#39;s a phone number</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">check_region</span> <span class="o">=</span> <span class="p">(</span><span class="n">data_string</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;+&quot;</span><span class="p">)</span>
+
+            <span class="c"># First pass to see if it&#39;s a valid number</span>
+            <span class="n">num_obj</span> <span class="o">=</span> <span class="n">phonenumberutil</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
+                <span class="n">data_string</span><span class="p">,</span>
+                <span class="n">_check_region</span><span class="o">=</span><span class="n">check_region</span>
+            <span class="p">)</span>
+
+            <span class="n">num_desc</span> <span class="o">=</span> <span class="n">geocoder</span><span class="o">.</span><span class="n">description_for_valid_number</span><span class="p">(</span>
+                <span class="n">num_obj</span><span class="p">,</span> <span class="s">&quot;en&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="n">NumberParseException</span><span class="p">:</span>
+            <span class="c"># If we can&#39;t parse it out, it&#39;s not a valid number</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="c"># if we weren&#39;t able to check the region, and we didn&#39;t get a</span>
+        <span class="c"># description we want to modify the data and give it another go</span>
+        <span class="c"># with a country code added</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">check_region</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">num_desc</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">11</span> <span class="ow">and</span> <span class="n">data_string</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">&quot;1&quot;</span><span class="p">:</span>
+                <span class="n">prefix</span> <span class="o">=</span> <span class="s">&quot;+&quot;</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span> \
+                    <span class="ow">and</span> <span class="p">(</span><span class="n">data_string</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">or</span>
+                         <span class="n">data_string</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span><span class="p">):</span>
+                <span class="n">prefix</span> <span class="o">=</span> <span class="s">&quot;+1&quot;</span>
+
+            <span class="k">if</span> <span class="n">prefix</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c"># Second pass to see if we can get an actual</span>
+                    <span class="c"># geocode out of it using a hammer</span>
+                    <span class="n">second_pass</span> <span class="o">=</span> <span class="n">phonenumberutil</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">data_string</span><span class="p">)</span>
+                    <span class="n">num_desc</span> <span class="o">=</span> <span class="n">geocoder</span><span class="o">.</span><span class="n">description_for_valid_number</span><span class="p">(</span>
+                        <span class="n">second_pass</span><span class="p">,</span> <span class="s">&quot;en&quot;</span>
+                    <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">num_desc</span><span class="p">:</span>
+                        <span class="n">num_obj</span> <span class="o">=</span> <span class="n">second_pass</span>
+                        <span class="c"># confidence hit because we had to</span>
+                        <span class="c"># modify the data to get a result</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">-=</span> <span class="mi">5</span>
+                <span class="k">except</span> <span class="p">(</span><span class="n">NumberParseException</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">):</span>
+                    <span class="k">pass</span>
+
+        <span class="c"># Attempting to get a valid region</span>
+        <span class="n">num_region</span> <span class="o">=</span> <span class="n">phonenumberutil</span><span class="o">.</span><span class="n">region_code_for_number</span><span class="p">(</span><span class="n">num_obj</span><span class="p">)</span>
+
+        <span class="c"># This is the compiled phone number data that</span>
+        <span class="c"># we will use for the confidence decision</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_phone_number_dict</span><span class="p">(</span><span class="n">num_obj</span><span class="p">,</span> <span class="n">num_desc</span><span class="p">,</span> <span class="n">num_region</span><span class="p">)</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="PhoneParser.build_phone_number_dict"><a class="viewcode-back" href="../../../cahoots.parsers.phone.html#cahoots.parsers.phone.PhoneParser.build_phone_number_dict">[docs]</a>    <span class="k">def</span> <span class="nf">build_phone_number_dict</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">num_obj</span><span class="p">,</span> <span class="n">num_desc</span><span class="p">,</span> <span class="n">num_region</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds phone number data</span>
+
+<span class="sd">        :param num_obj: phone number data</span>
+<span class="sd">        :type num_obj: phonenumbers.phonenumber.PhoneNumber</span>
+<span class="sd">        :param num_desc: phone number description</span>
+<span class="sd">        :type num_desc: str</span>
+<span class="sd">        :param num_region: region code for this phone number</span>
+<span class="sd">        :type num_region: str</span>
+<span class="sd">        :return: phonenumber data</span>
+<span class="sd">        :rtype: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">&#39;countryCode&#39;</span><span class="p">:</span> <span class="n">num_obj</span><span class="o">.</span><span class="n">country_code</span><span class="p">,</span>
+            <span class="s">&#39;countryCodeSource&#39;</span><span class="p">:</span> <span class="n">num_obj</span><span class="o">.</span><span class="n">country_code_source</span><span class="p">,</span>
+            <span class="s">&#39;nationalNumber&#39;</span><span class="p">:</span> <span class="n">num_obj</span><span class="o">.</span><span class="n">national_number</span><span class="p">,</span>
+            <span class="s">&#39;extension&#39;</span><span class="p">:</span> <span class="n">num_obj</span><span class="o">.</span><span class="n">extension</span><span class="p">,</span>
+            <span class="s">&#39;leadingZero&#39;</span><span class="p">:</span> <span class="n">num_obj</span><span class="o">.</span><span class="n">italian_leading_zero</span><span class="p">,</span>
+            <span class="s">&#39;carrierCode&#39;</span><span class="p">:</span> <span class="n">num_obj</span><span class="o">.</span><span class="n">preferred_domestic_carrier_code</span><span class="p">,</span>
+            <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="n">num_desc</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span>
+            <span class="s">&#39;region&#39;</span><span class="p">:</span> <span class="n">num_region</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="p">}</span>
+</div>
+<div class="viewcode-block" id="PhoneParser.calculate_confidence"><a class="viewcode-back" href="../../../cahoots.parsers.phone.html#cahoots.parsers.phone.PhoneParser.calculate_confidence">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_confidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_string</span><span class="p">,</span> <span class="n">phone_number_data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Various confidence calculations</span>
+
+<span class="sd">        :param data_string: the data passed to the parser</span>
+<span class="sd">        :type data_string: string</span>
+<span class="sd">        :param phone_number_data: data that the phone number parsing produced</span>
+<span class="sd">        :type phone_number_data: dict</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># If this is an integer, we take a big hit.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">data_string</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">-=</span> <span class="mi">20</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="c"># Length penalties</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="c"># Could be a 32bit integer</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">-=</span> <span class="mi">5</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">-=</span> <span class="mi">10</span>
+
+        <span class="c"># No description == not as strong</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">phone_number_data</span><span class="p">[</span><span class="s">&#39;description&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">-=</span> <span class="mi">15</span>
+
+        <span class="c"># No region == not as strong</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">phone_number_data</span><span class="p">[</span><span class="s">&#39;region&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">-=</span> <span class="mi">15</span>
+
+        <span class="c"># if there was punctuation, and we still see</span>
+        <span class="c"># this as a phone number, we raise confidence</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">punctuation</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">punctuation</span><span class="p">)))</span>
+</div>
+<div class="viewcode-block" id="PhoneParser.parse"><a class="viewcode-back" href="../../../cahoots.parsers.phone.html#cahoots.parsers.phone.PhoneParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        parses for phone numbers</span>
+
+<span class="sd">        :param data_string: the string we want to parse</span>
+<span class="sd">        :type data_string: str</span>
+<span class="sd">        :return: yields parse result(s) if there are any</span>
+<span class="sd">        :rtype: ParseResult</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_string</span> <span class="o">=</span> <span class="n">data_string</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="c"># 30 is a stretch...</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_string</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">30</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">digits</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data_string</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">]</span>
+
+        <span class="c"># We&#39;re just assuming less than 7 nums = not phone</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">letter_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">letters</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data_string</span> <span class="k">if</span>
+                        <span class="n">c</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span> <span class="ow">and</span>
+                        <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">letter_set</span> <span class="ow">and</span>
+                        <span class="ow">not</span> <span class="n">letter_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="p">)]</span>
+
+        <span class="c"># We don&#39;t believe this is a phone number if more letters than nums</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">letters</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">digits</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">punctuation</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data_string</span> <span class="k">if</span>
+                            <span class="n">c</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">punctuation</span> <span class="ow">or</span>
+                            <span class="n">c</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">whitespace</span><span class="p">]</span>
+
+        <span class="c"># Parsing our input, looking for phone numbers</span>
+        <span class="n">phone_number_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_phone_number_object</span><span class="p">(</span><span class="n">data_string</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">phone_number_data</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">calculate_confidence</span><span class="p">(</span><span class="n">data_string</span><span class="p">,</span> <span class="n">phone_number_data</span><span class="p">)</span>
+
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span>
+            <span class="s">&quot;Phone Number&quot;</span><span class="p">,</span>
+            <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">)),</span>
+            <span class="n">phone_number_data</span>
+        <span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          <footer>
+
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Serenity Software LLC.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+
+
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../static/jquery.js"></script>
+      <script type="text/javascript" src="../../../static/underscore.js"></script>
+      <script type="text/javascript" src="../../../static/doctools.js"></script>
+
+
+
+
+
+    <script type="text/javascript" src="../../../static/js/theme.js"></script>
+
+
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+
+</body>
+</html>

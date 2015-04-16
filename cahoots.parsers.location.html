@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>cahoots.parsers.location package &mdash; cahoots  documentation</title>
+
+
+
+
+
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+
+
+
+
+
+    <link rel="top" title="cahoots  documentation" href="index.html"/>
+        <link rel="up" title="cahoots.parsers package" href="cahoots.parsers.html"/>
+        <link rel="next" title="cahoots.parsers.location.address module" href="cahoots.parsers.location.address.html"/>
+        <link rel="prev" title="cahoots.parsers package" href="cahoots.parsers.html"/>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+
+          <a href="index.html" class="fa fa-home"> cahoots</a>
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+
+
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cahoots.html">cahoots package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="cahoots.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#module-cahoots">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">cahoots</a>
+      </nav>
+
+
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+
+          <li><a href="cahoots.html">cahoots package</a> &raquo;</li>
+
+          <li><a href="cahoots.parsers.html">cahoots.parsers package</a> &raquo;</li>
+
+    <li>cahoots.parsers.location package</li>
+      <li class="wy-breadcrumbs-aside">
+
+          <a href="sources/cahoots.parsers.location.txt" rel="nofollow"> View page source</a>
+
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+
+  <div class="section" id="cahoots-parsers-location-package">
+<h1>cahoots.parsers.location package<a class="headerlink" href="#cahoots-parsers-location-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cahoots.parsers.location.address.html">cahoots.parsers.location.address module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cahoots.parsers.location.coordinate.html">cahoots.parsers.location.coordinate module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cahoots.parsers.location.landmark.html">cahoots.parsers.location.landmark module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cahoots.parsers.location.postalcode.html">cahoots.parsers.location.postalcode module</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-cahoots.parsers.location">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cahoots.parsers.location" title="Permalink to this headline">¶</a></h2>
+<p>The MIT License (MIT)</p>
+<p>Copyright (c) Serenity Software, LLC</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &#8220;Software&#8221;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED &#8220;AS IS&#8221;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+<dl class="class">
+<dt id="cahoots.parsers.location.CityEntity">
+<em class="property">class </em><code class="descclassname">cahoots.parsers.location.</code><code class="descname">CityEntity</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/location.html#CityEntity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.location.CityEntity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a city database entity</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="cahoots.parsers.location.CountryEntity">
+<em class="property">class </em><code class="descclassname">cahoots.parsers.location.</code><code class="descname">CountryEntity</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/location.html#CountryEntity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.location.CountryEntity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a country database entity</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="cahoots.parsers.location.LandmarkEntity">
+<em class="property">class </em><code class="descclassname">cahoots.parsers.location.</code><code class="descname">LandmarkEntity</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/location.html#LandmarkEntity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.location.LandmarkEntity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a landmark database entity</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="cahoots.parsers.location.LocationDatabase">
+<em class="property">class </em><code class="descclassname">cahoots.parsers.location.</code><code class="descname">LocationDatabase</code><a class="reference internal" href="modules/cahoots/parsers/location.html#LocationDatabase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.location.LocationDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Handles the database for location parsing in various submodules</p>
+<dl class="classmethod">
+<dt id="cahoots.parsers.location.LocationDatabase.get_database">
+<em class="property">classmethod </em><code class="descname">get_database</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/location.html#LocationDatabase.get_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.location.LocationDatabase.get_database" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a sqlite database connection to the location database</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">sqlite3 connection</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">_sqlite3.Connection</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="cahoots.parsers.location.LocationDatabase.hydrate">
+<em class="property">classmethod </em><code class="descname">hydrate</code><span class="sig-paren">(</span><em>data</em>, <em>prototype</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/location.html#LocationDatabase.hydrate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.location.LocationDatabase.hydrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>hydrates a set of entities</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>tuple</em>) &#8211; the data retrieved from a select</li>
+<li><strong>prototype</strong> (<em>mixed</em>) &#8211; the class we want to hydrate with the data</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">hydrated prototype</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">mixed</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parsers.location.LocationDatabase.single_select">
+<code class="descname">single_select</code><span class="sig-paren">(</span><em>sql</em>, <em>params</em>, <em>prototype</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/location.html#LocationDatabase.single_select"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.location.LocationDatabase.single_select" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes a statement (assumed to be a select) against the db</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sql</strong> (<em>str</em>) &#8211; the sql select that we want to execute</li>
+<li><strong>params</strong> (<em>tuple</em>) &#8211; the sql parameters to inject into the provided sql</li>
+<li><strong>prototype</strong> (<em>mixed</em>) &#8211; The class we want to hydrate with results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the hydrated prototype</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">mixed</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="cahoots.parsers.location.LocationDatabase.substitute_country_data">
+<em class="property">classmethod </em><code class="descname">substitute_country_data</code><span class="sig-paren">(</span><em>entities</em>, <em>cursor</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/location.html#LocationDatabase.substitute_country_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.location.LocationDatabase.substitute_country_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Preps our entity objects with country data and converts dicts</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>entities</strong> (<em>list</em>) &#8211; list of city entities to map country data to</li>
+<li><strong>cursor</strong> (<em>_sqlite3.Cursor</em>) &#8211; sqlite3 database cursor</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of results with subbed country data</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="cahoots.parsers.location.StreetSuffixEntity">
+<em class="property">class </em><code class="descclassname">cahoots.parsers.location.</code><code class="descname">StreetSuffixEntity</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parsers/location.html#StreetSuffixEntity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parsers.location.StreetSuffixEntity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Represents a street suffix entity</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          <footer>
+
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+
+        <a href="cahoots.parsers.location.address.html" class="btn btn-neutral float-right" title="cahoots.parsers.location.address module">Next <span class="fa fa-arrow-circle-right"></span></a>
+
+
+        <a href="cahoots.parsers.html" class="btn btn-neutral" title="cahoots.parsers package"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+
+    </div>
+
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Serenity Software LLC.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+
+
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="static/jquery.js"></script>
+      <script type="text/javascript" src="static/underscore.js"></script>
+      <script type="text/javascript" src="static/doctools.js"></script>
+
+
+
+
+
+    <script type="text/javascript" src="static/js/theme.js"></script>
+
+
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>cahoots.parsers.name &mdash; cahoots  documentation</title>
+
+
+
+
+
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="../../../static/css/theme.css" type="text/css" />
+
+
+
+
+
+    <link rel="top" title="cahoots  documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+
+          <a href="../../../index.html" class="fa fa-home"> cahoots</a>
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+
+
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cahoots.html">cahoots package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cahoots.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cahoots.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cahoots.html#module-cahoots">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../../index.html">cahoots</a>
+      </nav>
+
+
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../../index.html">Docs</a> &raquo;</li>
+
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+
+    <li>cahoots.parsers.name</li>
+      <li class="wy-breadcrumbs-aside">
+
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+
+  <h1>Source code for cahoots.parsers.name</h1><div class="highlight"><pre>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The MIT License (MIT)</span>
+
+<span class="sd">Copyright (c) Serenity Software, LLC</span>
+
+<span class="sd">Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="sd">of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="sd">in the Software without restriction, including without limitation the rights</span>
+<span class="sd">to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="sd">copies of the Software, and to permit persons to whom the Software is</span>
+<span class="sd">furnished to do so, subject to the following conditions:</span>
+
+<span class="sd">The above copyright notice and this permission notice shall be included in all</span>
+<span class="sd">copies or substantial portions of the Software.</span>
+
+<span class="sd">THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="sd">IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="sd">FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="sd">AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="sd">LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="sd">OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="sd">SOFTWARE.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">cahoots.parsers.base</span> <span class="kn">import</span> <span class="n">BaseParser</span>
+<span class="kn">from</span> <span class="nn">cahoots.parsers.number</span> <span class="kn">import</span> <span class="n">NumberParser</span>
+<span class="kn">from</span> <span class="nn">SereneRegistry</span> <span class="kn">import</span> <span class="n">registry</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">string</span>
+
+
+<div class="viewcode-block" id="NameParser"><a class="viewcode-back" href="../../../cahoots.parsers.name.html#cahoots.parsers.name.NameParser">[docs]</a><span class="k">class</span> <span class="nc">NameParser</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Determines if given data is a name&#39;&#39;&#39;</span>
+
+    <span class="n">prefixes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;MS&#39;</span><span class="p">,</span> <span class="s">&#39;MISS&#39;</span><span class="p">,</span> <span class="s">&#39;MRS&#39;</span><span class="p">,</span> <span class="s">&#39;MR&#39;</span><span class="p">,</span> <span class="s">&#39;MASTER&#39;</span><span class="p">,</span> <span class="s">&#39;REV&#39;</span><span class="p">,</span> <span class="s">&#39;FR&#39;</span><span class="p">,</span> <span class="s">&#39;DR&#39;</span><span class="p">,</span>
+                <span class="s">&#39;ATTY&#39;</span><span class="p">,</span> <span class="s">&#39;PROF&#39;</span><span class="p">,</span> <span class="s">&#39;HON&#39;</span><span class="p">,</span> <span class="s">&#39;PRES&#39;</span><span class="p">,</span> <span class="s">&#39;GOV&#39;</span><span class="p">,</span> <span class="s">&#39;COACH&#39;</span><span class="p">,</span> <span class="s">&#39;OFC&#39;</span><span class="p">,</span> <span class="s">&#39;MSGR&#39;</span><span class="p">,</span>
+                <span class="s">&#39;SR&#39;</span><span class="p">,</span> <span class="s">&#39;BR&#39;</span><span class="p">,</span> <span class="s">&#39;SUPT&#39;</span><span class="p">,</span> <span class="s">&#39;REP&#39;</span><span class="p">,</span> <span class="s">&#39;SEN&#39;</span><span class="p">,</span> <span class="s">&#39;AMB&#39;</span><span class="p">,</span> <span class="s">&#39;TREAS&#39;</span><span class="p">,</span> <span class="s">&#39;SEC&#39;</span><span class="p">,</span>
+                <span class="s">&#39;PVT&#39;</span><span class="p">,</span> <span class="s">&#39;CPL&#39;</span><span class="p">,</span> <span class="s">&#39;SGT&#39;</span><span class="p">,</span> <span class="s">&#39;ADM&#39;</span><span class="p">,</span> <span class="s">&#39;MAJ&#39;</span><span class="p">,</span> <span class="s">&#39;CAPT&#39;</span><span class="p">,</span> <span class="s">&#39;CMDR&#39;</span><span class="p">,</span> <span class="s">&#39;LT&#39;</span><span class="p">,</span>
+                <span class="s">&#39;COL&#39;</span><span class="p">,</span> <span class="s">&#39;GEN&#39;</span><span class="p">]</span>
+    <span class="n">suffixes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;AB&#39;</span><span class="p">,</span> <span class="s">&#39;BA&#39;</span><span class="p">,</span> <span class="s">&#39;BFA&#39;</span><span class="p">,</span> <span class="s">&#39;BTECH&#39;</span><span class="p">,</span> <span class="s">&#39;LLB&#39;</span><span class="p">,</span> <span class="s">&#39;BSC&#39;</span><span class="p">,</span> <span class="s">&#39;MA&#39;</span><span class="p">,</span> <span class="s">&#39;MFA&#39;</span><span class="p">,</span> <span class="s">&#39;LLM&#39;</span><span class="p">,</span>
+                <span class="s">&#39;MLA&#39;</span><span class="p">,</span> <span class="s">&#39;MBA&#39;</span><span class="p">,</span> <span class="s">&#39;MSC&#39;</span><span class="p">,</span> <span class="s">&#39;JD&#39;</span><span class="p">,</span> <span class="s">&#39;MD&#39;</span><span class="p">,</span> <span class="s">&#39;DO&#39;</span><span class="p">,</span> <span class="s">&#39;PHARMD&#39;</span><span class="p">,</span> <span class="s">&#39;PHD&#39;</span><span class="p">,</span>
+                <span class="s">&#39;DPHIL&#39;</span><span class="p">,</span> <span class="s">&#39;LLD&#39;</span><span class="p">,</span> <span class="s">&#39;ENGD&#39;</span><span class="p">,</span> <span class="s">&#39;KBE&#39;</span><span class="p">,</span> <span class="s">&#39;LLD&#39;</span><span class="p">,</span> <span class="s">&#39;DD&#39;</span><span class="p">,</span> <span class="s">&#39;ESQ&#39;</span><span class="p">,</span> <span class="s">&#39;ESQUIRE&#39;</span><span class="p">,</span>
+                <span class="s">&#39;CSA&#39;</span><span class="p">,</span> <span class="s">&#39;ASCAP&#39;</span><span class="p">,</span> <span class="s">&#39;CA&#39;</span><span class="p">,</span> <span class="s">&#39;CPA&#39;</span><span class="p">,</span> <span class="s">&#39;CFA&#39;</span><span class="p">,</span> <span class="s">&#39;PE&#39;</span><span class="p">,</span> <span class="s">&#39;PG&#39;</span><span class="p">,</span> <span class="s">&#39;CPL&#39;</span><span class="p">,</span> <span class="s">&#39;CENG&#39;</span><span class="p">,</span>
+                <span class="s">&#39;RA&#39;</span><span class="p">,</span> <span class="s">&#39;AIA&#39;</span><span class="p">,</span> <span class="s">&#39;RIBA&#39;</span><span class="p">,</span> <span class="s">&#39;MEOA&#39;</span><span class="p">,</span> <span class="s">&#39;CISA&#39;</span><span class="p">,</span> <span class="s">&#39;CISSP&#39;</span><span class="p">,</span> <span class="s">&#39;CISM&#39;</span><span class="p">,</span> <span class="s">&#39;PT&#39;</span><span class="p">,</span>
+                <span class="s">&#39;DPT&#39;</span><span class="p">,</span> <span class="s">&#39;MCSP&#39;</span><span class="p">,</span> <span class="s">&#39;SRP&#39;</span><span class="p">,</span> <span class="s">&#39;RGN&#39;</span><span class="p">,</span> <span class="s">&#39;USN&#39;</span><span class="p">,</span> <span class="s">&#39;USMC&#39;</span><span class="p">,</span> <span class="s">&#39;OFM&#39;</span><span class="p">,</span> <span class="s">&#39;CSV&#39;</span><span class="p">,</span>
+                <span class="s">&#39;JR&#39;</span><span class="p">,</span> <span class="s">&#39;SR&#39;</span><span class="p">,</span> <span class="s">&#39;JNR&#39;</span><span class="p">,</span> <span class="s">&#39;SNR&#39;</span><span class="p">,</span> <span class="s">&#39;2ND&#39;</span><span class="p">,</span> <span class="s">&#39;3RD&#39;</span><span class="p">,</span> <span class="s">&#39;4TH&#39;</span><span class="p">,</span> <span class="s">&#39;5TH&#39;</span><span class="p">,</span> <span class="s">&#39;6TH&#39;</span><span class="p">,</span>
+                <span class="s">&#39;7TH&#39;</span><span class="p">,</span> <span class="s">&#39;8TH&#39;</span><span class="p">,</span> <span class="s">&#39;9TH&#39;</span><span class="p">,</span> <span class="s">&#39;BT&#39;</span><span class="p">,</span> <span class="s">&#39;BART&#39;</span><span class="p">,</span> <span class="s">&#39;QC&#39;</span><span class="p">,</span> <span class="s">&#39;MP&#39;</span><span class="p">,</span> <span class="s">&#39;SSF&#39;</span><span class="p">,</span> <span class="s">&#39;FRCP&#39;</span><span class="p">,</span>
+                <span class="s">&#39;FRSA&#39;</span><span class="p">,</span> <span class="s">&#39;RAF&#39;</span><span class="p">,</span> <span class="s">&#39;RN&#39;</span><span class="p">,</span> <span class="s">&#39;RMP&#39;</span><span class="p">,</span> <span class="s">&#39;FAIA&#39;</span><span class="p">,</span> <span class="s">&#39;FRSE&#39;</span><span class="p">,</span> <span class="s">&#39;SJ&#39;</span><span class="p">,</span> <span class="s">&#39;OP&#39;</span><span class="p">,</span>
+                <span class="s">&#39;ICMA-CM&#39;</span><span class="p">,</span> <span class="s">&#39;MBASW&#39;</span><span class="p">]</span>
+    <span class="n">name_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;van&#39;</span><span class="p">,</span> <span class="s">&#39;der&#39;</span><span class="p">,</span> <span class="s">&#39;de&#39;</span><span class="p">,</span> <span class="s">&#39;</span><span class="se">\&#39;</span><span class="s">t&#39;</span><span class="p">,</span> <span class="s">&#39;het&#39;</span><span class="p">,</span> <span class="s">&#39;in&#39;</span><span class="p">,</span> <span class="s">&#39;bin&#39;</span><span class="p">,</span> <span class="s">&#39;al&#39;</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="NameParser.bootstrap"><a class="viewcode-back" href="../../../cahoots.parsers.name.html#cahoots.parsers.name.NameParser.bootstrap">[docs]</a>    <span class="k">def</span> <span class="nf">bootstrap</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is statically called to bootstrap a parser</span>
+
+<span class="sd">        :param config: cahoots config</span>
+<span class="sd">        :type config: cahoots.config.BaseConfig</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">upper_alpha</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;[A-Z]&#39;</span><span class="p">)</span>
+        <span class="n">registry</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;NP_upper_alpha_regex&#39;</span><span class="p">,</span> <span class="n">upper_alpha</span><span class="p">)</span>
+</div>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param config: cahoots config</span>
+<span class="sd">        :type config: cahoots.config.BaseConfig</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">BaseParser</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NameParser.basic_validation"><a class="viewcode-back" href="../../../cahoots.parsers.name.html#cahoots.parsers.name.NameParser.basic_validation">[docs]</a>    <span class="k">def</span> <span class="nf">basic_validation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make sure every word in the phrase either</span>
+<span class="sd">        starts with a Capital Letter or a Number</span>
+
+<span class="sd">        :param data: tokenized data we want to check</span>
+<span class="sd">        :type data: list</span>
+<span class="sd">        :return: if this could be a name</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">remainder</span> <span class="o">=</span> \
+            <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">data</span> <span class="k">if</span>
+             <span class="c"># Has to start with a caps letter or digit or word in name parts</span>
+             <span class="p">(</span>
+                 <span class="n">word</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span> <span class="ow">or</span>
+                 <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">word</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span> <span class="ow">or</span>
+                 <span class="n">word</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_parts</span>
+             <span class="p">)</span> <span class="ow">and</span>
+             <span class="c"># Whole word can&#39;t be a digit</span>
+             <span class="ow">not</span> <span class="n">word</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="ow">and</span>
+             <span class="c"># Must contain only printable characters</span>
+             <span class="ow">not</span> <span class="p">[</span><span class="n">char</span> <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">word</span> <span class="k">if</span> <span class="n">char</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">printable</span><span class="p">]]</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">remainder</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="NameParser.is_prefix"><a class="viewcode-back" href="../../../cahoots.parsers.name.html#cahoots.parsers.name.NameParser.is_prefix">[docs]</a>    <span class="k">def</span> <span class="nf">is_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks to see if the word passed in is a name prefix</span>
+
+<span class="sd">        :param word: word we want to check for being a prefix</span>
+<span class="sd">        :type word: str</span>
+<span class="sd">        :return: if this is a prefix or not</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">word</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">word</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefixes</span>
+</div>
+<div class="viewcode-block" id="NameParser.is_suffix"><a class="viewcode-back" href="../../../cahoots.parsers.name.html#cahoots.parsers.name.NameParser.is_suffix">[docs]</a>    <span class="k">def</span> <span class="nf">is_suffix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks to see if the word passed in is a name suffix</span>
+
+<span class="sd">        :param word: word we want to check for being a suffix</span>
+<span class="sd">        :type word: str</span>
+<span class="sd">        :return: if this is a suffix or not</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">NumberParser</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">enabled_modules</span><span class="p">:</span>
+            <span class="n">nump</span> <span class="o">=</span> <span class="n">NumberParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">nump</span><span class="o">.</span><span class="n">is_roman_numeral</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">True</span>
+
+        <span class="n">word</span> <span class="o">=</span> <span class="n">word</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">word</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">suffixes</span>
+</div>
+    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="NameParser.is_initial"><a class="viewcode-back" href="../../../cahoots.parsers.name.html#cahoots.parsers.name.NameParser.is_initial">[docs]</a>    <span class="k">def</span> <span class="nf">is_initial</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">word</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks to see if the word passed in is an initial</span>
+
+<span class="sd">        :param word: word we want to check for being an initial</span>
+<span class="sd">        :type word: str</span>
+<span class="sd">        :return: if this is an initial or not</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">word</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">word</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;.&#39;</span> <span class="ow">and</span> <span class="n">word</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">()</span>
+</div>
+<div class="viewcode-block" id="NameParser.detect_prefix_or_suffix"><a class="viewcode-back" href="../../../cahoots.parsers.name.html#cahoots.parsers.name.NameParser.detect_prefix_or_suffix">[docs]</a>    <span class="k">def</span> <span class="nf">detect_prefix_or_suffix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checking for things like Mr. or Jr. Big boost for these values.</span>
+<span class="sd">        If found, we remove them from the list of words</span>
+
+<span class="sd">        :param data: tokenized names</span>
+<span class="sd">        :type data: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_prefix</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">+=</span> <span class="mi">20</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_suffix</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">+=</span> <span class="mi">20</span>
+</div>
+<div class="viewcode-block" id="NameParser.calculate_confidence"><a class="viewcode-back" href="../../../cahoots.parsers.name.html#cahoots.parsers.name.NameParser.calculate_confidence">[docs]</a>    <span class="k">def</span> <span class="nf">calculate_confidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates confidence based on various attributes of the data</span>
+
+<span class="sd">        :param data: tokenized names</span>
+<span class="sd">        :type data: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># If we have a two - four word &quot;name&quot; here we boost its</span>
+        <span class="c"># confidence since this is something of a giveaway</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+        <span class="c"># Adding confidence for initials vs words,</span>
+        <span class="c"># if we have greater than one word</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_initial</span><span class="p">(</span><span class="n">word</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">+=</span> <span class="mi">15</span>
+                    <span class="c"># if there&#39;s a period in this initial, we boost it.</span>
+                    <span class="k">if</span> <span class="s">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">word</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">+=</span> <span class="mi">5</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">+=</span> <span class="mi">10</span>
+
+        <span class="c"># If our &quot;name&quot; is longer than 4 words, we</span>
+        <span class="c"># reduce the likelihood that it&#39;s a name</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">-=</span> <span class="p">(</span><span class="mi">7</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+</div>
+<div class="viewcode-block" id="NameParser.parse"><a class="viewcode-back" href="../../../cahoots.parsers.name.html#cahoots.parsers.name.NameParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Determines if the data is a name or not</span>
+
+<span class="sd">        :param data: the string we want to parse</span>
+<span class="sd">        :type data: str</span>
+<span class="sd">        :return: yields parse result(s) if there are any</span>
+<span class="sd">        :rtype: ParseResult</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c"># Making sure there are at least SOME uppercase letters in the phrase</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">registry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;NP_upper_alpha_regex&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+        <span class="c"># If someone has a name longer than 7 words...they need</span>
+        <span class="c"># help. Making sure each word in the phrase starts with an</span>
+        <span class="c"># uppercase letter or a number</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">7</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">basic_validation</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">detect_prefix_or_suffix</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">calculate_confidence</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">(</span><span class="s">&quot;Name&quot;</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">confidence</span><span class="p">))</span></div></div>
+</pre></div>
+
+          </div>
+          <footer>
+
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Serenity Software LLC.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+
+
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../../static/jquery.js"></script>
+      <script type="text/javascript" src="../../../static/underscore.js"></script>
+      <script type="text/javascript" src="../../../static/doctools.js"></script>
+
+
+
+
+
+    <script type="text/javascript" src="../../../static/js/theme.js"></script>
+
+
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>cahoots.parser module &mdash; cahoots  documentation</title>
+
+
+
+
+
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" href="static/css/theme.css" type="text/css" />
+
+
+
+
+
+    <link rel="top" title="cahoots  documentation" href="index.html"/>
+        <link rel="up" title="cahoots package" href="cahoots.html"/>
+        <link rel="next" title="cahoots.result module" href="cahoots.result.html"/>
+        <link rel="prev" title="cahoots.data module" href="cahoots.data.html"/>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-nav-search">
+
+          <a href="index.html" class="fa fa-home"> cahoots</a>
+
+
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+
+
+
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="cahoots.html">cahoots package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="cahoots.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cahoots.html#module-cahoots">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">cahoots</a>
+      </nav>
+
+
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+
+          <li><a href="cahoots.html">cahoots package</a> &raquo;</li>
+
+    <li>cahoots.parser module</li>
+      <li class="wy-breadcrumbs-aside">
+
+          <a href="sources/cahoots.parser.txt" rel="nofollow"> View page source</a>
+
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document">
+
+  <div class="section" id="module-cahoots.parser">
+<span id="cahoots-parser-module"></span><h1>cahoots.parser module<a class="headerlink" href="#module-cahoots.parser" title="Permalink to this headline">¶</a></h1>
+<p>The MIT License (MIT)</p>
+<p>Copyright (c) Serenity Software, LLC</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &#8220;Software&#8221;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED &#8220;AS IS&#8221;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+<dl class="class">
+<dt id="cahoots.parser.CahootsParser">
+<em class="property">class </em><code class="descclassname">cahoots.parser.</code><code class="descname">CahootsParser</code><span class="sig-paren">(</span><em>config=None</em>, <em>bootstrap=False</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parser.html#CahootsParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parser.CahootsParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Kicks off the parsing process</p>
+<dl class="classmethod">
+<dt id="cahoots.parser.CahootsParser.bootstrap">
+<em class="property">classmethod </em><code class="descname">bootstrap</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parser.html#CahootsParser.bootstrap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parser.CahootsParser.bootstrap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bootstraps each parser. Can be used for cache warming, etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<a class="reference internal" href="cahoots.config.html#cahoots.config.BaseConfig" title="cahoots.config.BaseConfig"><em>BaseConfig</em></a>) &#8211; cahoots config</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="cahoots.parser.CahootsParser.config">
+<code class="descname">config</code><em class="property"> = None</em><a class="headerlink" href="#cahoots.parser.CahootsParser.config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parser.CahootsParser.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>data_string</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parser.html#CahootsParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parser.CahootsParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses input data and returns a dict of result data</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data_string</strong> (<em>str</em>) &#8211; the string we want to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">yields parse result data if there is any</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="cahoots.parser.ParserThread">
+<em class="property">class </em><code class="descclassname">cahoots.parser.</code><code class="descname">ParserThread</code><span class="sig-paren">(</span><em>config</em>, <em>module</em>, <em>data_string</em><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parser.html#ParserThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parser.ParserThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">threading.Thread</span></code></p>
+<p>Represents a thread that will handle one parser parsing request</p>
+<dl class="attribute">
+<dt id="cahoots.parser.ParserThread.config">
+<code class="descname">config</code><em class="property"> = None</em><a class="headerlink" href="#cahoots.parser.ParserThread.config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cahoots.parser.ParserThread.data_string">
+<code class="descname">data_string</code><em class="property"> = None</em><a class="headerlink" href="#cahoots.parser.ParserThread.data_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="cahoots.parser.ParserThread.results">
+<code class="descname">results</code><em class="property"> = []</em><a class="headerlink" href="#cahoots.parser.ParserThread.results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="cahoots.parser.ParserThread.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="modules/cahoots/parser.html#ParserThread.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#cahoots.parser.ParserThread.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes this parser thread.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          <footer>
+
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+
+        <a href="cahoots.result.html" class="btn btn-neutral float-right" title="cahoots.result module">Next <span class="fa fa-arrow-circle-right"></span></a>
+
+
+        <a href="cahoots.data.html" class="btn btn-neutral" title="cahoots.data module"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+
+    </div>
+
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Serenity Software LLC.
+    </p>
+  </div>
+
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+
+
+
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="static/jquery.js"></script>
+      <script type="text/javascript" src="static/underscore.js"></script>
+      <script type="text/javascript" src="static/doctools.js"></script>
+
+
+
+
+
+    <script type="text/javascript" src="static/js/theme.js"></script>
+
+
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+
+
+</body>
+</html>
