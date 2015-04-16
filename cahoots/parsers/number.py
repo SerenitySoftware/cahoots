@@ -52,7 +52,16 @@ class NumberParser(BaseParser):
         BaseParser.__init__(self, config, "Number", 100)
 
         def convert_to_literal(tok, val):
-            """Converts a value to pyparsing caselessliteral"""
+            """
+            Converts a value to pyparsing caselessliteral
+
+            :param tok: the token we want to find/replace
+            :type tok: str
+            :param val: the integer the token represented
+            :type val: int
+            :return: pyparsing caseless literal
+            :rtype: pyparsing.CaselessLiteral
+            """
             return CaselessLiteral(tok) \
                 .setName(tok) \
                 .setParseAction(replaceWith(val))
@@ -172,7 +181,14 @@ class NumberParser(BaseParser):
 
     @classmethod
     def is_float(cls, data):
-        """Checks to see if the value is a float"""
+        """
+        Checks to see if the value is a float
+
+        :param data: potential float
+        :type data: str
+        :return: data confirming or denying this is a float
+        :rtype: tuple
+        """
         try:
             return True, float(data)
         except ValueError:
@@ -180,7 +196,14 @@ class NumberParser(BaseParser):
 
     @classmethod
     def is_integer(cls, data):
-        """Checks to see if the value is an integer"""
+        """
+        Checks to see if the value is an integer
+
+        :param data: potential integer
+        :type data: str
+        :return: data confirming or denying this is a integer
+        :rtype: tuple
+        """
         try:
             return True, int(data)
         except ValueError:
@@ -188,7 +211,14 @@ class NumberParser(BaseParser):
 
     @classmethod
     def is_hex(cls, data):
-        """Checks to see if the value is hexidecimal"""
+        """
+        Checks to see if the value is hexidecimal
+
+        :param data: potential hexidecimal
+        :type data: str
+        :return: data confirming or denying this is a hexidecimal
+        :rtype: tuple
+        """
         if data[0] == '#':
             data = data[1:]
 
@@ -199,7 +229,14 @@ class NumberParser(BaseParser):
 
     @classmethod
     def is_binary(cls, data):
-        """Checks to see if the value looks like a binary"""
+        """
+        Checks to see if the value looks like a binary
+
+        :param data: potential binary
+        :type data: str
+        :return: data confirming or denying this is a binary
+        :rtype: tuple
+        """
         if len(data) < 4:
             return False, 0
 
@@ -224,14 +261,28 @@ class NumberParser(BaseParser):
 
     @classmethod
     def is_octal(cls, data):
-        """Checks to see if the value is octal"""
+        """
+        Checks to see if the value is octal
+
+        :param data: potential octal
+        :type data: str
+        :return: data confirming or denying this is a octal
+        :rtype: tuple
+        """
         try:
             return True, int(data, 8)
         except ValueError:
             return False, 0
 
     def is_roman_numeral(self, data):
-        """Checks to see if the value is a roman numeral"""
+        """
+        Checks to see if the value is a roman numeral
+
+        :param data: potential roman numeral
+        :type data: str
+        :return: data confirming or denying this is a roman numeral
+        :rtype: tuple
+        """
         data = data.upper()
         rgx_roman = re.compile("""^
            ([M]{0,9})   # thousands
@@ -258,7 +309,14 @@ class NumberParser(BaseParser):
         return False, 0
 
     def is_words(self, data):
-        """determines if the data is textual numbers"""
+        """
+        determines if the data is textual numbers
+
+        :param data: potential textual numbers
+        :type data: str
+        :return: data confirming or denying this is a textual numbers
+        :rtype: tuple
+        """
         try:
             number_value = self.number_words.parseString(data)[0]
             return True, number_value
@@ -266,7 +324,14 @@ class NumberParser(BaseParser):
             return False, 0
 
     def is_fraction(self, data):
-        """Detects if input is a fraction"""
+        """
+        Detects if input is a fraction
+
+        :param data: potential fraction
+        :type data: str
+        :return: data confirming or denying this is a fraction
+        :rtype: tuple
+        """
         if '/' not in data:
             return False, 0
 
@@ -298,7 +363,14 @@ class NumberParser(BaseParser):
 
     @classmethod
     def prep_data(cls, data):
-        """Removes unwanted stuff from data"""
+        """
+        Removes unwanted stuff from data
+
+        :param data: data to prep
+        :type data: str
+        :return: prepped data
+        :rtype: str
+        """
         data = data.strip()
 
         if not data:
@@ -317,7 +389,14 @@ class NumberParser(BaseParser):
         return data
 
     def parse_fraction(self, data):
-        """finds and confidence scores a fraction"""
+        """
+        finds and confidence scores a fraction
+
+        :param data: data we're testing
+        :type data: str
+        :return: results if this proper type
+        :rtype: ParseResult
+        """
         is_fraction, value = self.is_fraction(data)
         if is_fraction:
             fraction_confidence = 100
@@ -339,13 +418,27 @@ class NumberParser(BaseParser):
             return self.result("Fraction", fraction_confidence, value)
 
     def parse_binary(self, data):
-        """finds and confidence scores a binary"""
+        """
+        finds and confidence scores a binary
+
+        :param data: data we're testing
+        :type data: str
+        :return: results if this proper type
+        :rtype: ParseResult
+        """
         is_binary, value = self.is_binary(data)
         if is_binary:
             return self.result("Binary", 100, value)
 
     def parse_integer(self, data):
-        """finds and confidence scores a integer"""
+        """
+        finds and confidence scores a integer
+
+        :param data: data we're testing
+        :type data: str
+        :return: results if this proper type
+        :rtype: ParseResult
+        """
         is_integer, value = self.is_integer(data)
         if is_integer:
             integer_confidence = 75
@@ -362,27 +455,55 @@ class NumberParser(BaseParser):
             return self.result("Integer", integer_confidence, value)
 
     def parse_float(self, data):
-        """finds and confidence scores a float"""
+        """
+        finds and confidence scores a float
+
+        :param data: data we're testing
+        :type data: str
+        :return: results if this proper type
+        :rtype: ParseResult
+        """
         if '.' in data:
             is_float, value = self.is_float(data)
             if is_float:
                 return self.result("Decimal", 100, value)
 
     def parse_hex(self, data):
-        """finds and confidence scores a hex number"""
+        """
+        finds and confidence scores a hex number
+
+        :param data: data we're testing
+        :type data: str
+        :return: results if this proper type
+        :rtype: ParseResult
+        """
         if len(data) > 1:
             is_hex, value = self.is_hex(data)
             if is_hex:
                 return self.result("Hexadecimal", 100, value)
 
     def parse_roman_numeral(self, data):
-        """finds and confidence scores a roman numeral"""
+        """
+        finds and confidence scores a roman numeral
+
+        :param data: data we're testing
+        :type data: str
+        :return: results if this proper type
+        :rtype: ParseResult
+        """
         is_roman_numeral, value = self.is_roman_numeral(data)
         if is_roman_numeral:
             return self.result("Roman Numeral", 100, value)
 
     def parse_word_number(self, data):
-        """finds and confidence scores a word-number"""
+        """
+        finds and confidence scores a word-number
+
+        :param data: data we're testing
+        :type data: str
+        :return: results if this proper type
+        :rtype: ParseResult
+        """
         is_word, value = self.is_words(data)
         if is_word:
             return self.result("Word Number", 100, value)
