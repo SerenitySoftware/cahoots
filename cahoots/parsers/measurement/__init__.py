@@ -72,8 +72,8 @@ class MeasurementParser(BaseParser):
 
         measurement_parser = \
             originalTextFor(
-                Word(nums) +
-                ZeroOrMore(',' + Word(nums+',')) +
+                Word(nums, max=3) +
+                ZeroOrMore(',' + Word(nums, exact=3)) +
                 ZeroOrMore('.' + Word(nums)) +
                 ZeroOrMore(Word(nums) + '/' + Word(nums))
             ) + \

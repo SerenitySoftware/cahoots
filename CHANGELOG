@@ -1,3 +1,9 @@
+0.4.0 - Beta
+------------
+- Fixing a bug in the measurement parser.
+- Adding better number detection precision in the measurement parser.
+- Removing some debug code that was accidentally left in.
+
 0.3.11 - Beta
 -------------
 - Adding sphinx compatible docstrings to all of the code

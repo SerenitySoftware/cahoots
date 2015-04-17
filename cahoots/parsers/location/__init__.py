@@ -38,7 +38,6 @@ class LocationDatabase(object):
         """
         data_dir = os.path.dirname(os.path.realpath(__file__))
         database = sqlite3.connect(data_dir + '/data/location.sqlite')
-        print(type(database))
         database.cursor().execute('PRAGMA temp_store = 2')
         return database
 
