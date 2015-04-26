@@ -95,7 +95,6 @@ Basic Server Usage
     # CTRL+C pressed
 
     $ sudo cahootserver --port 80
-    $ ./cahootserver/server.py
      * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
 
 Documentation
