@@ -135,7 +135,7 @@ setup (
         'install': cahoots_install
     },
     name = 'Cahoots',
-    version = '0.4.1',
+    version = '0.5.0',
     url = 'https://github.com/SerenitySoftwareLLC/cahoots',
     maintainer='Serenity Software',
     maintainer_email = 'hello@serenitysoftware.io',
@@ -150,6 +150,9 @@ setup (
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
+        'Topic :: Utilities',
+        'Operating System :: MacOS',
+        'Operating System :: POSIX :: Linux',
     ],
     install_requires = [
         'watchdog',
