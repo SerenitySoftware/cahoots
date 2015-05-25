@@ -5,7 +5,7 @@ end
 
 Vagrant.configure("2") do |config|
     # Standard VM Settings
-    config.vm.box = "hashicorp/precise64"
+    config.vm.box = "puphpet/ubuntu1404-x64"
 
     if Kernel.is_windows?
         config.vm.network :public_network, :bridge => ENV['VAGRANT_BRIDGE']
@@ -38,13 +38,7 @@ Vagrant.configure("2") do |config|
         virtualbox.customize ["modifyvm", :id, "--memory", 2048]
     end
 
-    config.vm.provider "vmware_fusion" do |v|
-        v.vmx["memsize"] = "2048"
-    end
     config.vm.provider "vmware_desktop" do |v|
-        v.vmx["memsize"] = "2048"
-    end
-    config.vm.provider "vmware_workstation" do |v|
         v.vmx["memsize"] = "2048"
     end
 end
