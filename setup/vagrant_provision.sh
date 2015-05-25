@@ -30,15 +30,6 @@ echo " "
 echo " [Cahoots] Step 5: Installing Development Python Packages"
 echo " "
 pip install -r setup/requirements.dev.txt
-cd ~/
-wget https://pypi.python.org/packages/source/p/pylint/pylint-1.4.3.tar.gz
-tar -xvf pylint-1.4.3.tar.gz
-cd pylint-1.4.3
-python setup.py install
-cd ..
-rm -rf pylint-1.4.3
-rm -f pylint-1.4.3.tar.gz
-cd /vagrant
 
 echo " "
 echo " [Cahoots] Step 6: Importing Location Database"
