@@ -23,10 +23,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 # pylint: disable=invalid-name,too-many-public-methods,missing-docstring
+from __future__ import unicode_literals
 from cahoots.parsers.location.coordinate import CoordinateParser
 from tests.config import TestConfig
 from SereneRegistry import registry
-from cahoots.util import u
 import unittest
 import sys
 
@@ -62,7 +62,7 @@ class CoordinateParserTests(unittest.TestCase):
         self.assertEqual(1, count)
 
     def test_parseWithDegCoordsYieldsExpectedResult(self):
-        results = self.cp.parse(u('40.244° N 79.123° W'))
+        results = self.cp.parse('40.244° N 79.123° W')
         count = 0
         for result in results:
             count += 1
@@ -79,7 +79,7 @@ class CoordinateParserTests(unittest.TestCase):
         self.assertEqual(1, count)
 
     def test_parseWithDegMinCoordsYieldsExpectedResult(self):
-        results = self.cp.parse(u('13° 34.425\' N 45° 37.983\' W'))
+        results = self.cp.parse('13° 34.425\' N 45° 37.983\' W')
         count = 0
         for result in results:
             count += 1
@@ -99,7 +99,7 @@ class CoordinateParserTests(unittest.TestCase):
         self.assertEqual(1, count)
 
     def test_parseWithDegMinSecCoordsYieldsExpectedResult(self):
-        results = self.cp.parse(u('40° 26\' 46.56" N 79° 58\' 56.88" W'))
+        results = self.cp.parse('40° 26\' 46.56" N 79° 58\' 56.88" W')
         count = 0
         for result in results:
             count += 1
