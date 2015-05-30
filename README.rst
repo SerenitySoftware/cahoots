@@ -1,3 +1,6 @@
+.. image:: https://badge.waffle.io/serenitysoftwarellc/cahoots.png?label=ready&title=Ready 
+ :target: https://waffle.io/serenitysoftwarellc/cahoots
+ :alt: 'Stories in Ready'
 Cahoots
 =======
 A Text Comprehension Engine in Python
