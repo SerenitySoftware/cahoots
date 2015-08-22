@@ -4,25 +4,12 @@ def Kernel.is_windows?
 end
 
 Vagrant.configure("2") do |config|
-    # Standard VM Settings
-    config.vm.box = "puphpet/ubuntu1404-x64"
 
-    if Kernel.is_windows?
-        config.vm.network :public_network, :bridge => ENV['VAGRANT_BRIDGE']
-    elsif ENV['VAGRANT_PRIVATE_IP'].nil?
-        config.vm.network :private_network, type: :dhcp
-    else
-        config.vm.network :private_network, ip: ENV['VAGRANT_PRIVATE_IP']
-    end
-
-	config.vm.network :forwarded_port, guest: 8000, host: 8000
-
+    config.vm.box = "pjcolp/trusty64"
+    config.vm.network :public_network, :bridge => ENV['VAGRANT_BRIDGE']
+    config.vm.network :forwarded_port, guest: 8000, host: 8000
     config.vm.synced_folder ".", "/vagrant", type: "nfs"
-
-    # Provisioning
     config.vm.provision :shell, :path => "setup/vagrant_provision.sh"
-
-    # SSH Configuration
     config.ssh.username = "vagrant"
     config.ssh.shell = "bash -l"
     config.ssh.keep_alive = true
@@ -30,7 +17,6 @@ Vagrant.configure("2") do |config|
     config.ssh.forward_x11 = true
     config.vagrant.host = :detect
 
-    # VirtualBox Provider
     config.vm.provider :virtualbox do |virtualbox, override|
         virtualbox.customize ["modifyvm", :id, "--name", "cahoots"]
         virtualbox.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
@@ -38,7 +24,10 @@ Vagrant.configure("2") do |config|
         virtualbox.customize ["modifyvm", :id, "--memory", 2048]
     end
 
-    config.vm.provider "vmware_desktop" do |v|
-        v.vmx["memsize"] = "2048"
+    config.vm.provider "hyperv" do |hv|
+        hv.memory = 2048
+        hv.vmname = 'cahoots'
+        hv.cpus = 2
+        hv.ip_address_timeout = 300
     end
 end
