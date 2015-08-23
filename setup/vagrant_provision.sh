@@ -9,17 +9,17 @@ echo "Please ignore any 'stdin' related errors. It's an Ubuntu+Vagrant bug."
 echo " "
 echo " [Cahoots] Step 1: Adding APT Repositories and Updating APT"
 echo " "
-apt-get update
+apt-get update -o Acquire::ForceIPv4=true
 
 echo " "
 echo " [Cahoots] Step 2: Upgrading Base System Packages"
 echo " "
-apt-get -y upgrade
+apt-get upgrade -y --force-yes -o Acquire::ForceIPv4=true
 
 echo " "
 echo " [Cahoots] Step 3: Installing Required System Packages"
 echo " "
-cat setup/requirements.system.txt | xargs apt-get install -y --force-yes
+cat setup/requirements.system.txt | xargs apt-get install -y --force-yes -o Acquire::ForceIPv4=true
 
 echo " "
 echo " [Cahoots] Step 4: Installing Required Python Packages"
@@ -49,9 +49,8 @@ cat cahoots/parsers/location/data/landmark.sql | sqlite3 cahoots/parsers/locatio
 rm cahoots/parsers/location/data/landmark.csv
 
 echo " "
-echo " [Cahoots] Step 7: Moving files around"
-echo 'cd /vagrant' >> /home/vagrant/.bashrc
-echo 'export PYTHONPATH=$PYTHONPATH:/vagrant' >> /home/vagrant/.bashrc
+echo " [Cahoots] Step 7: Setting Up Bash Defaults"
+cat /vagrant/setup/bashrc >> /home/vagrant/.bashrc
 
 echo " "
 echo " "
